@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		FCA079062D90A9AA00DC97A8 /* Config-Development.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = FCA079052D90A9AA00DC97A8 /* Config-Development.xcconfig */; };
+		FCA0790A2D90B5BC00DC97A8 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = FCA079092D90B5B300DC97A8 /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		FCA437B72D8C9A7D000510C2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FCA079052D90A9AA00DC97A8 /* Config-Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Config-Development.xcconfig"; sourceTree = "<group>"; };
+		FCA079092D90B5B300DC97A8 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		FCA437A62D8C9A7C000510C2 /* anothapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = anothapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCA437B62D8C9A7D000510C2 /* anothappTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = anothappTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCA437C02D8C9A7D000510C2 /* anothappUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = anothappUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +82,8 @@
 		FCA4379D2D8C9A7C000510C2 = {
 			isa = PBXGroup;
 			children = (
+				FCA079092D90B5B300DC97A8 /* .gitignore */,
+				FCA079052D90A9AA00DC97A8 /* Config-Development.xcconfig */,
 				FCA437A82D8C9A7C000510C2 /* anothapp */,
 				FCA437B92D8C9A7D000510C2 /* anothappTests */,
 				FCA437C32D8C9A7D000510C2 /* anothappUITests */,
@@ -212,6 +221,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCA0790A2D90B5BC00DC97A8 /* .gitignore in Resources */,
+				FCA079062D90A9AA00DC97A8 /* Config-Development.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,10 +8,10 @@
 import SwiftUI
 
 @main
-struct anothappApp: App {
+struct AnothappApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationView(appRouter: .init())
         }
     }
 }
