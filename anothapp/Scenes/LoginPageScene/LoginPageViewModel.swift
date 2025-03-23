@@ -11,10 +11,11 @@ class LoginPageViewModel: ObservableObject {
     
     @Published var identifier = ""
     @Published var password = ""
-    @Published var showingLoginError = false
     @Published var errorMessage = ""
+    @Published var hasError = false
     
     private let router: LoginPageRouter
+    private let authService = AuthService()
     
     init(router: LoginPageRouter) {
         self.router = router
@@ -24,8 +25,16 @@ class LoginPageViewModel: ObservableObject {
         router.routeToSignUpPage()
     }
     
-    func performLogin() {
+    func performLogin() async {
+        let loginModel = LoginModel(identifier: identifier, password: password)
+        let authenticated = await authService.login(loginModel: loginModel)
         
+        if authenticated {
+            
+        } else {
+            errorMessage = "Identifiant ou mot de passe incorrect"
+            hasError = true
+        }
     }
 }
 

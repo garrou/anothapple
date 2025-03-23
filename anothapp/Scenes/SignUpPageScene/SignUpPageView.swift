@@ -58,7 +58,11 @@ struct SignUpPageView: View {
                 )
                 .focused($isConfirmPasswordFieldFocused)
             
-            Button(action: viewModel.performSignUp) {
+            Button(action: {
+                Task {
+                    await viewModel.performSignUp()
+                }
+            }) {
                 Text("S'inscrire")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.white)

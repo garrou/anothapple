@@ -46,7 +46,11 @@ struct LoginPageView: View {
                 )
                 .focused($isPasswordFieldFocused)
             
-            Button(action: self.viewModel.performLogin) {
+            Button(action: {
+                Task {
+                    await viewModel.performLogin()
+                }
+            }) {
                 Text("Se conncter")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.white)
@@ -57,7 +61,7 @@ struct LoginPageView: View {
             
             HStack {
                 Text("Pas de compte ?").font(.system(size: 14))
-                Button(action: self.viewModel.navigateToSignUpPage) {
+                Button(action: viewModel.navigateToSignUpPage) {
                     Text("S'inscrire")
                 }
                 .font(.system(size: 14, weight: .semibold))
@@ -66,6 +70,11 @@ struct LoginPageView: View {
             .padding(.bottom, 20)
         }
         .padding(.horizontal, 40)
+        .alert("Erreur", isPresented: $viewModel.hasError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(viewModel.errorMessage)
+        }
     }
 }
 

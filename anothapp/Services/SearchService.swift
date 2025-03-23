@@ -10,8 +10,10 @@ import Foundation
 
 class SearchService {
     
+    private let baseUrl = "http://localhost:8080/search"
+    
     func fetchImages(limit: Int) async throws -> [String] {
-        guard let url = URL(string: "http://localhost:8080/search/images?limit=\(limit)") else {
+        guard let url = URL(string: "\(baseUrl)/images?limit=\(limit)") else {
             throw URLError(.badURL)
         }
         

@@ -9,29 +9,25 @@ import Foundation
 
 class SignUpPageViewModel: ObservableObject {
     
-    @Published var email: String
-    @Published var username: String
-    @Published var password: String
-    @Published var confirmPassword: String
-    @Published var errorMessage: String
+    @Published var email: String = ""
+    @Published var username: String = ""
+    @Published var password: String = ""
+    @Published var confirmPassword: String = ""
+    @Published var errorMessage: String = ""
     @Published var hasError: Bool = false
 
     private let router: SignUpPageRouter
+    private let authService = AuthService()
     
     init(router: SignUpPageRouter) {
         self.router = router
-        email = ""
-        username = ""
-        password = ""
-        confirmPassword = ""
-        errorMessage = ""
     }
     
     func navigateToLoginPage() {
         router.routeToLoginPage()
     }
     
-    func performSignUp() {
+    func performSignUp() async {
         if email.isEmpty || username.isEmpty || password.isEmpty || confirmPassword.isEmpty {
             errorMessage = "Tous les champs sont requis"
             hasError = true
@@ -58,7 +54,15 @@ class SignUpPageViewModel: ObservableObject {
             return
         }
         
-        // Signup
+        let signUpModel = SignUpModel(email: email, username: username, password: password, confirm: confirmPassword)
+        let created = await authService.signup(signUpModel: signUpModel)
+        
+        if created {
+            router.routeToLoginPage()
+        } else {
+            errorMessage = "Une erreur est survenue"
+            hasError = true
+        }
     }
     
     private func isValidEmail() -> Bool {
