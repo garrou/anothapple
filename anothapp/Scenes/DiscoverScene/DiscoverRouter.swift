@@ -14,6 +14,11 @@ class DiscoverRouter {
     init(rootCoordinator: NavigationCoordinator) {
         self.rootCoordinator = rootCoordinator
     }
+    
+    func routeToDiscoverDetail(serie: ApiSerie) {
+        let router = DiscoverDetailRouter(rootCoordinator: rootCoordinator, serie: serie)
+        rootCoordinator.push(router)
+    }
 }
 
 // MARK: ViewFactory implementation

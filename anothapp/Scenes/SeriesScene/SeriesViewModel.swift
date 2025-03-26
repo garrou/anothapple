@@ -18,7 +18,7 @@ class SeriesViewModel: ObservableObject {
         self.router = router
     }
     
-    func routeToSerieDetail(_ serie: Serie) {
+    func routeToSerieDetail(serie: Serie) {
         router.routeToSerieDetail(serie: serie)
     }
     

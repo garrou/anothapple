@@ -4,6 +4,7 @@
 //
 //  Created by Adrien Garrouste on 24/03/2025.
 //
+
 import Foundation
 
 struct Serie: Codable, Hashable {

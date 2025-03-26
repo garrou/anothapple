@@ -20,7 +20,7 @@ class HomeViewModel: ObservableObject {
         router.getSeriesTabView()
     }
     
-    func getDisordersTabView() -> AnyView {
+    func getDiscoverTabView() -> AnyView {
         router.getDiscoverTabView()
     }
 }

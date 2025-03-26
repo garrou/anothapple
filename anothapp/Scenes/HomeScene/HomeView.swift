@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeView: View {
     
     @StateObject var viewModel: HomeViewModel
-    @State var selectedTab: AppTab = .series
+    @State private var selectedTab: AppTab = .series
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -21,13 +21,13 @@ struct HomeView: View {
                 }
                 .tag(AppTab.series)
             
-            viewModel.getDisordersTabView()
+            viewModel.getDiscoverTabView()
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Discover")
                 }
-                .tag(AppTab.series)
-        }
+                .tag(AppTab.discover)
+        }.tint(.black)
     }
 }
 #Preview {

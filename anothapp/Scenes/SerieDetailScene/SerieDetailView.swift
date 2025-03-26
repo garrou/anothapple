@@ -73,6 +73,7 @@ struct SerieDetailView: View {
             }
             .padding()
         }
+        .navigationTitle(viewModel.serie.title)
     }
 }
 
