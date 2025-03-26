@@ -16,8 +16,8 @@ class SearchService {
         guard let url = URL(string: "\(baseUrl)/images?limit=\(limit)") else {
             throw URLError(.badURL)
         }
-        
-        let (data, _) = try await URLSession.shared.data(from: url)
-        return try JSONDecoder().decode([String].self, from: data)
+        let (data, response) = try await URLSession.shared.data(from: url)
+        let ok = (response as? HTTPURLResponse)?.statusCode == 200
+        return ok ? try JSONDecoder().decode([String].self, from: data) : []
     }
 }

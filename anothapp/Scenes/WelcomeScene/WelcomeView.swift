@@ -7,15 +7,9 @@
 
 import SwiftUI
 
-struct WelcomePageView: View {
+struct WelcomeView: View {
     
-    @StateObject var viewModel: WelcomePageViewModel
-    
-    private let columns = [
-        GridItem(.flexible(), spacing: 5),
-        GridItem(.flexible(), spacing: 5),
-        GridItem(.flexible(), spacing: 5)
-    ]
+    @StateObject var viewModel: WelcomeViewModel
     
     var body: some View {
         VStack(spacing: 5) {
@@ -23,13 +17,9 @@ struct WelcomePageView: View {
                 .font(.largeTitle)
                 .textCase(.uppercase)
             
-            ScrollView {
-                LazyVGrid(columns: columns) {
-                    ForEach(viewModel.images, id: \.self) { image in
-                        ImageCardView(imageUrl: image)
-                    }
-                }
-            }
+            GridView(items: viewModel.images, columns: 3) { image in
+                ImageCardView(imageUrl: image)
+            }.frame(maxHeight: .infinity)
             
             Button(action: viewModel.navigateToLoginPage) {
                 Text("Se connecter")
@@ -43,12 +33,12 @@ struct WelcomePageView: View {
         .padding(.vertical, 10)
         .onAppear {
             Task {
-                await viewModel.loadImages(limit: 12)
+                await viewModel.loadImages(limit: 9)
             }
         }
     }
 }
 
 #Preview {
-    WelcomePageView(viewModel: .mock)
+    WelcomeView(viewModel: .mock)
 }

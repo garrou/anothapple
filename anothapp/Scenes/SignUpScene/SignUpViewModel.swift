@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SignUpPageViewModel: ObservableObject {
+class SignUpViewModel: ObservableObject {
     
     @Published var email: String = ""
     @Published var username: String = ""
@@ -15,11 +15,11 @@ class SignUpPageViewModel: ObservableObject {
     @Published var confirmPassword: String = ""
     @Published var errorMessage: String = ""
     @Published var hasError: Bool = false
-
-    private let router: SignUpPageRouter
+    
+    private let router: SignUpRouter
     private let authService = AuthService()
     
-    init(router: SignUpPageRouter) {
+    init(router: SignUpRouter) {
         self.router = router
     }
     
@@ -54,12 +54,14 @@ class SignUpPageViewModel: ObservableObject {
             return
         }
         
-        let signUpModel = SignUpModel(email: email, username: username, password: password, confirm: confirmPassword)
-        let created = await authService.signup(signUpModel: signUpModel)
-        
-        if created {
-            router.routeToLoginPage()
-        } else {
+        let signUpRequest = SignUpRequest(email: email, username: username, password: password, confirm: confirmPassword)
+        do {
+            let created = try await authService.signup(signUpRequest: signUpRequest)
+            
+            if created {
+                router.routeToLoginPage()
+            }
+        } catch {
             errorMessage = "Une erreur est survenue"
             hasError = true
         }
@@ -75,6 +77,6 @@ class SignUpPageViewModel: ObservableObject {
 
 // MARK: - SignUpPageViewModel mock for preview
 
-extension SignUpPageViewModel {
-    static let mock: SignUpPageViewModel = .init(router: SignUpPageRouter.mock)
+extension SignUpViewModel {
+    static let mock: SignUpViewModel = .init(router: SignUpRouter.mock)
 }

@@ -7,14 +7,14 @@
 
 import Foundation
 
-class WelcomePageViewModel: ObservableObject {
+class WelcomeViewModel: ObservableObject {
     
     @Published var images: [String] = []
     
-    private let router: WelcomePageRouter
+    private let router: WelcomeRouter
     private let searchService = SearchService()
     
-    init(router: WelcomePageRouter) {
+    init(router: WelcomeRouter) {
         self.router = router
     }
     
@@ -22,6 +22,7 @@ class WelcomePageViewModel: ObservableObject {
         router.routeToLoginPage()
     }
     
+    @MainActor
     func loadImages(limit: Int) async {
         do {
             images = try await searchService.fetchImages(limit: limit)
@@ -33,6 +34,6 @@ class WelcomePageViewModel: ObservableObject {
 
 // MARK: - WelcomePageViewModel mock for preview
 
-extension WelcomePageViewModel {
-    static let mock: WelcomePageViewModel = .init(router: WelcomePageRouter.mock)
+extension WelcomeViewModel {
+    static let mock: WelcomeViewModel = .init(router: WelcomeRouter.mock)
 }

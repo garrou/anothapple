@@ -17,20 +17,14 @@ struct ImageCardView: View {
                 switch phase {
                 case .empty:
                     ProgressView()
-                        .frame(height: 120)
+                        .scaledToFill()
                 case .success(let image):
                     image
                         .resizable()
                         .scaledToFill()
-                        .frame(height: 120)
-                        .cornerRadius(10)
-                        .clipped()
                 case .failure:
                     Image(systemName: "photo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 120)
-                        .foregroundColor(.gray)
+                        .frame(height: 200)
                 @unknown default:
                     EmptyView()
                 }
@@ -38,12 +32,12 @@ struct ImageCardView: View {
         }
         .frame(maxWidth: .infinity)
         .background(Color.white)
-        .cornerRadius(12)
+        .cornerRadius(10)
         .shadow(radius: 5)
         .padding()
     }
 }
 
 #Preview {
-    ImageCardView(imageUrl: "https://picsum.photos/200")
+    ImageCardView(imageUrl: Datasource.mockImages[0])
 }

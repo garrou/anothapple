@@ -7,16 +7,26 @@
 
 import SwiftUI
 
+enum AppTab {
+    case series
+    case discover
+}
+
 class AppRouter: ObservableObject {
-    @Published var paths: NavigationPath
     
+    @Published var paths: NavigationPath
+    @Published var selectedTab: AppTab = .series
+
     init(paths: NavigationPath = NavigationPath()) {
         self.paths = paths
     }
     
     func resolveInitialRouter() -> any Routable {
-        let homePageRouter = WelcomePageRouter(rootCoordinator: self)
-        return homePageRouter
+        isLoggedIn() ? HomeRouter(rootCoordinator: self) : WelcomeRouter(rootCoordinator: self)
+    }
+    
+    private func isLoggedIn() -> Bool {
+        SecurityHelper.getUser() != nil
     }
 }
 

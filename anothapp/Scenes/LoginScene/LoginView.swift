@@ -1,29 +1,34 @@
 //
-//  SignUpPageView.swift
+//  LoginPageView.swift
 //  anothapp
 //
-//  Created by Adrien Garrouste on 21/03/2025.
+//  Created by Adrien Garrouste on 20/03/2025.
 //
 
 import SwiftUI
 
-struct SignUpPageView: View {
+struct LoginView: View {
     
-    @StateObject var viewModel: SignUpPageViewModel
+    @StateObject var viewModel: LoginViewModel
     
-    @FocusState var isEmailFieldFocused: Bool
-    @FocusState var isIdentifierFieldFocused: Bool
-    @FocusState var isPasswordFieldFocused: Bool
-    @FocusState var isConfirmPasswordFieldFocused: Bool
+    @FocusState private var isEmailFieldFocused: Bool
+    @FocusState private var isPasswordFieldFocused: Bool
     
     var body: some View {
         VStack(spacing: 30) {
             
-            Text("Créer un compte")
+            Image(systemName: "person.circle.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 100, height: 100)
+                .foregroundColor(.black)
+                .padding(.bottom, 10)
+            
+            Text("Se connecter")
                 .font(.system(size: 28, weight: .bold))
                 .padding(.bottom, 10)
             
-            TextField("Email", text: $viewModel.email)
+            TextField("Identifiant", text: $viewModel.identifier)
                 .keyboardType(.emailAddress)
                 .autocapitalization(.none)
                 .padding()
@@ -33,15 +38,6 @@ struct SignUpPageView: View {
                 )
                 .focused($isEmailFieldFocused)
             
-            TextField("Nom d'utilisateur", text: $viewModel.username)
-                .autocapitalization(.none)
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(isIdentifierFieldFocused ? .black : .gray.opacity(0.5), lineWidth: 1)
-                )
-                .focused($isIdentifierFieldFocused)
-            
             SecureField("Mot de passe", text: $viewModel.password)
                 .padding()
                 .background(
@@ -50,20 +46,12 @@ struct SignUpPageView: View {
                 )
                 .focused($isPasswordFieldFocused)
             
-            SecureField("Confirmer le mot de passe", text: $viewModel.confirmPassword)
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(isConfirmPasswordFieldFocused ? .black : .gray.opacity(0.5), lineWidth: 1)
-                )
-                .focused($isConfirmPasswordFieldFocused)
-            
             Button(action: {
                 Task {
-                    await viewModel.performSignUp()
+                    await viewModel.performLogin()
                 }
             }) {
-                Text("S'inscrire")
+                Text("Se connecter")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.white)
                     .padding()
@@ -72,9 +60,9 @@ struct SignUpPageView: View {
             }
             
             HStack {
-                Text("Déjà membre ?").font(.system(size: 14))
-                Button(action: viewModel.navigateToLoginPage) {
-                    Text("Se connecter")
+                Text("Pas de compte ?").font(.system(size: 14))
+                Button(action: viewModel.navigateToSignUpPage) {
+                    Text("S'inscrire")
                 }
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(.blue)
@@ -91,5 +79,5 @@ struct SignUpPageView: View {
 }
 
 #Preview {
-    SignUpPageView(viewModel: .mock)
+    LoginView(viewModel: .mock)
 }
