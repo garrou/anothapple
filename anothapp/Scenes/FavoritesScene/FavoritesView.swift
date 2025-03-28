@@ -33,7 +33,7 @@ struct FavoritesView: View {
         .navigationTitle("\(viewModel.series.count) favori(s)")
         .onAppear {
             Task {
-                await viewModel.loadSeries()
+                viewModel.loadFavorites()
             }
         }
     }

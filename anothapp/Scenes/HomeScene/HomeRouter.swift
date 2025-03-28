@@ -26,6 +26,10 @@ class HomeRouter {
     func getFavoritesView() -> AnyView {
         FavoritesRouter(rootCoordinator: rootCoordinator).makeView()
     }
+    
+    func routeToWelcomePage() {
+        rootCoordinator.popToRoot()
+    }
 }
 
 // MARK: ViewFactory implementation

@@ -64,8 +64,11 @@ struct HomeView: View {
                                 NavigationLink(destination: Text("Option 3 View")) {
                                     Label("Paramètres", systemImage: "gear")
                                 }
-                                NavigationLink(destination: Text("Option 3 View")) {
-                                    Label("Se déconnecter", systemImage: "arrow.left.to.line")
+                                Button(action: { viewModel.logout() }) {
+                                    HStack {
+                                        Image(systemName: "arrow.left.to.line").padding(.leading, 5)
+                                        Text("Se déconnecter")
+                                    }
                                 }
                             }
                             .listStyle(PlainListStyle())

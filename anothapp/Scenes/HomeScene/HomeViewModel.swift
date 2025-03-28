@@ -35,6 +35,11 @@ class HomeViewModel: ObservableObject {
     func getFavoritesView() -> AnyView {
         router.getFavoritesView()
     }
+    
+    func logout() {
+        SecurityHelper.clearUser()
+        router.routeToWelcomePage()
+    }
 }
 
 // MARK: - HomePageViewModel mock for preview

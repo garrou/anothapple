@@ -85,7 +85,7 @@ struct DiscoverDetailView: View {
                 
                 Text("Description")
                     .font(.headline)
-                Text(viewModel.serie.description)
+                Text(viewModel.serie.synopsis)
                     .font(.body)
                     .foregroundColor(.secondary)
                 

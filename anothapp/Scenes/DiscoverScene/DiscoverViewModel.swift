@@ -24,11 +24,7 @@ class DiscoverViewModel: ObservableObject {
     
     @MainActor
     func loadDiscoverSeries(limit: Int) async {
-        do {
-            series = try await searchService.fetchSuggestions(limit: limit)
-        } catch {
-            print("Error: \(error.localizedDescription)")
-        }
+        series = await ApiSeriesCacheManager.shared.getSeries(limit: limit)
     }
 }
 

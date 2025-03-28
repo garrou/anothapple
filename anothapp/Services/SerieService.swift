@@ -10,25 +10,38 @@ import Foundation
 class SerieService {
     
     private let baseUrl = "http://localhost:8080/shows"
-    private let session = URLSession(configuration: URLSessionConfiguration.default, delegate: HTTPInterceptor.shared, delegateQueue: nil)
+    private let decoder: JSONDecoder
+    
+    init() {
+        decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+    }
     
     func fetchSeries() async throws -> [Serie] {
-        guard let url = URL(string: baseUrl) else {
-            throw URLError(.badURL)
-        }
-        let request = HTTPInterceptor.shared.interceptRequest(URLRequest(url: url))
-        let (data, response) = try await session.data(for: request)
-        let ok = (response as? HTTPURLResponse)?.statusCode == 200
-        return ok ? try JSONDecoder().decode([Serie].self, from: data) : []
+        let (data, ok) = try await BaseService.shared.request(url: baseUrl)
+        return ok ? try decoder.decode([Serie].self, from: data) : []
+    }
+    
+    func fetchSerie(id: Int) async throws -> Serie? {
+        let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/\(id)")
+        return ok ? try decoder.decode(Serie.self, from: data) : nil
     }
     
     func fetchFavorites() async throws -> [Serie] {
-        guard let url = URL(string: "\(baseUrl)?status=favorite") else {
-            throw URLError(.badURL)
-        }
-        let request = HTTPInterceptor.shared.interceptRequest(URLRequest(url: url))
-        let (data, response) = try await session.data(for: request)
-        let ok = (response as? HTTPURLResponse)?.statusCode == 200
-        return ok ? try JSONDecoder().decode([Serie].self, from: data) : []
+        let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)?status=favorite")
+        return ok ? try decoder.decode([Serie].self, from: data) : []
+    }
+    
+    func changeFavorite(id: Int, request: StatusRequest) async throws -> Bool {
+        try await BaseService.shared.updateRequest(url: "\(baseUrl)/\(id)", method: "PATCH", data: request)
+    }
+    
+    func changeWatching(id: Int, request: StatusRequest) async throws -> Bool {
+        try await BaseService.shared.updateRequest(url: "\(baseUrl)/\(id)", method: "PATCH", data: request)
+    }
+    
+    func deleteSerie(id: Int) async throws -> Bool {
+        let (_, ok) = try await BaseService.shared.request(url: "\(baseUrl)/\(id)", method: "DELETE", successCode: 204)
+        return ok
     }
 }

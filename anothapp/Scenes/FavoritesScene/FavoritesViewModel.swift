@@ -23,13 +23,8 @@ class FavoritesViewModel: ObservableObject {
     }
     
     @MainActor
-    func loadSeries() async {
-        do {
-            let fetchedSeries = try await seriesService.fetchSeries()
-            series = fetchedSeries.filter { $0.favorite }
-        } catch {
-            print("Error: \(error.localizedDescription)")
-        }
+    func loadFavorites() {
+        series = SeriesCacheManager.shared.getFavorites()
     }
 }
 

@@ -7,15 +7,28 @@
 
 import Foundation
 
-struct Serie: Codable, Hashable {
+class Serie: NSObject, Codable {
     let id: Int
     let title: String
     let poster: String
     let kinds: [String]
-    let favorite: Bool
+    var favorite: Bool
     let duration: Int
     let addedAt: String
     let country: String
-    let watch: Bool
+    var watch: Bool
     let seasons: Int
+    
+    init(id: Int, title: String, poster: String, kinds: [String], favorite: Bool, duration: Int, addedAt: String, country: String, watch: Bool, seasons: Int) {
+        self.id = id
+        self.title = title
+        self.poster = poster
+        self.kinds = kinds
+        self.favorite = favorite
+        self.duration = duration
+        self.addedAt = addedAt
+        self.country = country
+        self.watch = watch
+        self.seasons = seasons
+    }
 }

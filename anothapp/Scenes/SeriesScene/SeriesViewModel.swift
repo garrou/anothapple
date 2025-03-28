@@ -24,11 +24,7 @@ class SeriesViewModel: ObservableObject {
     
     @MainActor
     func loadSeries() async {
-        do {
-            series = try await seriesService.fetchSeries()
-        } catch {
-            print("Error: \(error.localizedDescription)")
-        }
+        series = await SeriesCacheManager.shared.getSeries()
     }
 }
 

@@ -16,6 +16,15 @@ class SerieDetailRouter: ObservableObject {
         self.rootCoordinator = rootCoordinator
         self.serie = serie
     }
+    
+    func routeToDiscoverDetails(serie: ApiSerie) {
+        let router = DiscoverDetailRouter(rootCoordinator: rootCoordinator, serie: serie)
+        rootCoordinator.push(router)
+    }
+    
+    func routeToHomePage() {
+        rootCoordinator.popLast()
+    }
 }
 
 // MARK: ViewFactory implementation
