@@ -8,9 +8,17 @@
 import Foundation
 import SwiftUI
 
+enum AppTab {
+    case series
+    case discover
+}
+
 class HomeViewModel: ObservableObject {
     
     private let router: HomeRouter
+    
+    @Published var selectedTab: AppTab = .series
+    @Published var isMenuOpened: Bool = false
     
     init(router: HomeRouter) {
         self.router = router
@@ -22,6 +30,10 @@ class HomeViewModel: ObservableObject {
     
     func getDiscoverTabView() -> AnyView {
         router.getDiscoverTabView()
+    }
+    
+    func getFavoritesView() -> AnyView {
+        router.getFavoritesView()
     }
 }
 

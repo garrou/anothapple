@@ -25,11 +25,11 @@ struct SerieDetailView: View {
                 .shadow(radius: 5)
                 
                 HStack {
-                    Text(viewModel.serie.title)
-                        .font(.title)
-                        .bold()
+                    //                    Text(viewModel.serie.title)
+                    //                        .font(.title)
+                    //                        .bold()
                     
-                    Spacer()
+                    //                    Spacer()
                     
                     if viewModel.serie.favorite {
                         Image(systemName: "heart.fill")
@@ -60,20 +60,50 @@ struct SerieDetailView: View {
                         Text("\(viewModel.serie.seasons) Season(s)")
                     }
                     
-                    HStack {
-                        Image(systemName: viewModel.serie.watch ? "checkmark.circle.fill" : "circle")
-                            .foregroundColor(viewModel.serie.watch ? .green : .gray)
-                        Text(viewModel.serie.watch ? "Vue" : "Pas vue")
-                    }
+                    //                    HStack {
+                    //                        Image(systemName: "timer")
+                    //                        Text("\() temps total")
+                    //                    }
                 }
                 .font(.subheadline)
                 .foregroundColor(.gray)
                 
-                Spacer()
+                TabView(selection: $viewModel.selectedTab) {
+                    Text("Mes saisons")
+                        .tabItem {
+                            Label("Tab 1", systemImage: "1.circle")
+                        }.tag(SerieDetailTab.seasons)
+                    
+                    Text("Ajouter")
+                        .tabItem {
+                            Label("Tab 2", systemImage: "2.circle")
+                        }.tag(SerieDetailTab.add)
+                    
+                    Text("Vue par")
+                        .tabItem {
+                            Label("Tab 3", systemImage: "3.circle")
+                        }.tag(SerieDetailTab.viewedBy)
+                }
+                .frame(maxHeight: .infinity)
+                .padding(.top, 40)
+                .background(.white)
+                .cornerRadius(15)
+                .shadow(radius: 10)
+                .frame(maxWidth: .infinity)
             }
             .padding()
         }
         .navigationTitle(viewModel.serie.title)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    print("Button tapped")
+                }) {
+                    Image(systemName: "line.horizontal.3")
+                        .font(.title2)
+                }
+            }
+        }.tint(.black)
     }
 }
 

@@ -21,4 +21,14 @@ class SerieService {
         let ok = (response as? HTTPURLResponse)?.statusCode == 200
         return ok ? try JSONDecoder().decode([Serie].self, from: data) : []
     }
+    
+    func fetchFavorites() async throws -> [Serie] {
+        guard let url = URL(string: "\(baseUrl)?status=favorite") else {
+            throw URLError(.badURL)
+        }
+        let request = HTTPInterceptor.shared.interceptRequest(URLRequest(url: url))
+        let (data, response) = try await session.data(for: request)
+        let ok = (response as? HTTPURLResponse)?.statusCode == 200
+        return ok ? try JSONDecoder().decode([Serie].self, from: data) : []
+    }
 }

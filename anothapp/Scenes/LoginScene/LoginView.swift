@@ -10,7 +10,6 @@ import SwiftUI
 struct LoginView: View {
     
     @StateObject var viewModel: LoginViewModel
-    
     @FocusState private var isEmailFieldFocused: Bool
     @FocusState private var isPasswordFieldFocused: Bool
     

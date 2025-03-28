@@ -7,11 +7,18 @@
 
 import Foundation
 
+enum SerieDetailTab {
+    case seasons
+    case add
+    case viewedBy
+}
+
 class SerieDetailViewModel: ObservableObject {
     
     private let router: SerieDetailRouter
     
     @Published var serie: Serie
+    @Published var selectedTab: SerieDetailTab = .seasons
     
     init(router: SerieDetailRouter, serie: Serie) {
         self.router = router

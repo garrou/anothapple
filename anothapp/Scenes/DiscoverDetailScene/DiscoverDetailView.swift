@@ -26,10 +26,10 @@ struct DiscoverDetailView: View {
                 .shadow(radius: 5)
                 
                 HStack {
-                    Text(viewModel.serie.title)
-                        .font(.title)
-                        .fontWeight(.bold)
-                    Spacer()
+//                    Text(viewModel.serie.title)
+//                        .font(.title)
+//                        .fontWeight(.bold)
+//                    Spacer()
                     Text(String(format: "%.1f ★", viewModel.serie.note))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
@@ -60,8 +60,8 @@ struct DiscoverDetailView: View {
                 }
                 
                 if !viewModel.serie.platforms.isEmpty {
-                    Text("Platformes :")
-                        .font(.headline)
+//                    Text("Platformes :")
+//                        .font(.headline)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(viewModel.serie.platforms, id: \.name) { platform in
@@ -93,6 +93,16 @@ struct DiscoverDetailView: View {
             .padding()
         }
         .navigationTitle(viewModel.serie.title)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    print("Button tapped")
+                }) {
+                    Image(systemName: "line.horizontal.3")
+                        .font(.title2)
+                }
+            }
+        }.tint(.black)
     }
 }
 

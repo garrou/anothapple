@@ -22,6 +22,10 @@ class HomeRouter {
     func getDiscoverTabView() -> AnyView {
         DiscoverRouter(rootCoordinator: rootCoordinator).makeView()
     }
+    
+    func getFavoritesView() -> AnyView {
+        FavoritesRouter(rootCoordinator: rootCoordinator).makeView()
+    }
 }
 
 // MARK: ViewFactory implementation

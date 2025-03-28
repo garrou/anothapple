@@ -10,11 +10,10 @@ import SwiftUI
 struct SignUpView: View {
     
     @StateObject var viewModel: SignUpViewModel
-    
-    @FocusState var isEmailFieldFocused: Bool
-    @FocusState var isIdentifierFieldFocused: Bool
-    @FocusState var isPasswordFieldFocused: Bool
-    @FocusState var isConfirmPasswordFieldFocused: Bool
+    @FocusState private var isEmailFieldFocused: Bool
+    @FocusState private var isIdentifierFieldFocused: Bool
+    @FocusState private var isPasswordFieldFocused: Bool
+    @FocusState private var isConfirmPasswordFieldFocused: Bool
     
     var body: some View {
         VStack(spacing: 30) {

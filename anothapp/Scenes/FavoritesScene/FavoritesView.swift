@@ -1,20 +1,20 @@
 //
-//  SeriesPageView.swift
+//  ListView.swift
 //  anothapp
 //
-//  Created by Adrien Garrouste on 24/03/2025.
+//  Created by Adrien Garrouste on 28/03/2025.
 //
 
 import SwiftUI
 
-struct SeriesView: View {
+struct FavoritesView: View {
     
-    @StateObject var viewModel: SeriesViewModel
+    @StateObject var viewModel: FavoritesViewModel
     
     var body: some View {
         ScrollView {
             if viewModel.series.isEmpty {
-                Text("Aucune série vue")
+                Text("Aucun favori")
             } else {
                 GridView(items: viewModel.series, columns: 2) { serie in
                     Button(action: {
@@ -30,6 +30,7 @@ struct SeriesView: View {
             }
         }
         .padding(.vertical, 10)
+        .navigationTitle("\(viewModel.series.count) favori(s)")
         .onAppear {
             Task {
                 await viewModel.loadSeries()
@@ -39,6 +40,5 @@ struct SeriesView: View {
 }
 
 #Preview {
-    SeriesView(viewModel: .mock)
+    FavoritesView(viewModel: .mock)
 }
-

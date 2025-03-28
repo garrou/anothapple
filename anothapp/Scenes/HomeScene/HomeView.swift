@@ -10,26 +10,92 @@ import SwiftUI
 struct HomeView: View {
     
     @StateObject var viewModel: HomeViewModel
-    @State private var selectedTab: AppTab = .series
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            viewModel.getSeriesTabView()
-                .tabItem {
-                    Image(systemName: "house")
-                    Text("Home")
-                }
-                .tag(AppTab.series)
+        ZStack {
+            TabView(selection: $viewModel.selectedTab) {
+                viewModel.getSeriesTabView()
+                    .tabItem {
+                        Label("Mes séries", systemImage: "play.rectangle")
+                    }
+                    .tag(AppTab.series)
+                
+                viewModel.getDiscoverTabView()
+                    .tabItem {
+                        Label("Découvrir", systemImage: "magnifyingglass")
+                    }
+                    .tag(AppTab.discover)
+            }
             
-            viewModel.getDiscoverTabView()
-                .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Discover")
+            if viewModel.isMenuOpened {
+                ZStack {
+                    Color.black.opacity(0.3)
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            withAnimation {
+                                viewModel.isMenuOpened.toggle()
+                            }
+                        }
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            
+                            Spacer().frame(height: 120)
+                            
+                            List {
+                                NavigationLink(destination: Text("Option 1 View")) {
+                                    Label("Ma liste", systemImage: "list.bullet")
+                                }
+                                NavigationLink(destination: Text("Option 2 View")) {
+                                    Label("Séries à continuer", systemImage: "play")
+                                }
+                                NavigationLink(destination: Text("Option 2 View")) {
+                                    Label("Historique", systemImage: "calendar.day.timeline.left")
+                                }
+                                NavigationLink(destination: viewModel.getFavoritesView()) {
+                                    Label("Favoris", systemImage: "heart")
+                                }
+                                NavigationLink(destination: Text("Option 3 View")) {
+                                    Label("Séries arrêtées", systemImage: "pause")
+                                }
+                                NavigationLink(destination: Text("Option 3 View")) {
+                                    Label("Calendrier", systemImage: "calendar")
+                                }
+                                NavigationLink(destination: Text("Option 3 View")) {
+                                    Label("Paramètres", systemImage: "gear")
+                                }
+                                NavigationLink(destination: Text("Option 3 View")) {
+                                    Label("Se déconnecter", systemImage: "arrow.left.to.line")
+                                }
+                            }
+                            .listStyle(PlainListStyle())
+                            .frame(maxHeight: .infinity)
+                        }
+                        .frame(width: 250)
+                        .background(.white)
+                        .edgesIgnoringSafeArea(.all)
+                        
+                        Spacer() // Drawer to the left
+                    }
+                    .transition(.move(edge: .leading))
+                }.zIndex(1)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    withAnimation {
+                        viewModel.isMenuOpened.toggle()
+                    }
+                }) {
+                    Image(systemName: viewModel.isMenuOpened ? "xmark" : "line.horizontal.3")
+                        .font(.title2)
                 }
-                .tag(AppTab.discover)
+            }
         }.tint(.black)
     }
 }
+
 #Preview {
     HomeView(viewModel: .mock)
 }

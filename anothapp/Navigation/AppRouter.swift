@@ -7,15 +7,9 @@
 
 import SwiftUI
 
-enum AppTab {
-    case series
-    case discover
-}
-
 class AppRouter: ObservableObject {
     
     @Published var paths: NavigationPath
-    @Published var selectedTab: AppTab = .series
 
     init(paths: NavigationPath = NavigationPath()) {
         self.paths = paths
