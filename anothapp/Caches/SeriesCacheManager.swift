@@ -36,16 +36,17 @@ class SeriesCacheManager {
         return deleted
     }
     
-    func getSeries() async -> [Serie] {
+    func getSeries(title: String) async -> [Serie] {
         let series = keys.compactMap { key in
             cache.object(forKey: key as NSString) as Serie?
         }
         if !series.isEmpty {
-            return series
+            let stored = series.sorted { $0.addedAt > $1.addedAt }
+            return title.isEmpty ? stored : stored.filter { $0.title.lowercased().contains(title.lowercased()) }
         }
         let fetched = (try? await serieService.fetchSeries()) ?? []
         fetched.forEach { storeSerie(key: String($0.id), value: $0) }
-        return fetched.sorted { $0.addedAt > $1.addedAt }
+        return fetched
     }
     
     func getFavorites() -> [Serie] {

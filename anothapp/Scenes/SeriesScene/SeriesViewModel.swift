@@ -10,6 +10,7 @@ import Foundation
 class SeriesViewModel: ObservableObject {
     
     @Published var series: [Serie] = []
+    @Published var titleSearch: String = ""
     
     private let router: SeriesRouter
     private let seriesService = SerieService()
@@ -24,7 +25,7 @@ class SeriesViewModel: ObservableObject {
     
     @MainActor
     func loadSeries() async {
-        series = await SeriesCacheManager.shared.getSeries()
+        series = await SeriesCacheManager.shared.getSeries(title: titleSearch)
     }
 }
 

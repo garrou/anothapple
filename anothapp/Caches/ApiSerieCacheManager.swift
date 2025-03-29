@@ -36,10 +36,10 @@ class ApiSeriesCacheManager {
             cache.object(forKey: key as NSString) as ApiSerie?
         }
         if !series.isEmpty {
-            return series
+            return series.sorted { $0.id > $1.id }
         }
         let fetched = (try? await searchService.fetchSuggestions(limit: limit)) ?? []
         fetched.forEach { storeSerie(key: String($0.id), value: $0) }
-        return fetched.sorted { $0.id > $1.id }
+        return fetched
     }
 }
