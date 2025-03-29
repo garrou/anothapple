@@ -20,10 +20,7 @@ class SeriesCacheManager {
     }
 
     func getSerie(key: String) async -> Serie? {
-        if let cached = cache.object(forKey: key as NSString) {
-            return cached
-        }
-        return try? await serieService.fetchSerie(id: Int(key) ?? 0)
+        return cache.object(forKey: key as NSString)
     }
     
     func removeSerie(key: String) async -> Bool {
@@ -34,6 +31,11 @@ class SeriesCacheManager {
             keys.remove(key)
         }
         return deleted
+    }
+    
+    func getSerieInfos(id: Int) async -> SerieInfos {
+        let infos = try? await serieService.fetchSerieInfos(id: id)
+        return infos ?? .init(seasons: [], time: 0, episodes: 0)
     }
     
     func getSeries(title: String) async -> [Serie] {

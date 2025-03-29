@@ -9,6 +9,8 @@ import Foundation
 
 class Datasource {
     
+    static var mockSerieInfos = SerieInfos(seasons: [], time: 0, episodes: 0)
+    
     static var mockSerie = Serie(id: 1, title: "Test", poster: "https://picsum.photos/200", kinds: ["Action"], favorite: false, duration: 45, addedAt: Date(), country: "France", watch: true, seasons: 2)
     
     static var mockImages = ["https://picsum.photos/200", "https://picsum.photos/201", "https://picsum.photos/202"]

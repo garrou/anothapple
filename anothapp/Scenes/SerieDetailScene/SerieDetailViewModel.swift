@@ -18,6 +18,7 @@ class SerieDetailViewModel: ObservableObject {
     private let router: SerieDetailRouter
     
     @Published var serie: Serie
+    @Published var infos: SerieInfos = .init(seasons: [], time: 0, episodes: 0)
     @Published var selectedTab: SerieDetailTab = .seasons
     @Published var isMenuOpened = false
     @Published var showDeleteModal = false
@@ -50,6 +51,11 @@ class SerieDetailViewModel: ObservableObject {
         if fetched != nil {
             router.routeToDiscoverDetails(serie: fetched!)
         }
+    }
+    
+    @MainActor
+    func getSerieInfos() async {
+        infos = await SeriesCacheManager.shared.getSerieInfos(id: serie.id)
     }
 }
 

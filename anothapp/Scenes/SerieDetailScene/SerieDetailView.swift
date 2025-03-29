@@ -69,32 +69,39 @@ struct SerieDetailView: View {
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     
+                    // Tabs
+                    Picker("", selection: $viewModel.selectedTab) {
+                        Image(systemName: "square.grid.2x2").tag(SerieDetailTab.seasons)
+                        Image(systemName: "play.square.stack").tag(SerieDetailTab.add)
+                        Image(systemName: "person.3").tag(SerieDetailTab.viewedBy)
+                    }.pickerStyle(SegmentedPickerStyle()).padding().frame(height: 50)
+                    
                     TabView(selection: $viewModel.selectedTab) {
-                        Text("Mes saisons")
-                            .tabItem {
-                                Label("Tab 1", systemImage: "1.circle")
-                            }.tag(SerieDetailTab.seasons)
+                        //                        GridView(items: viewModel.infos.seasons, columns: 2) { season in
+                        //                            SeasonCard(season: season)
+                        //                        }.tag(SerieDetailTab.seasons)
+                        
+                        
+                        Text("Saisons")
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .background(Color.red.opacity(0.3))
+                            .tag(SerieDetailTab.seasons)
                         
                         Text("Ajouter")
-                            .tabItem {
-                                Label("Tab 2", systemImage: "2.circle")
-                            }.tag(SerieDetailTab.add)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .background(Color.green.opacity(0.3))
+                            .tag(SerieDetailTab.add)
                         
                         Text("Vue par")
-                            .tabItem {
-                                Label("Tab 3", systemImage: "3.circle")
-                            }.tag(SerieDetailTab.viewedBy)
-                    }
-                    .frame(maxHeight: .infinity)
-                    .padding(.top, 40)
-                    .background(.white)
-                    .cornerRadius(15)
-                    .shadow(radius: 10)
-                    .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .background(Color.blue.opacity(0.3))
+                            .tag(SerieDetailTab.viewedBy)
+                    }.frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 .padding()
             }
             
+            // Right drawer
             if viewModel.isMenuOpened {
                 ZStack {
                     Color.black.opacity(0.3)
@@ -173,6 +180,10 @@ struct SerieDetailView: View {
                     .transition(.move(edge: .trailing))
                 }.zIndex(10)
             }
+        }.onAppear {
+            Task {
+                await viewModel.getSerieInfos()
+            }
         }
         .navigationTitle(viewModel.serie.title)
         .navigationBarHidden(viewModel.isMenuOpened)
@@ -205,6 +216,22 @@ struct WrapView<Data: Hashable, Content: View>: View {
                         content(item)
                     }
                 }
+            }
+        }
+    }
+}
+
+struct SeasonCard: View {
+    let season: Season
+    
+    var body: some View {
+        Button(action: {
+            print("season")
+        })
+        {
+            VStack {
+                ImageCardView(imageUrl: season.image)
+                Text("Saison \(season.number)").font(.headline).multilineTextAlignment(.center).foregroundColor(.black)
             }
         }
     }

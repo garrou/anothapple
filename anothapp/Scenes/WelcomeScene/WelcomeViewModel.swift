@@ -24,11 +24,7 @@ class WelcomeViewModel: ObservableObject {
     
     @MainActor
     func loadImages(limit: Int) async {
-        do {
-            images = try await searchService.fetchImages(limit: limit)
-        } catch {
-            print("Error: \(error.localizedDescription)")
-        }
+        images = (try? await searchService.fetchImages(limit: limit)) ?? []
     }
 }
 

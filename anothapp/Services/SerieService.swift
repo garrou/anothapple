@@ -10,21 +10,22 @@ import Foundation
 class SerieService {
     
     private let baseUrl = "http://localhost:8080/shows"
-    private let decoder: JSONDecoder
-    
-    init() {
-        decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-    }
+    private let decoder: JSONDecoder = JSONDecoder()
     
     func fetchSeries() async throws -> [Serie] {
         let (data, ok) = try await BaseService.shared.request(url: baseUrl)
         return ok ? try decoder.decode([Serie].self, from: data) : []
     }
     
-    func fetchSerie(id: Int) async throws -> Serie? {
+    func fetchSerieInfos(id: Int) async throws -> SerieInfos? {
         let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/\(id)")
-        return ok ? try decoder.decode(Serie.self, from: data) : nil
+        
+        do {
+            return ok ? try decoder.decode(SerieInfos.self, from: data) : nil
+        } catch {
+            print(error)
+            return nil 
+        }
     }
     
     func fetchFavorites() async throws -> [Serie] {

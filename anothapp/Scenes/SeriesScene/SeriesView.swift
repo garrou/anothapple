@@ -15,8 +15,8 @@ struct SeriesView: View {
     var body: some View {
         ScrollView {
             
-            TextField("Chercher dans mes séries", text: $viewModel.titleSearch)
-                .padding()
+            TextField("Titre de la série", text: $viewModel.titleSearch)
+                .padding(.all, 5)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(isSearchFocused ? .black : .gray.opacity(0.5), lineWidth: 1)
