@@ -26,4 +26,9 @@ class SearchService {
         let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/shows/\(id)")
         return ok ? try JSONDecoder().decode(ApiSerie.self, from: data) : nil
     }
+    
+    func fetchSeasonsBySerieId(id: Int) async throws -> [Season] {
+        let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/shows/\(id)/seasons")
+        return ok ? try JSONDecoder().decode([Season].self, from: data) : []
+    }
 }

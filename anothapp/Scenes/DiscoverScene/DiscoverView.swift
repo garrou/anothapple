@@ -13,7 +13,10 @@ struct DiscoverView: View {
     
     var body: some View {
         ScrollView {
-            if viewModel.series.isEmpty {
+            
+            if viewModel.isLoading {
+                LoadingView()
+            } else if viewModel.series.isEmpty {
                 Text("Aucune série disponible")
             } else {
                 GridView(items: viewModel.series, columns: 2) { serie in
@@ -22,8 +25,8 @@ struct DiscoverView: View {
                     })
                     {
                         VStack {
-                            ImageCardView(imageUrl: serie.poster)
-                            Text(serie.title).font(.headline).multilineTextAlignment(.center).foregroundColor(.black)
+                            ImageCardView(url: serie.poster)
+                            Text(serie.title).font(.headline).foregroundColor(.black)
                         }
                     }
                 }

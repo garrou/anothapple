@@ -30,6 +30,6 @@ struct GridView<Item, Content>: View where Item: Hashable, Content: View {
 
 #Preview {
     GridView(items: Datasource.mockImages, columns: 2) { url in
-        ImageCardView(imageUrl: url)
+        ImageCardView(url: url)
     }
 }

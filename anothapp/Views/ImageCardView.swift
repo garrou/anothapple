@@ -9,35 +9,38 @@ import SwiftUI
 
 struct ImageCardView: View {
     
-    let imageUrl: String
+    let url: String?
+    let radius = 10.0
+    private let defaultHeight = 200.0
     
     var body: some View {
         VStack {
-            AsyncImage(url: URL(string: imageUrl)) { phase in
-                switch phase {
-                case .empty:
-                    ProgressView()
-                        .scaledToFill()
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
-                case .failure:
-                    Image(systemName: "photo")
-                        .frame(height: 200)
-                @unknown default:
-                    EmptyView()
+            if url != nil {
+                AsyncImage(url: URL(string: url!)) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                            .scaledToFill()
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    case .failure:
+                        Image(systemName: "photo")
+                            .frame(height: defaultHeight)
+                    @unknown default:
+                        EmptyView()
+                    }
                 }
             }
         }
         .frame(maxWidth: .infinity)
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(radius: 5)
-        .padding()
+        .background(.white)
+        .cornerRadius(radius)
+        .padding(.all, 1)
     }
 }
 
 #Preview {
-    ImageCardView(imageUrl: Datasource.mockImages[0])
+    ImageCardView(url: Datasource.mockImages[0])
 }

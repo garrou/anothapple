@@ -42,4 +42,8 @@ class ApiSeriesCacheManager {
         fetched.forEach { storeSerie(key: String($0.id), value: $0) }
         return fetched
     }
+    
+    func getSeasonsBySerie(id: Int) async -> [Season] {
+        (try? await searchService.fetchSeasonsBySerieId(id: id)) ?? []
+    }
 }

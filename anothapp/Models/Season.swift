@@ -8,6 +8,6 @@
 struct Season: Codable, Hashable {
     let number: Int
     let episodes: Int
-    let image: String
+    let image: String?
     let interval: String
 }

@@ -32,18 +32,10 @@ struct SeriesView: View {
             if viewModel.series.isEmpty {
                 Text("Aucune série")
             } else {
-                HStack {
-                    Text("\(viewModel.series.count) séries")
-                        .font(.subheadline)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(Capsule().fill(.black))
-                        .shadow(radius: 5)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }.padding(.leading, 10)
+                Text("\(viewModel.series.count) séries")
+                    .font(.subheadline)
+                    .foregroundColor(.black)
             }
-            
             
             GridView(items: viewModel.series, columns: 2) { serie in
                 Button(action: {
@@ -51,8 +43,8 @@ struct SeriesView: View {
                 })
                 {
                     VStack {
-                        ImageCardView(imageUrl: serie.poster)
-                        Text(serie.title).font(.headline).multilineTextAlignment(.center).foregroundColor(.black)
+                        ImageCardView(url: serie.poster)
+                        Text(serie.title).font(.headline).foregroundColor(.black)
                     }
                 }
             }

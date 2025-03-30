@@ -9,9 +9,13 @@ import Foundation
 
 class Datasource {
     
+    static var mockFriend = Friend(id: "12345", email: "test@mail.com", username: "Test", picture: nil, current: false)
+    
+    static var mockSeason = Season(number: 1, episodes: 82, image: "https://pictures.betaseries.com/fonds/seasons/3966/6673f65bbdf50.jpg", interval: "1 - 82")
+    
     static var mockSerieInfos = SerieInfos(seasons: [], time: 0, episodes: 0)
     
-    static var mockSerie = Serie(id: 1, title: "Test", poster: "https://picsum.photos/200", kinds: ["Action"], favorite: false, duration: 45, addedAt: Date(), country: "France", watch: true, seasons: 2)
+    static var mockSerie = Serie(id: 33104, title: "Daredevil: Born Again", poster: "https://pictures.betaseries.com/fonds/poster/1b03b1f37e10c1eb8d675f869bc4adcd.jpg", kinds: ["Action", "Drame"], favorite: false, duration: 59, addedAt: Date(), country: "États-Unis", watch: true, seasons: 1)
     
     static var mockImages = ["https://picsum.photos/200", "https://picsum.photos/201", "https://picsum.photos/202"]
     

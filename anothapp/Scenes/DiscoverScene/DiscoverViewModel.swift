@@ -10,6 +10,7 @@ import Foundation
 class DiscoverViewModel: ObservableObject {
     
     @Published var series: [ApiSerie] = []
+    @Published var isLoading = false
     
     private let router: DiscoverRouter
     private let searchService = SearchService()
@@ -24,7 +25,9 @@ class DiscoverViewModel: ObservableObject {
     
     @MainActor
     func loadDiscoverSeries(limit: Int) async {
+        isLoading = true
         series = await ApiSeriesCacheManager.shared.getSeries(limit: limit)
+        isLoading = false
     }
 }
 

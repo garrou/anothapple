@@ -30,6 +30,7 @@ struct SignUpView: View {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(isEmailFieldFocused ? .black : .gray.opacity(0.5), lineWidth: 1)
                 )
+                .keyboardType(.emailAddress)
                 .focused($isEmailFieldFocused)
             
             TextField("Nom d'utilisateur", text: $viewModel.username)

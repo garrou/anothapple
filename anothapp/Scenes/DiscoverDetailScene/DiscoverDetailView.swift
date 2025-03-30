@@ -25,17 +25,11 @@ struct DiscoverDetailView: View {
                 .cornerRadius(12)
                 .shadow(radius: 5)
                 
-                HStack {
-//                    Text(viewModel.serie.title)
-//                        .font(.title)
-//                        .fontWeight(.bold)
-//                    Spacer()
-                    Text(String(format: "%.1f ★", viewModel.serie.note))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(Color.yellow.opacity(0.8))
-                        .cornerRadius(8)
-                }
+                Text(String(format: "%.1f ★", viewModel.serie.note))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(.yellow.opacity(0.8))
+                    .cornerRadius(8)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
@@ -60,8 +54,6 @@ struct DiscoverDetailView: View {
                 }
                 
                 if !viewModel.serie.platforms.isEmpty {
-//                    Text("Platformes :")
-//                        .font(.headline)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(viewModel.serie.platforms, id: \.name) { platform in

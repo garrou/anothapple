@@ -18,7 +18,7 @@ struct WelcomeView: View {
                 .textCase(.uppercase)
             
             GridView(items: viewModel.images, columns: 3) { image in
-                ImageCardView(imageUrl: image)
+                ImageCardView(url: image)
             }.frame(maxHeight: .infinity)
             
             Button(action: viewModel.navigateToLoginPage) {

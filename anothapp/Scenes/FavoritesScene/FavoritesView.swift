@@ -22,8 +22,8 @@ struct FavoritesView: View {
                     })
                     {
                         VStack {
-                            ImageCardView(imageUrl: serie.poster)
-                            Text(serie.title).font(.headline).multilineTextAlignment(.center).foregroundColor(.black)
+                            ImageCardView(url: serie.poster)
+                            Text(serie.title).font(.headline).foregroundColor(.black)
                         }
                     }
                 }

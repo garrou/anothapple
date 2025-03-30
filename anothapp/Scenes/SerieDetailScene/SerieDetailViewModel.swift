@@ -19,9 +19,12 @@ class SerieDetailViewModel: ObservableObject {
     
     @Published var serie: Serie
     @Published var infos: SerieInfos = .init(seasons: [], time: 0, episodes: 0)
+    @Published var seasons: [Season] = []
+    @Published var viewedByFriends: [Friend] = []
     @Published var selectedTab: SerieDetailTab = .seasons
     @Published var isMenuOpened = false
     @Published var showDeleteModal = false
+    @Published var tabContentHeight: CGFloat = ContentHeightPreferenceKey.defaultValue
     
     init(router: SerieDetailRouter, serie: Serie) {
         self.router = router
@@ -56,6 +59,18 @@ class SerieDetailViewModel: ObservableObject {
     @MainActor
     func getSerieInfos() async {
         infos = await SeriesCacheManager.shared.getSerieInfos(id: serie.id)
+    }
+    
+    @MainActor
+    func getSeasonsToAdd() async {
+        if !seasons.isEmpty { return }
+        seasons = await ApiSeriesCacheManager.shared.getSeasonsBySerie(id: serie.id)
+    }
+    
+    @MainActor
+    func getFriendsWhoWatch() async {
+        if !viewedByFriends.isEmpty { return }
+        viewedByFriends = await FriendsCacheManager.shared.getFriendsWhoWatch(id: serie.id)
     }
 }
 

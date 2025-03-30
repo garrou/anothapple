@@ -15,34 +15,12 @@ struct SerieDetailView: View {
         ZStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 10) {
-                    AsyncImage(url: URL(string: viewModel.serie.poster)) { image in
-                        image.resizable()
-                            .scaledToFill()
-                    } placeholder: {
-                        Color.gray.opacity(0.3)
-                    }
-                    .frame(height: 250)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .shadow(radius: 5)
+                    ImageCardView(url: viewModel.serie.poster)
+                    //                        .frame(height: 250)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .shadow(radius: 5)
                     
-                    HStack {
-                        //                    Text(viewModel.serie.title)
-                        //                        .font(.title)
-                        //                        .bold()
-                        
-                        //                    Spacer()
-                        
-                        if viewModel.serie.favorite {
-                            Image(systemName: "heart.fill")
-                                .foregroundColor(.red)
-                        }
-                    }
-                    
-                    Text(viewModel.serie.country)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    
-                    WrapView(items: viewModel.serie.kinds) { kind in
+                    HScrollItems(items: viewModel.serie.kinds) { kind in
                         Text(kind)
                             .font(.caption)
                             .padding(6)
@@ -51,20 +29,36 @@ struct SerieDetailView: View {
                     }
                     
                     VStack(alignment: .leading, spacing: 8) {
+                        
+                        HStack {
+                            Image(systemName: "flag")
+                            Text(viewModel.serie.country)
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                        }
+                        
                         HStack {
                             Image(systemName: "clock")
-                            Text("\(viewModel.serie.duration) min")
+                            Text("\(viewModel.serie.duration) mins / épisode")
                         }
                         
                         HStack {
                             Image(systemName: "film.stack")
-                            Text("\(viewModel.serie.seasons) Season(s)")
+                            Text("\(viewModel.infos.seasons.count) / \(viewModel.serie.seasons) saison(s)")
                         }
                         
-                        //                    HStack {
-                        //                        Image(systemName: "timer")
-                        //                        Text("\() temps total")
-                        //                    }
+                        HStack {
+                            Image(systemName: "timer")
+                            Text("\(viewModel.infos.time) mins de visionnage")
+                        }
+                        
+                        if viewModel.serie.favorite {
+                            HStack {
+                                Image(systemName: "heart.fill")
+                                    .foregroundColor(.red)
+                                Text("Série dans vos favoris")
+                            }
+                        }
                     }
                     .font(.subheadline)
                     .foregroundColor(.gray)
@@ -74,29 +68,99 @@ struct SerieDetailView: View {
                         Image(systemName: "square.grid.2x2").tag(SerieDetailTab.seasons)
                         Image(systemName: "play.square.stack").tag(SerieDetailTab.add)
                         Image(systemName: "person.3").tag(SerieDetailTab.viewedBy)
-                    }.pickerStyle(SegmentedPickerStyle()).padding().frame(height: 50)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding()
                     
                     TabView(selection: $viewModel.selectedTab) {
-                        //                        GridView(items: viewModel.infos.seasons, columns: 2) { season in
-                        //                            SeasonCard(season: season)
-                        //                        }.tag(SerieDetailTab.seasons)
                         
+                        // User seasons
+                        GridView(items: viewModel.infos.seasons, columns: 2) { season in
+                            SeasonCardView(season: season)
+                        }
+                        .tag(SerieDetailTab.seasons)
+                        .background(
+                            GeometryReader { geometry in
+                                Color.clear.preference(
+                                    key: ContentHeightPreferenceKey.self,
+                                    value: geometry.size.height
+                                )
+                            }
+                        )
+                        .onAppear {
+                            Task {
+                                await viewModel.getSerieInfos()
+                            }
+                        }
                         
-                        Text("Saisons")
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .background(Color.red.opacity(0.3))
-                            .tag(SerieDetailTab.seasons)
+                        // Seasons to add
+                        GridView(items: viewModel.seasons, columns: 2) { season in
+                            SeasonCardView(season: season) {
+                                HStack {
+                                    Button(action: {
+                                        print("add")
+                                    }) {
+                                        Image(systemName: "plus")
+                                            .font(.system(size: 15, weight: .regular))
+                                            .foregroundColor(.black)
+                                    }.padding()
+                                    
+                                    Button(action: {
+                                        print("episodes")
+                                    }) {
+                                        Image(systemName: "list.number")
+                                            .font(.system(size: 15, weight: .regular))
+                                            .foregroundColor(.black)
+                                    }.padding()
+                                }
+                            }
+                        }
+                        .tag(SerieDetailTab.add)
+                        .background(
+                            GeometryReader { geometry in
+                                Color.clear.preference(
+                                    key: ContentHeightPreferenceKey.self,
+                                    value: geometry.size.height
+                                )
+                            }
+                        )
+                        .onAppear {
+                            Task {
+                                await viewModel.getSeasonsToAdd()
+                            }
+                        }
                         
-                        Text("Ajouter")
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .background(Color.green.opacity(0.3))
-                            .tag(SerieDetailTab.add)
-                        
-                        Text("Vue par")
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .background(Color.blue.opacity(0.3))
-                            .tag(SerieDetailTab.viewedBy)
-                    }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                        // Friends who watched this serie
+                        GridView(items: viewModel.viewedByFriends, columns: 2) { friend in
+                            Button(action: { print("user") })
+                            {
+                                CardView(picture: friend.picture, text: friend.username).padding(.all, 2)
+                            }
+                        }
+                        .tag(SerieDetailTab.viewedBy)
+                        .background(
+                            GeometryReader { geometry in
+                                Color.clear.preference(
+                                    key: ContentHeightPreferenceKey.self,
+                                    value: geometry.size.height
+                                )
+                            }
+                        )
+                        .onAppear {
+                            Task {
+                                await viewModel.getFriendsWhoWatch()
+                            }
+                        }
+                    }
+                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                    .onPreferenceChange(ContentHeightPreferenceKey.self) { height in
+                        withAnimation {
+                            if abs(viewModel.tabContentHeight - height) > 1 {
+                                viewModel.tabContentHeight = height
+                            }
+                        }
+                    }
+                    .frame(minHeight: viewModel.tabContentHeight)
                 }
                 .padding()
             }
@@ -120,6 +184,7 @@ struct SerieDetailView: View {
                             
                             Spacer().frame(height: 80)
                             
+                            // Discover details
                             List {
                                 Button(action: {
                                     Task {
@@ -132,6 +197,7 @@ struct SerieDetailView: View {
                                     }
                                 }
                                 
+                                // Stop watching
                                 Button(action: {
                                     Task {
                                         await viewModel.changeWatching()
@@ -143,6 +209,7 @@ struct SerieDetailView: View {
                                     }
                                 }
                                 
+                                // Favorite
                                 Button(action: {
                                     Task {
                                         await viewModel.changeFavorite()
@@ -154,6 +221,7 @@ struct SerieDetailView: View {
                                     }
                                 }
                                 
+                                //Delete
                                 Button(action: { viewModel.showDeleteModal.toggle() }) {
                                     HStack {
                                         Image(systemName: "trash").foregroundColor(.red)
@@ -180,10 +248,6 @@ struct SerieDetailView: View {
                     .transition(.move(edge: .trailing))
                 }.zIndex(10)
             }
-        }.onAppear {
-            Task {
-                await viewModel.getSerieInfos()
-            }
         }
         .navigationTitle(viewModel.serie.title)
         .navigationBarHidden(viewModel.isMenuOpened)
@@ -198,44 +262,56 @@ struct SerieDetailView: View {
                         .font(.title2)
                 }
             }
-        }.tint(.black)
+        }
+        .tint(.black)
     }
 }
 
-// MARK: - WrapView for Tags
-
-struct WrapView<Data: Hashable, Content: View>: View {
+struct HScrollItems<Data: Hashable, Content: View>: View {
     let items: [Data]
     let content: (Data) -> Content
     
     var body: some View {
-        VStack(alignment: .leading) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ForEach(items, id: \.self) { item in
-                        content(item)
-                    }
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+                ForEach(items, id: \.self) { item in
+                    content(item)
                 }
             }
         }
     }
 }
 
-struct SeasonCard: View {
+struct SeasonCardView<Content: View>: View {
+    
     let season: Season
+    let content: Content
+    private let defaultRadius = 10.0
+    
+    init(season: Season, @ViewBuilder content: () -> Content = { EmptyView() }) {
+        self.season = season
+        self.content = content()
+    }
     
     var body: some View {
-        Button(action: {
-            print("season")
-        })
-        {
-            VStack {
-                ImageCardView(imageUrl: season.image)
-                Text("Saison \(season.number)").font(.headline).multilineTextAlignment(.center).foregroundColor(.black)
+        VStack(spacing: 2) {
+            CardView(picture: season.image, text: "Saison \(season.number)")
+            
+            HStack {
+                Text("\(season.episodes) épisodes")
+                    .font(.caption)
+                    .foregroundColor(.black)
+                
+                Text("(\(season.interval))")
+                    .font(.caption)
+                    .foregroundColor(.black)
             }
+            
+            content
         }
     }
 }
+
 
 #Preview {
     SerieDetailView(viewModel: .mock)

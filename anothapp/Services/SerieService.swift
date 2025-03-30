@@ -19,13 +19,7 @@ class SerieService {
     
     func fetchSerieInfos(id: Int) async throws -> SerieInfos? {
         let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/\(id)")
-        
-        do {
-            return ok ? try decoder.decode(SerieInfos.self, from: data) : nil
-        } catch {
-            print(error)
-            return nil 
-        }
+        return ok ? try? decoder.decode(SerieInfos.self, from: data) : nil
     }
     
     func fetchFavorites() async throws -> [Serie] {
