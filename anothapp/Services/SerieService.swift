@@ -9,7 +9,7 @@ import Foundation
 
 class SerieService {
     
-    private let baseUrl = "http://localhost:8080/shows"
+    private let baseUrl = "\(BaseService.serverUrl)/shows"
     private let decoder: JSONDecoder = JSONDecoder()
     
     func fetchSeries() async throws -> [Serie] {

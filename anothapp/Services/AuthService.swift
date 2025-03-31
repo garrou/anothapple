@@ -9,7 +9,7 @@ import Foundation
 
 class AuthService {
     
-    private let baseUrl = "http://localhost:8080/auth"
+    private let baseUrl = "\(BaseService.serverUrl)/auth"
     
     func signup(signUpRequest: SignUpRequest) async throws -> Bool {
         guard let url = URL(string: "\(baseUrl)/register") else {

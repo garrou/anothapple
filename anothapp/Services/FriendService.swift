@@ -9,7 +9,7 @@ import Foundation
 
 class FriendService {
     
-    private let baseUrl = "http://localhost:8080/friends"
+    private let baseUrl = "\(BaseService.serverUrl)/friends"
     private let decoder: JSONDecoder = JSONDecoder()
     
     func fetchUsersWhoWatch(id: Int) async throws -> ViewedByFriends? {

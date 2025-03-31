@@ -10,8 +10,9 @@ import Foundation
 class BaseService {
     
     static let shared = BaseService()
+    static let serverUrl = Bundle.main.object(forInfoDictionaryKey: "ServerUrl") as? String ?? ""
     private let session = URLSession(configuration: URLSessionConfiguration.default, delegate: HTTPInterceptor.shared, delegateQueue: nil)
-    
+
     func request(url: String, method: String = "GET", successCode: Int = 200) async throws -> (Data, Bool) {
         guard let url = URL(string: url) else {
             throw URLError(.badURL)

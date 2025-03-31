@@ -21,8 +21,7 @@ class LoginRouter: ObservableObject {
     }
     
     func routeToHomePage() {
-        let router = HomeRouter(rootCoordinator: rootCoordinator)
-        rootCoordinator.push(router)
+        rootCoordinator.popToRoot()
     }
 }
 

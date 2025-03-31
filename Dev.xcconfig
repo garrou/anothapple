@@ -1,0 +1,8 @@
+//
+//  Dev.xcconfig
+//  anothapp
+//
+//  Created by Adrien Garrouste on 31/03/2025.
+//
+
+SERVER_URL = http:/$()/localhost:8080

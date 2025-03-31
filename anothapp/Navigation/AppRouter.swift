@@ -27,8 +27,7 @@ class AppRouter: ObservableObject {
 extension AppRouter: NavigationCoordinator {
     func push(_ router: any Routable) {
         DispatchQueue.main.async {
-            let wrappedRouter = AnyRoutable(router)
-            self.paths.append(wrappedRouter)
+            self.paths.append(AnyRoutable(router))
         }
     }
     
@@ -43,5 +42,4 @@ extension AppRouter: NavigationCoordinator {
             self.paths.removeLast(self.paths.count)
         }
     }
-    
 }

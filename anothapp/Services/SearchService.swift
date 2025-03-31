@@ -10,7 +10,7 @@ import Foundation
 
 class SearchService {
     
-    private let baseUrl = "http://localhost:8080/search"
+    private let baseUrl = "\(BaseService.serverUrl)/search"
     
     func fetchImages(limit: Int) async throws -> [String] {
         let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/images?limit=\(limit)")
