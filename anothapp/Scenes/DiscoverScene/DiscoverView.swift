@@ -26,7 +26,7 @@ struct DiscoverView: View {
                     {
                         VStack {
                             ImageCardView(url: serie.poster)
-                            Text(serie.title).font(.headline).foregroundColor(.black)
+                            Text(serie.title).font(.headline)
                         }
                     }
                 }

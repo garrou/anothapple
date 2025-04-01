@@ -20,7 +20,6 @@ struct LoginView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 100, height: 100)
-                .foregroundColor(.black)
                 .padding(.bottom, 10)
             
             Text("Se connecter")

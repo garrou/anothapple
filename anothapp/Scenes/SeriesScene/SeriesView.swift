@@ -29,22 +29,22 @@ struct SeriesView: View {
                     }
                 }
             
-            if viewModel.series.isEmpty {
-                Text("Aucune série")
+            if viewModel.isLoading {
+                LoadingView()
             } else {
                 Text("\(viewModel.series.count) séries")
                     .font(.subheadline)
                     .foregroundColor(.black)
-            }
-            
-            GridView(items: viewModel.series, columns: 2) { serie in
-                Button(action: {
-                    viewModel.routeToSerieDetail(serie: serie)
-                })
-                {
-                    VStack {
-                        ImageCardView(url: serie.poster)
-                        Text(serie.title).font(.headline).foregroundColor(.black)
+                
+                GridView(items: viewModel.series, columns: 2) { serie in
+                    Button(action: {
+                        viewModel.routeToSerieDetail(serie: serie)
+                    })
+                    {
+                        VStack {
+                            ImageCardView(url: serie.poster)
+                            Text(serie.title).font(.headline).foregroundColor(.black)
+                        }
                     }
                 }
             }

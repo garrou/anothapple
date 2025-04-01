@@ -43,7 +43,7 @@ struct HomeView: View {
                             Spacer().frame(height: 120)
                             
                             List {
-                                NavigationLink(destination: Text("Option 1 View")) {
+                                NavigationLink(destination: viewModel.getWatchListView()) {
                                     Label("Ma liste", systemImage: "list.bullet")
                                 }
                                 NavigationLink(destination: Text("Option 2 View")) {

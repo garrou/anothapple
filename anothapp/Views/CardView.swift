@@ -17,7 +17,7 @@ struct CardView: View {
             if picture != nil {
                 ImageCardView(url: picture!)
             }
-            Text(text).font(.headline).foregroundColor(.black)
+            Text(text).font(.headline)
         }
         .frame(maxWidth: .infinity)
         .padding(.all, 1)

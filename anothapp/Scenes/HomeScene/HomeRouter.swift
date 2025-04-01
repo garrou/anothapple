@@ -27,6 +27,10 @@ class HomeRouter {
         FavoritesRouter(rootCoordinator: rootCoordinator).makeView()
     }
     
+    func getWatchListView() -> AnyView {
+        WatchListRouter(rootCoordinator: rootCoordinator).makeView()
+    }
+    
     func routeToWelcomePage() {
         rootCoordinator.popToRoot()
     }

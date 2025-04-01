@@ -1,15 +1,15 @@
 //
-//  ListView.swift
+//  WatchListView.swift
 //  anothapp
 //
-//  Created by Adrien Garrouste on 28/03/2025.
+//  Created by Adrien Garrouste on 01/04/2025.
 //
 
 import SwiftUI
 
-struct FavoritesView: View {
+struct WatchListView: View {
     
-    @StateObject var viewModel: FavoritesViewModel
+    @StateObject var viewModel: WatchListViewModel
     
     var body: some View {
         ScrollView {
@@ -18,7 +18,9 @@ struct FavoritesView: View {
             } else {
                 GridView(items: viewModel.series, columns: 2) { serie in
                     Button(action: {
-                        viewModel.routeToSerieDetail(serie: serie)
+                        Task {
+                            await viewModel.routeToDiscoverDetails(serie: serie)
+                        }
                     })
                     {
                         VStack {
@@ -30,15 +32,15 @@ struct FavoritesView: View {
             }
         }
         .padding(.vertical, 10)
-        .navigationTitle("\(viewModel.series.count) favori(s)")
+        .navigationTitle("\(viewModel.series.count) série(s)")
         .onAppear {
             Task {
-                viewModel.loadFavorites()
+                await viewModel.loadWatchList()
             }
         }
     }
 }
 
 #Preview {
-    FavoritesView(viewModel: .mock)
+    WatchListView(viewModel: .mock)
 }

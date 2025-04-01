@@ -14,21 +14,21 @@ class ApiSeriesCacheManager {
     private var keys: Set<String> = []
     private let searchService = SearchService()
 
-    func storeSerie(key: String, value: ApiSerie) {
+    private func storeSerie(key: String, value: ApiSerie) {
         cache.setObject(value, forKey: key as NSString)
         keys.insert(key)
     }
     
-    func getSerie(key: String) async -> ApiSerie? {
-        if let cached = cache.object(forKey: key as NSString) {
-            return cached
-        }
-        return try? await searchService.fetchSerie(id: Int(key) ?? 0)
-    }
-    
-    func removeSerie(key: String) {
+    private func removeSerie(key: String) {
         cache.removeObject(forKey: key as NSString)
         keys.remove(key)
+    }
+    
+    func getSerie(id: Int) async -> ApiSerie? {
+        if let cached = cache.object(forKey: String(id) as NSString) {
+            return cached
+        }
+        return try? await searchService.fetchSerie(id: id)
     }
     
     func getSeries(limit: Int) async -> [ApiSerie] {

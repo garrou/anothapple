@@ -10,9 +10,9 @@ import Foundation
 class FavoritesViewModel: ObservableObject {
     
     @Published var series: [Serie] = []
+    @Published var isLoading = false
     
     private let router: FavoritesRouter
-    private let seriesService = SerieService()
     
     init(router: FavoritesRouter) {
         self.router = router
@@ -24,7 +24,9 @@ class FavoritesViewModel: ObservableObject {
     
     @MainActor
     func loadFavorites() {
+        isLoading = true
         series = SeriesCacheManager.shared.getFavorites()
+        isLoading = false
     }
 }
 

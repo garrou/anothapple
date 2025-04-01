@@ -11,25 +11,45 @@ class SeriesCacheManager {
 
     static let shared = SeriesCacheManager()
     private let cache = NSCache<NSString, Serie>()
-    private var keys: Set<String> = []
+    private var keys: Set<Int> = []
     private let serieService = SerieService()
 
-    func storeSerie(key: String, value: Serie) {
-        cache.setObject(value, forKey: key as NSString)
-        keys.insert(key)
-    }
-
-    func getSerie(key: String) async -> Serie? {
-        return cache.object(forKey: key as NSString)
+    private func storeSerie(id: Int, value: Serie) {
+        cache.setObject(value, forKey: String(id) as NSString)
+        keys.insert(id)
     }
     
-    func removeSerie(key: String) async -> Bool {
-        let deleted = (try? await serieService.deleteSerie(id: Int(key) ?? 0)) ?? false
+    private func removeSerie(id: Int) {
+        cache.removeObject(forKey: String(id) as NSString)
+        keys.remove(id)
+    }
+    
+    func clear() {
+        cache.removeAllObjects()
+        keys.removeAll()
+    }
+
+    func getSerie(id: Int) -> Serie? {
+        cache.object(forKey: String(id) as NSString)
+    }
+    
+    func addSerie(id: Int) async -> Bool {
+        let request = SerieRequest(id: id, list: false)
+        let (data, added) = (try? await serieService.addSerie(request: request)) ?? (Data(), false)
         
-        if deleted {
-            cache.removeObject(forKey: key as NSString)
-            keys.remove(key)
+        if !added || data.isEmpty { return false }
+        
+        if let show = try? JSONDecoder().decode(Serie.self, from: data) {
+            show.addedAt = Date()
+            storeSerie(id: show.id, value: show)
+            return true
         }
+        return false
+    }
+    
+    func deleteSerie(id: Int) async -> Bool {
+        let deleted = (try? await serieService.deleteSerie(id: id)) ?? false
+        if deleted { self.removeSerie(id: id) }
         return deleted
     }
     
@@ -39,22 +59,18 @@ class SeriesCacheManager {
     }
     
     func getSeries(title: String) async -> [Serie] {
-        let series = keys.compactMap { key in
-            cache.object(forKey: key as NSString) as Serie?
-        }
+        let series = keys.compactMap { id in getSerie(id: id) }
         if !series.isEmpty {
             let stored = series.sorted { $0.addedAt > $1.addedAt }
             return title.isEmpty ? stored : stored.filter { $0.title.lowercased().contains(title.lowercased()) }
         }
-        let fetched = (try? await serieService.fetchSeries()) ?? []
-        fetched.forEach { storeSerie(key: String($0.id), value: $0) }
+        let fetched = (try? await serieService.fetchSeries(status: nil)) ?? []
+        fetched.forEach { storeSerie(id: $0.id, value: $0) }
         return fetched
     }
     
     func getFavorites() -> [Serie] {
-        let series = keys.compactMap { key in
-            cache.object(forKey: key as NSString) as Serie?
-        }
+        let series = keys.compactMap { id in getSerie(id: id) }
         return series.filter { $0.favorite }.sorted { $0.title.lowercased() < $1.title.lowercased() }
     }
     
@@ -64,7 +80,7 @@ class SeriesCacheManager {
         
         if updated {
             serie.favorite.toggle()
-            storeSerie(key: String(serie.id), value: serie)
+            storeSerie(id: serie.id, value: serie)
         }
         return serie
     }
@@ -75,8 +91,13 @@ class SeriesCacheManager {
         
         if updated {
             serie.watch.toggle()
-            storeSerie(key: String(serie.id), value: serie)
+            storeSerie(id: serie.id, value: serie)
         }
         return serie
+    }
+    
+    func addSeason(id: Int, season: Season) async -> Bool {
+        let request = SeasonRequest(id: id, num: season.number)
+        return (try? await serieService.addSeason(request: request)) ?? false
     }
 }

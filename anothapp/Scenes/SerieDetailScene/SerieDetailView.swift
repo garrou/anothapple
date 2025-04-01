@@ -34,7 +34,6 @@ struct SerieDetailView: View {
                             Image(systemName: "flag")
                             Text(viewModel.serie.country)
                                 .font(.subheadline)
-                                .foregroundColor(.gray)
                         }
                         
                         HStack {
@@ -98,9 +97,11 @@ struct SerieDetailView: View {
                             SeasonCardView(season: season) {
                                 HStack {
                                     Button(action: {
-                                        print("add")
+                                        Task {
+                                            await viewModel.addSeason(season: season)
+                                        }
                                     }) {
-                                        Image(systemName: "plus")
+                                        Image(systemName: "plus.square")
                                             .font(.system(size: 15, weight: .regular))
                                             .foregroundColor(.black)
                                     }.padding()
@@ -110,7 +111,6 @@ struct SerieDetailView: View {
                                     }) {
                                         Image(systemName: "list.number")
                                             .font(.system(size: 15, weight: .regular))
-                                            .foregroundColor(.black)
                                     }.padding()
                                 }
                             }
@@ -264,6 +264,7 @@ struct SerieDetailView: View {
             }
         }
         .tint(.black)
+        .toast(message: viewModel.message, isShowing: $viewModel.showToast)
     }
 }
 

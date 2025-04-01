@@ -24,14 +24,15 @@ class BaseService {
         return (data, ok)
     }
     
-    func updateRequest<T: Encodable>(url: String, method: String, data: T, successCode: Int = 200) async throws -> Bool {
+    func dataRequest<T: Encodable>(url: String, method: String, data: T, successCode: Int = 200) async throws -> (Data, Bool) {
         guard let url = URL(string: url) else {
             throw URLError(.badURL)
         }
         var request = HTTPInterceptor.shared.interceptRequest(URLRequest(url: url))
         request.httpMethod = method
         request.httpBody = try JSONEncoder().encode(data)
-        let (_, response) = try await session.data(for: request)
-        return (response as? HTTPURLResponse)?.statusCode == successCode
+        let (data, response) = try await session.data(for: request)
+        let ok = (response as? HTTPURLResponse)?.statusCode == successCode
+        return (data, ok)
     }
 }

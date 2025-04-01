@@ -24,6 +24,8 @@ class SerieDetailViewModel: ObservableObject {
     @Published var selectedTab: SerieDetailTab = .seasons
     @Published var isMenuOpened = false
     @Published var showDeleteModal = false
+    @Published var showToast = false
+    @Published var message = ""
     @Published var tabContentHeight: CGFloat = ContentHeightPreferenceKey.defaultValue
     
     init(router: SerieDetailRouter, serie: Serie) {
@@ -42,7 +44,7 @@ class SerieDetailViewModel: ObservableObject {
     }
     
     func deleteSerie() async {
-        let deleted = await SeriesCacheManager.shared.removeSerie(key: String(serie.id))
+        let deleted = await SeriesCacheManager.shared.deleteSerie(id: serie.id)
         
         if deleted {
             router.routeToHomePage()
@@ -50,7 +52,7 @@ class SerieDetailViewModel: ObservableObject {
     }
     
     func routeToDiscoverDetails() async {
-        let fetched = await ApiSeriesCacheManager.shared.getSerie(key: String(serie.id))
+        let fetched = await ApiSeriesCacheManager.shared.getSerie(id: serie.id)
         if fetched != nil {
             router.routeToDiscoverDetails(serie: fetched!)
         }
@@ -71,6 +73,13 @@ class SerieDetailViewModel: ObservableObject {
     func getFriendsWhoWatch() async {
         if !viewedByFriends.isEmpty { return }
         viewedByFriends = await FriendsCacheManager.shared.getFriendsWhoWatch(id: serie.id)
+    }
+    
+    @MainActor
+    func addSeason(season: Season) async {
+        let added = await SeriesCacheManager.shared.addSeason(id: serie.id, season: season)
+        showToast = true
+        message = added ? "Saison ajoutée" : "Impossible d'ajouter la saison"
     }
 }
 

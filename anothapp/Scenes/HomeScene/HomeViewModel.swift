@@ -36,8 +36,14 @@ class HomeViewModel: ObservableObject {
         router.getFavoritesView()
     }
     
+    func getWatchListView() -> AnyView {
+        router.getWatchListView()
+    }
+    
     func logout() {
         SecurityHelper.clearUser()
+        SeriesCacheManager.shared.clear()
+        SeriesListCacheManager.shared.clear()
         router.routeToWelcomePage()
     }
 }
