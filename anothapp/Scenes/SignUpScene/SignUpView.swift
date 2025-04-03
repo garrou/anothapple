@@ -28,7 +28,7 @@ struct SignUpView: View {
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(isEmailFieldFocused ? .black : .gray.opacity(0.5), lineWidth: 1)
+                        .stroke(isEmailFieldFocused ? .primary : .secondary, lineWidth: 1)
                 )
                 .keyboardType(.emailAddress)
                 .focused($isEmailFieldFocused)
@@ -38,7 +38,7 @@ struct SignUpView: View {
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(isIdentifierFieldFocused ? .black : .gray.opacity(0.5), lineWidth: 1)
+                        .stroke(isIdentifierFieldFocused ? .primary : .secondary, lineWidth: 1)
                 )
                 .focused($isIdentifierFieldFocused)
             
@@ -46,7 +46,7 @@ struct SignUpView: View {
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(isPasswordFieldFocused ? .black : .gray.opacity(0.5), lineWidth: 1)
+                        .stroke(isPasswordFieldFocused ? .primary : .secondary, lineWidth: 1)
                 )
                 .focused($isPasswordFieldFocused)
             
@@ -54,7 +54,7 @@ struct SignUpView: View {
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(isConfirmPasswordFieldFocused ? .black : .gray.opacity(0.5), lineWidth: 1)
+                        .stroke(isConfirmPasswordFieldFocused ? .primary : .secondary, lineWidth: 1)
                 )
                 .focused($isConfirmPasswordFieldFocused)
             
@@ -65,11 +65,11 @@ struct SignUpView: View {
             }) {
                 Text("S'inscrire")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
+                    .foregroundColor(viewModel.isInvalidForm ? .secondary : .primary)
                     .padding()
-                    .background(.black)
                     .cornerRadius(8)
             }
+            .disabled(viewModel.isInvalidForm)
             
             HStack {
                 Text("Déjà membre ?").font(.system(size: 14))
@@ -82,11 +82,7 @@ struct SignUpView: View {
             .padding(.bottom, 20)
         }
         .padding(.horizontal, 40)
-        .alert("Erreur", isPresented: $viewModel.hasError) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text(viewModel.errorMessage)
-        }
+        .toast(message: viewModel.errorMessage, isShowing: $viewModel.hasError, isError: true)
     }
 }
 

@@ -75,7 +75,7 @@ struct HomeView: View {
                             .frame(maxHeight: .infinity)
                         }
                         .frame(width: 250)
-                        .background(.white)
+                        .background(Color(UIColor.systemBackground))
                         .edgesIgnoringSafeArea(.all)
                         
                         Spacer() // Drawer to the left
@@ -95,7 +95,7 @@ struct HomeView: View {
                         .font(.title2)
                 }
             }
-        }.tint(.black)
+        }
     }
 }
 

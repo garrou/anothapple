@@ -22,7 +22,6 @@ class FavoritesViewModel: ObservableObject {
         router.routeToSerieDetail(serie: serie)
     }
     
-    @MainActor
     func loadFavorites() {
         isLoading = true
         series = SeriesCacheManager.shared.getFavorites()

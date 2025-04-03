@@ -18,6 +18,6 @@ struct NavigationView: View {
                 .navigationDestination(for: AnyRoutable.self) { router in
                     router.makeView()
                 }
-        }.tint(.black)
+        }.tint(.secondary)
     }
 }

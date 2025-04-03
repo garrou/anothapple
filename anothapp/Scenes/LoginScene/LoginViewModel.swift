@@ -18,6 +18,10 @@ class LoginViewModel: ObservableObject {
     private let authService = AuthService()
     private let securityHelper = SecurityHelper()
     
+    var isInvalidForm: Bool {
+        identifier.isEmpty || password.isEmpty
+    }
+    
     init(router: LoginRouter) {
         self.router = router
     }
@@ -26,6 +30,7 @@ class LoginViewModel: ObservableObject {
         router.routeToSignUpPage()
     }
     
+    @MainActor
     func performLogin() async {
         let loginRequest = LoginRequest(identifier: identifier, password: password)
         

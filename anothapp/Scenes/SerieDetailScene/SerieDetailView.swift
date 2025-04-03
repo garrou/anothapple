@@ -16,7 +16,6 @@ struct SerieDetailView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 10) {
                     ImageCardView(url: viewModel.serie.poster)
-                    //                        .frame(height: 250)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .shadow(radius: 5)
                     
@@ -24,7 +23,7 @@ struct SerieDetailView: View {
                         Text(kind)
                             .font(.caption)
                             .padding(6)
-                            .background(.black.opacity(0.2))
+                            .background(.secondary.opacity(0.2))
                             .cornerRadius(8)
                     }
                     
@@ -96,21 +95,24 @@ struct SerieDetailView: View {
                         GridView(items: viewModel.seasons, columns: 2) { season in
                             SeasonCardView(season: season) {
                                 HStack {
+                                    // Add
                                     Button(action: {
                                         Task {
                                             await viewModel.addSeason(season: season)
                                         }
                                     }) {
                                         Image(systemName: "plus.square")
-                                            .font(.system(size: 15, weight: .regular))
-                                            .foregroundColor(.black)
+                                            .font(.system(size: 20, weight: .regular))
+                                            .foregroundColor(.primary)
                                     }.padding()
                                     
+                                    // Episodes
                                     Button(action: {
-                                        print("episodes")
+                                        viewModel.routeToEpisodesView(season: season.number)
                                     }) {
                                         Image(systemName: "list.number")
-                                            .font(.system(size: 15, weight: .regular))
+                                            .font(.system(size: 20, weight: .regular))
+                                            .foregroundColor(.primary)
                                     }.padding()
                                 }
                             }
@@ -192,7 +194,7 @@ struct SerieDetailView: View {
                                     }
                                 }) {
                                     HStack {
-                                        Image(systemName: "info.circle").foregroundColor(.black)
+                                        Image(systemName: "info.circle")
                                         Text("Informations")
                                     }
                                 }
@@ -216,7 +218,7 @@ struct SerieDetailView: View {
                                     }
                                 }) {
                                     HStack {
-                                        Image(systemName: viewModel.serie.favorite ? "heart.fill" : "heart").foregroundColor(viewModel.serie.favorite ? .red : .black)
+                                        Image(systemName: viewModel.serie.favorite ? "heart.fill" : "heart").foregroundColor(viewModel.serie.favorite ? .red : .primary)
                                         Text(viewModel.serie.favorite ? "Supprimer" : "Ajouter")
                                     }
                                 }
@@ -242,7 +244,7 @@ struct SerieDetailView: View {
                             .frame(maxHeight: .infinity)
                         }
                         .frame(width: 200)
-                        .background(.white)
+                        .background(Color(UIColor.systemBackground))
                         .edgesIgnoringSafeArea(.all)
                     }
                     .transition(.move(edge: .trailing))
@@ -263,8 +265,7 @@ struct SerieDetailView: View {
                 }
             }
         }
-        .tint(.black)
-        .toast(message: viewModel.message, isShowing: $viewModel.showToast)
+        .toast(message: viewModel.message, isShowing: $viewModel.showToast, isError: viewModel.isError)
     }
 }
 
@@ -301,11 +302,9 @@ struct SeasonCardView<Content: View>: View {
             HStack {
                 Text("\(season.episodes) épisodes")
                     .font(.caption)
-                    .foregroundColor(.black)
                 
                 Text("(\(season.interval))")
                     .font(.caption)
-                    .foregroundColor(.black)
             }
             
             content

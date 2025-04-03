@@ -24,9 +24,8 @@ struct WelcomeView: View {
             Button(action: viewModel.navigateToLoginPage) {
                 Text("Se connecter")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
+                    .foregroundColor(.primary)
                     .padding()
-                    .background(.black)
                     .cornerRadius(8)
             }
         }

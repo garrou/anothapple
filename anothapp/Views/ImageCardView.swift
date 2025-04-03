@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ImageCardView: View {
     
@@ -13,29 +14,22 @@ struct ImageCardView: View {
     let radius = 10.0
     private let defaultHeight = 200.0
     
+    @State private var progress: Double = 0.0
+    
     var body: some View {
         VStack {
             if url != nil {
-                AsyncImage(url: URL(string: url!)) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                            .scaledToFill()
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    case .failure:
-                        Image(systemName: "photo")
-                            .frame(height: defaultHeight)
-                    @unknown default:
-                        EmptyView()
+                KFImage.url(URL(string: url!))
+                    .fade(duration: 0.25)
+                    .placeholder {
+                        LoadingView().scaledToFill()
                     }
-                }
+                    .resizable()
+                    .scaledToFill()
             }
         }
         .frame(maxWidth: .infinity)
-        .background(.white)
+        .background(.secondary)
         .cornerRadius(radius)
         .padding(.all, 1)
     }

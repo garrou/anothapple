@@ -10,6 +10,7 @@ import SwiftUI
 struct Toast: ViewModifier {
     let message: String
     @Binding var isShowing: Bool
+    let isError: Bool
     let duration: TimeInterval
     
     func body(content: Content) -> some View {
@@ -24,7 +25,7 @@ struct Toast: ViewModifier {
                             .foregroundColor(.white)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 10)
-                            .background(Color.black.opacity(0.7))
+                            .background(isError ? Color.red.opacity(0.8) : Color.green.opacity(0.8))
                             .cornerRadius(8)
                     }
                     .padding(.bottom, 20)
@@ -35,7 +36,7 @@ struct Toast: ViewModifier {
                                 self.isShowing = false
                             }
                         }
-                    }
+                    }.padding()
                 }
             }
         }
@@ -43,7 +44,7 @@ struct Toast: ViewModifier {
 }
 
 extension View {
-    func toast(message: String, isShowing: Binding<Bool>, duration: TimeInterval = 2) -> some View {
-        self.modifier(Toast(message: message, isShowing: isShowing, duration: duration))
+    func toast(message: String, isShowing: Binding<Bool>, isError: Bool, duration: TimeInterval = 2) -> some View {
+        self.modifier(Toast(message: message, isShowing: isShowing, isError: isError, duration: duration))
     }
 }

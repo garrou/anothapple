@@ -7,9 +7,9 @@
 
 import Foundation
 
-class FriendsCacheManager {
+class FriendsManager {
 
-    static let shared = FriendsCacheManager()
+    static let shared = FriendsManager()
     private let friendService = FriendService()
 
     func getFriendsWhoWatch(id: Int) async -> [Friend] {

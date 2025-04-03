@@ -11,7 +11,7 @@ import SwiftUI
 struct AnothappApp: App {
     var body: some Scene {
         WindowGroup {
-            NavigationView(appRouter: .init())
+            NavigationView(appRouter: .init()).tint(.secondary)
         }
     }
 }

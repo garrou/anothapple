@@ -14,10 +14,14 @@ class SignUpViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var confirmPassword: String = ""
     @Published var errorMessage: String = ""
-    @Published var hasError: Bool = false
+    @Published var hasError = false
     
     private let router: SignUpRouter
     private let authService = AuthService()
+    
+    var isInvalidForm: Bool {
+        email.isEmpty || username.isEmpty || password.isEmpty || confirmPassword.isEmpty
+    }
     
     init(router: SignUpRouter) {
         self.router = router
@@ -27,12 +31,8 @@ class SignUpViewModel: ObservableObject {
         router.routeToLoginPage()
     }
     
+    @MainActor
     func performSignUp() async {
-        if email.isEmpty || username.isEmpty || password.isEmpty || confirmPassword.isEmpty {
-            errorMessage = "Tous les champs sont requis"
-            hasError = true
-            return
-        }
         if !isValidEmail() {
             errorMessage = "Email invalide"
             hasError = true
@@ -63,14 +63,12 @@ class SignUpViewModel: ObservableObject {
             }
         } catch {
             errorMessage = "Une erreur est survenue"
-            hasError = true
         }
     }
     
     private func isValidEmail() -> Bool {
         let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
         let matches = detector?.matches(in: email, options: [], range: NSRange(location: 0, length: email.utf16.count))
-        
         return matches?.first?.url?.scheme == "mailto"
     }
 }

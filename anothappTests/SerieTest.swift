@@ -42,7 +42,7 @@ class SerieTest: XCTestCase {
         }
         """
         
-        let serie = try decoder.decode(UserSerie.self, from: jsonSerie.data(using: .utf8)!)
+        let serie = try? decoder.decode(Serie.self, from: jsonSerie.data(using: .utf8)!)
         XCTAssertNotNil(serie)
     }
     
@@ -80,7 +80,7 @@ class SerieTest: XCTestCase {
         }
         """
         
-        let infos = try decoder.decode(SerieInfos.self, from: jsonSerieInfos.data(using: .utf8)!)
+        let infos = try? decoder.decode(SerieInfos.self, from: jsonSerieInfos.data(using: .utf8)!)
         XCTAssertNotNil(infos)
     }
 }

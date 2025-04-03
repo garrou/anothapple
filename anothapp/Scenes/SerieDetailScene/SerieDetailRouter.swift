@@ -25,6 +25,11 @@ class SerieDetailRouter: ObservableObject {
     func routeToHomePage() {
         rootCoordinator.popLast()
     }
+    
+    func routeToEpisodesView(id: Int, season: Int) {
+        let router = EpisodesRouter(rootCoordinator: rootCoordinator, id: id, season: season)
+        rootCoordinator.push(router)
+    }
 }
 
 // MARK: ViewFactory implementation

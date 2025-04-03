@@ -32,7 +32,7 @@ struct LoginView: View {
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(isEmailFieldFocused ? .black : .gray.opacity(0.5), lineWidth: 1)
+                        .stroke(isEmailFieldFocused ? .primary : .secondary, lineWidth: 1)
                 )
                 .focused($isEmailFieldFocused)
             
@@ -40,7 +40,7 @@ struct LoginView: View {
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(isPasswordFieldFocused ? .black : .gray.opacity(0.5), lineWidth: 1)
+                        .stroke(isPasswordFieldFocused ? .primary : .secondary, lineWidth: 1)
                 )
                 .focused($isPasswordFieldFocused)
             
@@ -51,11 +51,10 @@ struct LoginView: View {
             }) {
                 Text("Se connecter")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
+                    .foregroundColor(viewModel.isInvalidForm ? .secondary : .primary)
                     .padding()
-                    .background(.black)
                     .cornerRadius(8)
-            }
+            }.disabled(viewModel.isInvalidForm)
             
             HStack {
                 Text("Pas de compte ?").font(.system(size: 14))
@@ -68,11 +67,7 @@ struct LoginView: View {
             .padding(.bottom, 20)
         }
         .padding(.horizontal, 40)
-        .alert("Erreur", isPresented: $viewModel.hasError) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text(viewModel.errorMessage)
-        }
+        .toast(message: viewModel.errorMessage, isShowing: $viewModel.hasError, isError: true)
     }
 }
 

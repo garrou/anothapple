@@ -15,6 +15,7 @@ class DiscoverDetailViewModel: ObservableObject {
     @Published var isSerieInList = false
     @Published var showToast = false
     @Published var message = ""
+    @Published var isError = false
     
     private let router: DiscoverDetailRouter
     
@@ -37,6 +38,7 @@ class DiscoverDetailViewModel: ObservableObject {
     func addSerie() async {
         isSerieAdded = await SeriesCacheManager.shared.addSerie(id: serie.id)
         message = isSerieAdded ? "\(serie.title) ajoutée" : "Impossible d'ajouter la série"
+        isError = !isSerieAdded
         showToast = true
     }
     
@@ -52,6 +54,7 @@ class DiscoverDetailViewModel: ObservableObject {
         } else {
             message = "Erreur durant l'ajout"
         }
+        isError = !changed
         showToast = true
     }
 }

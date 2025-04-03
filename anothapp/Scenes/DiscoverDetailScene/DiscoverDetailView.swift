@@ -114,7 +114,7 @@ struct DiscoverDetailView: View {
                                         }
                                     }) {
                                         HStack {
-                                            Image(systemName: "plus.square").foregroundColor(.black)
+                                            Image(systemName: "plus.square")
                                             Text("Ajouter dans mes séries")
                                         }
                                     }
@@ -171,7 +171,7 @@ struct DiscoverDetailView: View {
                             .frame(maxHeight: .infinity)
                         }
                         .frame(width: 200)
-                        .background(.white)
+                        .background(Color(UIColor.systemBackground))
                         .edgesIgnoringSafeArea(.all)
                     }
                     .transition(.move(edge: .trailing))
@@ -190,8 +190,7 @@ struct DiscoverDetailView: View {
                 }
             }
         }
-        .tint(.black)
-        .toast(message: viewModel.message, isShowing: $viewModel.showToast)
+        .toast(message: viewModel.message, isShowing: $viewModel.showToast, isError: viewModel.isError)
     }
 }
 

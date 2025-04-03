@@ -25,12 +25,17 @@ class SerieDetailViewModel: ObservableObject {
     @Published var isMenuOpened = false
     @Published var showDeleteModal = false
     @Published var showToast = false
+    @Published var isError = false
     @Published var message = ""
     @Published var tabContentHeight: CGFloat = ContentHeightPreferenceKey.defaultValue
     
     init(router: SerieDetailRouter, serie: Serie) {
         self.router = router
         self.serie = serie
+    }
+    
+    func routeToEpisodesView(season: Int) {
+        router.routeToEpisodesView(id: serie.id, season: season)
     }
     
     @MainActor
@@ -48,11 +53,15 @@ class SerieDetailViewModel: ObservableObject {
         
         if deleted {
             router.routeToHomePage()
+        } else {
+            isError = true
+            message = "Impossible de supprimer la série"
         }
     }
     
     func routeToDiscoverDetails() async {
         let fetched = await ApiSeriesCacheManager.shared.getSerie(id: serie.id)
+        
         if fetched != nil {
             router.routeToDiscoverDetails(serie: fetched!)
         }
@@ -72,14 +81,15 @@ class SerieDetailViewModel: ObservableObject {
     @MainActor
     func getFriendsWhoWatch() async {
         if !viewedByFriends.isEmpty { return }
-        viewedByFriends = await FriendsCacheManager.shared.getFriendsWhoWatch(id: serie.id)
+        viewedByFriends = await FriendsManager.shared.getFriendsWhoWatch(id: serie.id)
     }
     
     @MainActor
     func addSeason(season: Season) async {
         let added = await SeriesCacheManager.shared.addSeason(id: serie.id, season: season)
-        showToast = true
         message = added ? "Saison ajoutée" : "Impossible d'ajouter la saison"
+        isError = !added
+        showToast = true
     }
 }
 

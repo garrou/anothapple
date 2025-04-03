@@ -16,10 +16,10 @@ struct SeriesView: View {
         ScrollView {
             
             TextField("Titre de la série", text: $viewModel.titleSearch)
-                .padding(.all, 5)
+                .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(isSearchFocused ? .black : .gray.opacity(0.5), lineWidth: 1)
+                        .stroke(isSearchFocused ? .primary : .secondary, lineWidth: 1)
                 )
                 .padding(.horizontal, 10)
                 .focused($isSearchFocused)
@@ -34,7 +34,6 @@ struct SeriesView: View {
             } else {
                 Text("\(viewModel.series.count) séries")
                     .font(.subheadline)
-                    .foregroundColor(.black)
                 
                 GridView(items: viewModel.series, columns: 2) { serie in
                     Button(action: {
@@ -43,7 +42,7 @@ struct SeriesView: View {
                     {
                         VStack {
                             ImageCardView(url: serie.poster)
-                            Text(serie.title).font(.headline).foregroundColor(.black)
+                            Text(serie.title).font(.headline)
                         }
                     }
                 }
