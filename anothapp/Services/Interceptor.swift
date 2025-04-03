@@ -13,7 +13,7 @@ class HTTPInterceptor: NSObject, URLSessionDelegate {
     
     func interceptRequest(_ request: URLRequest) -> URLRequest {
         var modifiedRequest = request
-        let user = SecurityHelper.getUser()
+        let user = SecurityManager.shared.getUser()
         let token = user?.token ?? ""
         modifiedRequest.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         modifiedRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")

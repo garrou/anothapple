@@ -20,7 +20,7 @@ class AppRouter: ObservableObject {
     }
     
     private func isLoggedIn() -> Bool {
-        SecurityHelper.getUser() != nil
+        SecurityManager.shared.getUser() != nil
     }
 }
 

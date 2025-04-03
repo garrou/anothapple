@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct SerieDetailView: View {
+struct SerieDetailsView: View {
     
-    @StateObject var viewModel: SerieDetailViewModel
+    @StateObject var viewModel: SerieDetailsViewModel
     
     var body: some View {
         ZStack {
@@ -63,9 +63,9 @@ struct SerieDetailView: View {
                     
                     // Tabs
                     Picker("", selection: $viewModel.selectedTab) {
-                        Image(systemName: "square.grid.2x2").tag(SerieDetailTab.seasons)
-                        Image(systemName: "play.square.stack").tag(SerieDetailTab.add)
-                        Image(systemName: "person.3").tag(SerieDetailTab.viewedBy)
+                        Image(systemName: "square.grid.2x2").tag(SerieDetailsTab.seasons)
+                        Image(systemName: "play.square.stack").tag(SerieDetailsTab.add)
+                        Image(systemName: "person.3").tag(SerieDetailsTab.viewedBy)
                     }
                     .pickerStyle(SegmentedPickerStyle())
                     .padding()
@@ -74,9 +74,13 @@ struct SerieDetailView: View {
                         
                         // User seasons
                         GridView(items: viewModel.infos.seasons, columns: 2) { season in
-                            SeasonCardView(season: season)
+                            Button(action: {
+                                viewModel.routeToSeasonDetails(season: season.number)
+                            }) {
+                                SeasonCardView(season: season)
+                            }
                         }
-                        .tag(SerieDetailTab.seasons)
+                        .tag(SerieDetailsTab.seasons)
                         .background(
                             GeometryReader { geometry in
                                 Color.clear.preference(
@@ -117,7 +121,7 @@ struct SerieDetailView: View {
                                 }
                             }
                         }
-                        .tag(SerieDetailTab.add)
+                        .tag(SerieDetailsTab.add)
                         .background(
                             GeometryReader { geometry in
                                 Color.clear.preference(
@@ -139,7 +143,7 @@ struct SerieDetailView: View {
                                 CardView(picture: friend.picture, text: friend.username).padding(.all, 2)
                             }
                         }
-                        .tag(SerieDetailTab.viewedBy)
+                        .tag(SerieDetailsTab.viewedBy)
                         .background(
                             GeometryReader { geometry in
                                 Color.clear.preference(
@@ -265,7 +269,6 @@ struct SerieDetailView: View {
                 }
             }
         }
-        .toast(message: viewModel.message, isShowing: $viewModel.showToast, isError: viewModel.isError)
     }
 }
 
@@ -314,5 +317,5 @@ struct SeasonCardView<Content: View>: View {
 
 
 #Preview {
-    SerieDetailView(viewModel: .mock)
+    SerieDetailsView(viewModel: .mock)
 }

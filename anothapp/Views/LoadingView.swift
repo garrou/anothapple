@@ -14,7 +14,7 @@ struct LoadingView: View {
     var body: some View {
         
         ProgressView()
-            .progressViewStyle(CircularProgressViewStyle(tint: .black))
+            .progressViewStyle(CircularProgressViewStyle(tint: .primary))
             .scaleEffect(1.5)
     }
 }

@@ -16,7 +16,7 @@ class DiscoverRouter {
     }
     
     func routeToDiscoverDetail(serie: ApiSerie) {
-        let router = DiscoverDetailRouter(rootCoordinator: rootCoordinator, serie: serie)
+        let router = DiscoverDetailsRouter(rootCoordinator: rootCoordinator, serie: serie)
         rootCoordinator.push(router)
     }
 }

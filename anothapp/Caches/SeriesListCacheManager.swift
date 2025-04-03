@@ -35,28 +35,41 @@ class SeriesListCacheManager {
     
     func addSerie(id: Int) async -> Bool {
         let request = SerieRequest(id: id, list: true)
-        let (data, added) = (try? await serieService.addSerie(request: request)) ?? (Data(), false)
         
-        if !added || data.isEmpty { return false }
-        
-        if let show = try? JSONDecoder().decode(Serie.self, from: data) {
+        do {
+            let (data, added) = try await serieService.addSerie(request: request)
+            if !added { return false }
+            let show = try JSONDecoder().decode(Serie.self, from: data)
             storeSerie(id: show.id, value: show)
             return true
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant l'ajout")
+            return false
         }
-        return false
     }
     
     func deleteSerie(id: Int) async -> Bool {
-        let removed = (try? await serieService.deleteSerie(id: id, fromList: true)) ?? false
-        if removed { self.removeSerie(id: id) }
-        return removed
+        do {
+            let removed = try await serieService.deleteSerie(id: id, fromList: true)
+            if removed { self.removeSerie(id: id) }
+            return removed
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la suppression")
+            return false
+        }
     }
     
     func getSeries() async -> [Serie] {
         let series = keys.compactMap { id in getSerie(id: id) }
         if !series.isEmpty { return series.sorted { $0.title.lowercased() < $1.title.lowercased() } }
-        let fetched = (try? await serieService.fetchSeries(status: "not-started")) ?? []
-        fetched.forEach { storeSerie(id: $0.id, value: $0) }
-        return fetched
+        
+        do {
+            let fetched = try await serieService.fetchSeries(status: "not-started")
+            fetched.forEach { storeSerie(id: $0.id, value: $0) }
+            return fetched
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la récupération des séries")
+            return []
+        }
     }
 }

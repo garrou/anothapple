@@ -13,20 +13,19 @@ class EpisodesViewModel: ObservableObject {
     @Published var isLoading = false
     
     private let router: EpisodesRouter
-    let id: Int
-    let season: Int
     
-    
-    init(router: EpisodesRouter, id: Int, season: Int) {
+    init(router: EpisodesRouter) {
         self.router = router
-        self.id = id
-        self.season = season
+    }
+    
+    var season: Int {
+        router.season
     }
     
     @MainActor
     func loadEpisodes() async {
         isLoading = true
-        episodes = await SearchManager.shared.getEpisodesBySerieBySeason(id: id, season: season)
+        episodes = await SearchManager.shared.getEpisodesBySerieBySeason(id: router.id, season: router.season)
         isLoading = false
     }
 }
@@ -34,5 +33,5 @@ class EpisodesViewModel: ObservableObject {
 // MARK: - WatchListViewModel mock for preview
 
 extension EpisodesViewModel {
-    static let mock: EpisodesViewModel = .init(router: EpisodesRouter.mock, id: 10051, season: 1)
+    static let mock: EpisodesViewModel = .init(router: EpisodesRouter.mock)
 }

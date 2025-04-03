@@ -7,19 +7,16 @@
 
 import Foundation
 
-class DiscoverDetailViewModel: ObservableObject {
+class DiscoverDetailsViewModel: ObservableObject {
     
     @Published var serie: ApiSerie
     @Published var isMenuOpened = false
     @Published var isSerieAdded = false
     @Published var isSerieInList = false
-    @Published var showToast = false
-    @Published var message = ""
-    @Published var isError = false
     
-    private let router: DiscoverDetailRouter
+    private let router: DiscoverDetailsRouter
     
-    init(router: DiscoverDetailRouter, serie: ApiSerie) {
+    init(router: DiscoverDetailsRouter, serie: ApiSerie) {
         self.router = router
         self.serie = serie
         self.isSerieAdded = checkIfAlreadyAdded()
@@ -37,9 +34,6 @@ class DiscoverDetailViewModel: ObservableObject {
     @MainActor
     func addSerie() async {
         isSerieAdded = await SeriesCacheManager.shared.addSerie(id: serie.id)
-        message = isSerieAdded ? "\(serie.title) ajoutée" : "Impossible d'ajouter la série"
-        isError = !isSerieAdded
-        showToast = true
     }
     
     @MainActor
@@ -50,17 +44,13 @@ class DiscoverDetailViewModel: ObservableObject {
         
         if changed {
             isSerieInList.toggle()
-            message = isSerieInList ? "\(serie.title) ajoutée dans la liste" : "\(serie.title) supprimée de la liste"
-        } else {
-            message = "Erreur durant l'ajout"
+            ToastManager.shared.setToast(message: isSerieInList ? "\(serie.title) ajoutée dans la liste" : "\(serie.title) supprimée de la liste", isError: !changed)
         }
-        isError = !changed
-        showToast = true
     }
 }
 
 // MARK: - DiscoverViewModel mock for preview
 
-extension DiscoverDetailViewModel {
-    static let mock: DiscoverDetailViewModel = .init(router: DiscoverDetailRouter.mock, serie: Datasource.mockDiscoverSerie)
+extension DiscoverDetailsViewModel {
+    static let mock: DiscoverDetailsViewModel = .init(router: DiscoverDetailsRouter.mock, serie: Datasource.mockDiscoverSerie)
 }

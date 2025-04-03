@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct AnothappApp: App {
+    
+    @StateObject private var toastManager = ToastManager.shared
+    
     var body: some Scene {
         WindowGroup {
-            NavigationView(appRouter: .init()).tint(.secondary)
+            NavigationView(appRouter: .init())
+                .tint(.secondary)
+                .toast(message: toastManager.message, isShowing: $toastManager.showToast, isError: toastManager.isError)
         }
     }
 }

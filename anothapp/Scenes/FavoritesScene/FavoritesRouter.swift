@@ -16,7 +16,7 @@ class FavoritesRouter {
     }
     
     func routeToSerieDetail(serie: Serie) {
-        let router = SerieDetailRouter(rootCoordinator: rootCoordinator, serie: serie)
+        let router = SerieDetailsRouter(rootCoordinator: rootCoordinator, serie: serie)
         rootCoordinator.push(router)
     }
 }

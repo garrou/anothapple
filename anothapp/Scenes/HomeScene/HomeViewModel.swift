@@ -41,7 +41,7 @@ class HomeViewModel: ObservableObject {
     }
     
     func logout() {
-        SecurityHelper.clearUser()
+        SecurityManager.shared.clearUser()
         SeriesCacheManager.shared.clear()
         SeriesListCacheManager.shared.clear()
         router.routeToWelcomePage()

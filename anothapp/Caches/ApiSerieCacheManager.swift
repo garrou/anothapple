@@ -25,25 +25,27 @@ class ApiSeriesCacheManager {
     }
     
     func getSerie(id: Int) async -> ApiSerie? {
-        if let cached = cache.object(forKey: String(id) as NSString) {
-            return cached
+        if let cached = cache.object(forKey: String(id) as NSString) { return cached }
+        
+        do {
+            return try await searchService.fetchSerie(id: id)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur lors du chargement de la série")
+            return nil
         }
-        return try? await searchService.fetchSerie(id: id)
     }
     
     func getSeries(limit: Int) async -> [ApiSerie] {
-        let series = keys.compactMap { key in
-            cache.object(forKey: key as NSString) as ApiSerie?
+        let series = keys.compactMap { key in cache.object(forKey: key as NSString) as ApiSerie? }
+        if !series.isEmpty { return series.sorted { $0.id > $1.id } }
+        var fetched: [ApiSerie] = []
+        
+        do {
+            fetched = try await searchService.fetchSuggestions(limit: limit)
+            fetched.forEach { storeSerie(key: String($0.id), value: $0) }
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur lors du chargement des séries")
         }
-        if !series.isEmpty {
-            return series.sorted { $0.id > $1.id }
-        }
-        let fetched = (try? await searchService.fetchSuggestions(limit: limit)) ?? []
-        fetched.forEach { storeSerie(key: String($0.id), value: $0) }
         return fetched
-    }
-    
-    func getSeasonsBySerie(id: Int) async -> [Season] {
-        (try? await searchService.fetchSeasonsBySerieId(id: id)) ?? []
     }
 }

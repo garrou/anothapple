@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct DiscoverDetailView: View {
+struct DiscoverDetailsView: View {
     
-    @StateObject var viewModel: DiscoverDetailViewModel
+    @StateObject var viewModel: DiscoverDetailsViewModel
     
     var body: some View {
         ZStack {
@@ -190,7 +190,6 @@ struct DiscoverDetailView: View {
                 }
             }
         }
-        .toast(message: viewModel.message, isShowing: $viewModel.showToast, isError: viewModel.isError)
     }
 }
 
@@ -210,5 +209,5 @@ struct DetailRow: View {
 }
 
 #Preview {
-    DiscoverDetailView(viewModel: .mock)
+    DiscoverDetailsView(viewModel: .mock)
 }

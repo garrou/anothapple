@@ -35,38 +35,57 @@ class SeriesCacheManager {
     
     func addSerie(id: Int) async -> Bool {
         let request = SerieRequest(id: id, list: false)
-        let (data, added) = (try? await serieService.addSerie(request: request)) ?? (Data(), false)
+        var isAdded = false
         
-        if !added || data.isEmpty { return false }
-        
-        if let show = try? JSONDecoder().decode(Serie.self, from: data) {
-            show.addedAt = Date()
-            storeSerie(id: show.id, value: show)
-            return true
+        do {
+            let (data, added) = try await serieService.addSerie(request: request)
+            isAdded = added
+            
+            if isAdded {
+                let show = try JSONDecoder().decode(Serie.self, from: data)
+                show.addedAt = Date()
+                storeSerie(id: show.id, value: show)
+            }
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant l'ajout")
+            return false
         }
-        return false
+        ToastManager.shared.setToast(message: isAdded ? "Série ajoutée" : "Impossible d'ajouter la série", isError: !isAdded)
+        return isAdded
     }
     
     func deleteSerie(id: Int) async -> Bool {
-        let deleted = (try? await serieService.deleteSerie(id: id)) ?? false
-        if deleted { self.removeSerie(id: id) }
-        return deleted
-    }
-    
-    func getSerieInfos(id: Int) async -> SerieInfos {
-        let infos = try? await serieService.fetchSerieInfos(id: id)
-        return infos ?? .init(seasons: [], time: 0, episodes: 0)
+        do {
+            let deleted = try await serieService.deleteSerie(id: id)
+            
+            if deleted {
+                self.removeSerie(id: id)
+            } else {
+                ToastManager.shared.setToast(message: "Impossible de supprimer la série")
+            }
+            return deleted
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la suppression")
+            return false
+        }
     }
     
     func getSeries(title: String) async -> [Serie] {
         let series = keys.compactMap { id in getSerie(id: id) }
+        
         if !series.isEmpty {
             let stored = series.sorted { $0.addedAt > $1.addedAt }
             return title.isEmpty ? stored : stored.filter { $0.title.lowercased().contains(title.lowercased()) }
         }
-        let fetched = (try? await serieService.fetchSeries(status: nil)) ?? []
-        fetched.forEach { storeSerie(id: $0.id, value: $0) }
-        return fetched
+        
+        do {
+            let fetched = try await serieService.fetchSeries(status: nil)
+            fetched.forEach { storeSerie(id: $0.id, value: $0) }
+            return fetched
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la récupération des séries")
+            return []
+        }
     }
     
     func getFavorites() -> [Serie] {
@@ -76,28 +95,30 @@ class SeriesCacheManager {
     
     func changeFavorite(serie: Serie) async -> Serie {
         let request = StatusRequest(favorite: true, watch: nil)
-        let updated = (try? await serieService.changeFavorite(id: serie.id, request: request)) ?? false
         
-        if updated {
-            serie.favorite.toggle()
-            storeSerie(id: serie.id, value: serie)
+        do {
+            if try await serieService.changeFavorite(id: serie.id, request: request) {
+                serie.favorite.toggle()
+                storeSerie(id: serie.id, value: serie)
+            }
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la modification")
         }
         return serie
     }
     
     func changeWatching(serie: Serie) async -> Serie {
         let request = StatusRequest(favorite: nil, watch: true)
-        let updated = (try? await serieService.changeWatching(id: serie.id, request: request)) ?? false
         
-        if updated {
-            serie.watch.toggle()
-            storeSerie(id: serie.id, value: serie)
+        do {
+            if try await serieService.changeWatching(id: serie.id, request: request) {
+                serie.watch.toggle()
+                storeSerie(id: serie.id, value: serie)
+            }
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la modification")
         }
         return serie
     }
-    
-    func addSeason(id: Int, season: Season) async -> Bool {
-        let request = SeasonRequest(id: id, num: season.number)
-        return (try? await serieService.addSeason(request: request)) ?? false
-    }
+
 }

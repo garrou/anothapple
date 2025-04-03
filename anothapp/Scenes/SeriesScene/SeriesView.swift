@@ -51,7 +51,7 @@ struct SeriesView: View {
         .padding(.vertical, 10)
         .onAppear {
             Task {
-                await viewModel.loadSeries()
+                await viewModel.loadData()
             }
         }
     }

@@ -7,35 +7,36 @@
 
 import Foundation
 
-enum SerieDetailTab {
+enum SerieDetailsTab {
     case seasons
     case add
     case viewedBy
 }
 
-class SerieDetailViewModel: ObservableObject {
+class SerieDetailsViewModel: ObservableObject {
     
-    private let router: SerieDetailRouter
+    private let router: SerieDetailsRouter
     
     @Published var serie: Serie
     @Published var infos: SerieInfos = .init(seasons: [], time: 0, episodes: 0)
     @Published var seasons: [Season] = []
     @Published var viewedByFriends: [Friend] = []
-    @Published var selectedTab: SerieDetailTab = .seasons
+    @Published var selectedTab: SerieDetailsTab = .seasons
     @Published var isMenuOpened = false
     @Published var showDeleteModal = false
-    @Published var showToast = false
-    @Published var isError = false
-    @Published var message = ""
     @Published var tabContentHeight: CGFloat = ContentHeightPreferenceKey.defaultValue
     
-    init(router: SerieDetailRouter, serie: Serie) {
+    init(router: SerieDetailsRouter, serie: Serie) {
         self.router = router
         self.serie = serie
     }
     
     func routeToEpisodesView(season: Int) {
         router.routeToEpisodesView(id: serie.id, season: season)
+    }
+    
+    func routeToSeasonDetails(season: Int) {
+        router.routeToSeasonDetailsView(id: serie.id, season: season)
     }
     
     @MainActor
@@ -53,9 +54,6 @@ class SerieDetailViewModel: ObservableObject {
         
         if deleted {
             router.routeToHomePage()
-        } else {
-            isError = true
-            message = "Impossible de supprimer la série"
         }
     }
     
@@ -69,13 +67,13 @@ class SerieDetailViewModel: ObservableObject {
     
     @MainActor
     func getSerieInfos() async {
-        infos = await SeriesCacheManager.shared.getSerieInfos(id: serie.id)
+        infos = await SeriesManager.shared.getSerieInfos(id: serie.id)
     }
     
     @MainActor
     func getSeasonsToAdd() async {
         if !seasons.isEmpty { return }
-        seasons = await ApiSeriesCacheManager.shared.getSeasonsBySerie(id: serie.id)
+        seasons = await SearchManager.shared.getSeasonsBySerie(id: serie.id)
     }
     
     @MainActor
@@ -84,17 +82,13 @@ class SerieDetailViewModel: ObservableObject {
         viewedByFriends = await FriendsManager.shared.getFriendsWhoWatch(id: serie.id)
     }
     
-    @MainActor
     func addSeason(season: Season) async {
-        let added = await SeriesCacheManager.shared.addSeason(id: serie.id, season: season)
-        message = added ? "Saison ajoutée" : "Impossible d'ajouter la saison"
-        isError = !added
-        showToast = true
+        _ = await SeriesManager.shared.addSeason(id: serie.id, season: season)
     }
 }
 
 // MARK: - SerieDetailViewModel mock for preview
 
-extension SerieDetailViewModel {
-    static let mock: SerieDetailViewModel = .init(router: SerieDetailRouter.mock, serie: Datasource.mockSerie)
+extension SerieDetailsViewModel {
+    static let mock: SerieDetailsViewModel = .init(router: SerieDetailsRouter.mock, serie: Datasource.mockSerie)
 }

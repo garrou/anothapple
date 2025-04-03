@@ -14,7 +14,7 @@ struct EpisodesView: View {
     var body: some View {
         ScrollView {
             if viewModel.isLoading {
-                
+                LoadingView()
             } else {
                 GridView(items: viewModel.episodes, columns: 2) { episode in
                     EpisodeView(episode: episode)

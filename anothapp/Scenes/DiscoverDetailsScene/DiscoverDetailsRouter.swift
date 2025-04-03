@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class DiscoverDetailRouter {
+class DiscoverDetailsRouter {
     
     private let rootCoordinator: NavigationCoordinator
     private let serie: ApiSerie
@@ -18,35 +18,35 @@ class DiscoverDetailRouter {
     }
     
     func routeToSerieDetail(serie: Serie) {
-        let router = SerieDetailRouter(rootCoordinator: rootCoordinator, serie: serie)
+        let router = SerieDetailsRouter(rootCoordinator: rootCoordinator, serie: serie)
         rootCoordinator.push(router)
     }
 }
 
 // MARK: ViewFactory implementation
 
-extension DiscoverDetailRouter: Routable {
+extension DiscoverDetailsRouter: Routable {
     
     func makeView() -> AnyView {
-        let viewModel = DiscoverDetailViewModel(router: self, serie: serie)
-        let view = DiscoverDetailView(viewModel: viewModel)
+        let viewModel = DiscoverDetailsViewModel(router: self, serie: serie)
+        let view = DiscoverDetailsView(viewModel: viewModel)
         return AnyView(view)
     }
 }
 
 // MARK: Hashable implementation
 
-extension DiscoverDetailRouter {
+extension DiscoverDetailsRouter {
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(serie.id)
     }
     
-    static func == (lhs: DiscoverDetailRouter, rhs: DiscoverDetailRouter) -> Bool {
+    static func == (lhs: DiscoverDetailsRouter, rhs: DiscoverDetailsRouter) -> Bool {
         lhs.serie.id == rhs.serie.id
     }
 }
 
-extension DiscoverDetailRouter {
-    static let mock: DiscoverDetailRouter = .init(rootCoordinator: AppRouter(), serie: Datasource.mockDiscoverSerie)
+extension DiscoverDetailsRouter {
+    static let mock: DiscoverDetailsRouter = .init(rootCoordinator: AppRouter(), serie: Datasource.mockDiscoverSerie)
 }

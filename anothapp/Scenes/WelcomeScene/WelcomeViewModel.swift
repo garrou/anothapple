@@ -12,7 +12,6 @@ class WelcomeViewModel: ObservableObject {
     @Published var images: [String] = []
     
     private let router: WelcomeRouter
-    private let searchService = SearchService()
     
     init(router: WelcomeRouter) {
         self.router = router
@@ -24,7 +23,7 @@ class WelcomeViewModel: ObservableObject {
     
     @MainActor
     func loadImages(limit: Int) async {
-        images = (try? await searchService.fetchImages(limit: limit)) ?? []
+        images = await SearchManager.shared.getImages(limit: limit)
     }
 }
 

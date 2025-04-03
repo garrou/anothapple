@@ -82,7 +82,6 @@ struct SignUpView: View {
             .padding(.bottom, 20)
         }
         .padding(.horizontal, 40)
-        .toast(message: viewModel.errorMessage, isShowing: $viewModel.hasError, isError: true)
     }
 }
 

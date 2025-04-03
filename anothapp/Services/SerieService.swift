@@ -46,4 +46,9 @@ class SerieService {
         let (_, ok) = try await BaseService.shared.dataRequest(url: "\(baseUrl)/\(request.id)/seasons", method: "POST", data: request, successCode: 201)
         return ok
     }
+    
+    func fetchSeasonInfos(id: Int, num: Int) async throws -> [SeasonInfos] {
+        let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/\(id)/seasons/\(num)")
+        return ok ? try decoder.decode([SeasonInfos].self, from: data) : []
+    }
 }

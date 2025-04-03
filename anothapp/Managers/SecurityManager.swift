@@ -8,11 +8,12 @@
 import Foundation
 import Security
 
-class SecurityHelper {
+class SecurityManager {
     
-    static private let key = "user_info"
+    static let shared = SecurityManager()
+    private let key = "user_info"
     
-    static func clearUser() {
+    func clearUser() {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key
@@ -26,7 +27,7 @@ class SecurityHelper {
         }
     }
     
-    static func storeUser(_ user: User) {
+    func storeUser(_ user: User) {
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(user)
@@ -48,7 +49,7 @@ class SecurityHelper {
         }
     }
     
-    static func getUser() -> User? {
+    func getUser() -> User? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class SerieDetailRouter: ObservableObject {
+class SerieDetailsRouter: ObservableObject {
     
     private let rootCoordinator: NavigationCoordinator
     private let serie: Serie
@@ -18,7 +18,7 @@ class SerieDetailRouter: ObservableObject {
     }
     
     func routeToDiscoverDetails(serie: ApiSerie) {
-        let router = DiscoverDetailRouter(rootCoordinator: rootCoordinator, serie: serie)
+        let router = DiscoverDetailsRouter(rootCoordinator: rootCoordinator, serie: serie)
         rootCoordinator.push(router)
     }
     
@@ -30,32 +30,37 @@ class SerieDetailRouter: ObservableObject {
         let router = EpisodesRouter(rootCoordinator: rootCoordinator, id: id, season: season)
         rootCoordinator.push(router)
     }
+    
+    func routeToSeasonDetailsView(id: Int, season: Int) {
+        let router = SeasonDetailsRouter(rootCoordinator: rootCoordinator, id: id, season: season)
+        rootCoordinator.push(router)
+    }
 }
 
 // MARK: ViewFactory implementation
 
-extension SerieDetailRouter: Routable {
+extension SerieDetailsRouter: Routable {
     
     func makeView() -> AnyView {
-        let viewModel = SerieDetailViewModel(router: self, serie: serie)
-        let view = SerieDetailView(viewModel: viewModel)
+        let viewModel = SerieDetailsViewModel(router: self, serie: serie)
+        let view = SerieDetailsView(viewModel: viewModel)
         return AnyView(view)
     }
 }
 
 // MARK: Hashable implementation
 
-extension SerieDetailRouter {
+extension SerieDetailsRouter {
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(serie.id)
     }
     
-    static func == (lhs: SerieDetailRouter, rhs: SerieDetailRouter) -> Bool {
+    static func == (lhs: SerieDetailsRouter, rhs: SerieDetailsRouter) -> Bool {
         lhs.serie.id == rhs.serie.id
     }
 }
 
-extension SerieDetailRouter {
-    static let mock: SerieDetailRouter = .init(rootCoordinator: AppRouter(), serie: Datasource.mockSerie)
+extension SerieDetailsRouter {
+    static let mock: SerieDetailsRouter = .init(rootCoordinator: AppRouter(), serie: Datasource.mockSerie)
 }

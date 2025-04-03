@@ -21,7 +21,7 @@ struct GridView<Item, Content>: View where Item: Hashable, Content: View {
     
     var body: some View {
         LazyVGrid(columns: columns) {
-            ForEach(items, id: \.self) { item in
+            ForEach(items, id: \.self.hashValue) { item in
                 content(item)
             }
         }

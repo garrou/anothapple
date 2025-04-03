@@ -28,7 +28,7 @@ struct Toast: ViewModifier {
                             .background(isError ? Color.red.opacity(0.8) : Color.green.opacity(0.8))
                             .cornerRadius(8)
                     }
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 30)
                     .transition(.move(edge: .bottom))
                     .onAppear {
                         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
@@ -44,7 +44,7 @@ struct Toast: ViewModifier {
 }
 
 extension View {
-    func toast(message: String, isShowing: Binding<Bool>, isError: Bool, duration: TimeInterval = 2) -> some View {
+    func toast(message: String, isShowing: Binding<Bool>, isError: Bool, duration: TimeInterval = 3) -> some View {
         self.modifier(Toast(message: message, isShowing: isShowing, isError: isError, duration: duration))
     }
 }

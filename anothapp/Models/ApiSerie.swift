@@ -57,13 +57,3 @@ class ApiSerie: NSObject, Codable {
         self.platforms = platforms
     }
 }
-
-class Platform: NSObject, Codable {
-    let name: String
-    let logo: String
-    
-    init(name: String, logo: String) {
-        self.name = name
-        self.logo = logo
-    }
-}

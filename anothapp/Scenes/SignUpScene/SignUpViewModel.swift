@@ -9,15 +9,12 @@ import Foundation
 
 class SignUpViewModel: ObservableObject {
     
-    @Published var email: String = ""
-    @Published var username: String = ""
-    @Published var password: String = ""
-    @Published var confirmPassword: String = ""
-    @Published var errorMessage: String = ""
-    @Published var hasError = false
+    @Published var email = ""
+    @Published var username = ""
+    @Published var password = ""
+    @Published var confirmPassword = ""
     
     private let router: SignUpRouter
-    private let authService = AuthService()
     
     var isInvalidForm: Bool {
         email.isEmpty || username.isEmpty || password.isEmpty || confirmPassword.isEmpty
@@ -31,38 +28,25 @@ class SignUpViewModel: ObservableObject {
         router.routeToLoginPage()
     }
     
-    @MainActor
     func performSignUp() async {
         if !isValidEmail() {
-            errorMessage = "Email invalide"
-            hasError = true
+            ToastManager.shared.setToast(message: "Email invalide")
             return
         }
         if username.count < 3 {
-            errorMessage = "Le nom d'utilisateur doit contenir au moins 3 caractères"
-            hasError = true
+            ToastManager.shared.setToast(message: "Le nom d'utilisateur doit contenir au moins 3 caractères")
             return
         }
         if password.count < 8 {
-            errorMessage = "Le mot de passe doit contenir au moins 8 caractères"
-            hasError = true
+            ToastManager.shared.setToast(message: "Le mot de passe doit contenir au moins 8 caractères")
             return
         }
         if password != confirmPassword {
-            errorMessage = "Les mots de passe ne correspondent pas"
-            hasError = true
+            ToastManager.shared.setToast(message: "Les mots de passe ne correspondent pas")
             return
         }
-        
-        let signUpRequest = SignUpRequest(email: email, username: username, password: password, confirm: confirmPassword)
-        do {
-            let created = try await authService.signup(signUpRequest: signUpRequest)
-            
-            if created {
-                router.routeToLoginPage()
-            }
-        } catch {
-            errorMessage = "Une erreur est survenue"
+        if await AuthManager.shared.signup(email: email, username: username, password: password, confirm: confirmPassword) {
+            router.routeToLoginPage()
         }
     }
     

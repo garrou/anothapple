@@ -13,7 +13,15 @@ class FriendsManager {
     private let friendService = FriendService()
 
     func getFriendsWhoWatch(id: Int) async -> [Friend] {
-        let viewedBy = try? await friendService.fetchUsersWhoWatch(id: id)
-        return viewedBy?.friends ?? []
+        var friends: [Friend] = []
+        
+        do {
+            if let viewedBy = try await friendService.fetchUsersWhoWatch(id: id) {
+                friends = viewedBy.friends
+            }
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la récupération des amis")
+        }
+        return friends
     }
 }

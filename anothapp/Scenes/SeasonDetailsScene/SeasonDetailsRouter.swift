@@ -1,5 +1,5 @@
 //
-//  EpisodesRouter.swift
+//  SeasonDetailsRouter.swift
 //  anothapp
 //
 //  Created by Adrien Garrouste on 03/04/2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class EpisodesRouter {
+class SeasonDetailsRouter {
     
     private let rootCoordinator: NavigationCoordinator
     let id: Int
@@ -22,28 +22,28 @@ class EpisodesRouter {
 
 // MARK: ViewFactory implementation
 
-extension EpisodesRouter: Routable {
+extension SeasonDetailsRouter: Routable {
     
     func makeView() -> AnyView {
-        let viewModel = EpisodesViewModel(router: self)
-        let view = EpisodesView(viewModel: viewModel)
+        let viewModel = SeasonDetailsViewModel(router: self)
+        let view = SeasonDetailsView(viewModel: viewModel)
         return AnyView(view)
     }
 }
 
 // MARK: Hashable implementation
 
-extension EpisodesRouter {
+extension SeasonDetailsRouter {
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        
     }
     
-    static func == (lhs: EpisodesRouter, rhs: EpisodesRouter) -> Bool {
-        lhs.id == rhs.id && lhs.season == rhs.season
+    static func == (lhs: SeasonDetailsRouter, rhs: SeasonDetailsRouter) -> Bool {
+        lhs.hashValue == rhs.hashValue
     }
 }
 
-extension EpisodesRouter {
-    static let mock: EpisodesRouter = .init(rootCoordinator: AppRouter(), id: 10051, season: 1)
+extension SeasonDetailsRouter {
+    static let mock: SeasonDetailsRouter = .init(rootCoordinator: AppRouter(), id: 10051, season: 1)
 }

@@ -26,9 +26,15 @@ class SeriesViewModel: ObservableObject {
     
     @MainActor
     func loadSeries() async {
-        isLoading = true
         series = await SeriesCacheManager.shared.getSeries(title: titleSearch)
+    }
+    
+    @MainActor
+    func loadData() async {
+        isLoading = true
+        series = await SeriesCacheManager.shared.getSeries(title: "")
         let _ = await SeriesListCacheManager.shared.getSeries()
+        let _ = await PlatformsCacheManager.shared.getPlatforms()
         isLoading = false
     }
 }
