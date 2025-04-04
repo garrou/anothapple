@@ -49,7 +49,7 @@ class DiscoverDetailsViewModel: ObservableObject {
     }
 }
 
-// MARK: - DiscoverViewModel mock for preview
+// MARK: - DiscoverDetailsViewModel mock for preview
 
 extension DiscoverDetailsViewModel {
     static let mock: DiscoverDetailsViewModel = .init(router: DiscoverDetailsRouter.mock, serie: Datasource.mockDiscoverSerie)

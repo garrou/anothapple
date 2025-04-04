@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct FavoritesView: View {
+struct SeriesStatusView: View {
     
-    @StateObject var viewModel: FavoritesViewModel
+    @StateObject var viewModel: SeriesStatusViewModel
     
     var body: some View {
         ScrollView {
@@ -30,15 +30,10 @@ struct FavoritesView: View {
             }
         }
         .padding(.vertical, 10)
-        .navigationTitle("\(viewModel.series.count) favori(s)")
-        .onAppear {
-            Task {
-                viewModel.loadFavorites()
-            }
-        }
+        .navigationTitle(Formatter.shared.formatPlural(str: "série", num: viewModel.series.count))
     }
 }
 
 #Preview {
-    FavoritesView(viewModel: .mock)
+    SeriesStatusView(viewModel: .mock)
 }

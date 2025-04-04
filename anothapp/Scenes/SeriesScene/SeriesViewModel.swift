@@ -26,20 +26,13 @@ class SeriesViewModel: ObservableObject {
     
     @MainActor
     func loadSeries() async {
-        series = await SeriesCacheManager.shared.getSeries(title: titleSearch)
-    }
-    
-    @MainActor
-    func loadData() async {
         isLoading = true
-        series = await SeriesCacheManager.shared.getSeries(title: "")
-        let _ = await SeriesListCacheManager.shared.getSeries()
-        let _ = await PlatformsCacheManager.shared.getPlatforms()
+        series = await SeriesCacheManager.shared.getSeries(title: titleSearch)
         isLoading = false
     }
 }
 
-// MARK: - SeriesPageViewModel mock for preview
+// MARK: - SeriesViewModel mock for preview
 
 extension SeriesViewModel {
     static let mock: SeriesViewModel = .init(router: SeriesRouter.mock)

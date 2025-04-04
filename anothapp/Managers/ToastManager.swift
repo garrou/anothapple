@@ -16,8 +16,10 @@ class ToastManager: ObservableObject {
     @Published var showToast = false
     
     func setToast(message: String, isError: Bool = true) {
-        self.message = message
-        self.isError = isError
-        showToast = true
+        DispatchQueue.main.async {
+            self.message = message
+            self.isError = isError
+            self.showToast = true
+        }
     }
 }

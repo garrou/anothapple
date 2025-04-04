@@ -57,7 +57,7 @@ class SignUpViewModel: ObservableObject {
     }
 }
 
-// MARK: - SignUpPageViewModel mock for preview
+// MARK: - SignUpViewModel mock for preview
 
 extension SignUpViewModel {
     static let mock: SignUpViewModel = .init(router: SignUpRouter.mock)

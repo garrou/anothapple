@@ -35,8 +35,8 @@ class SerieDetailsViewModel: ObservableObject {
         router.routeToEpisodesView(id: serie.id, season: season)
     }
     
-    func routeToSeasonDetails(season: Int) {
-        router.routeToSeasonDetailsView(id: serie.id, season: season)
+    func routeToSeasonDetails(season: Season) {
+        router.routeToSeasonDetailsView(serie: serie, season: season)
     }
     
     @MainActor
@@ -58,10 +58,8 @@ class SerieDetailsViewModel: ObservableObject {
     }
     
     func routeToDiscoverDetails() async {
-        let fetched = await ApiSeriesCacheManager.shared.getSerie(id: serie.id)
-        
-        if fetched != nil {
-            router.routeToDiscoverDetails(serie: fetched!)
+        if let fetched = await ApiSeriesCacheManager.shared.getSerie(id: serie.id) {
+            router.routeToDiscoverDetails(serie: fetched)
         }
     }
     

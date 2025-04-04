@@ -25,7 +25,7 @@ struct Toast: ViewModifier {
                             .foregroundColor(.white)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 10)
-                            .background(isError ? Color.red.opacity(0.8) : Color.green.opacity(0.8))
+                            .background(isError ? Color.red : Color.green)
                             .cornerRadius(8)
                     }
                     .padding(.bottom, 30)

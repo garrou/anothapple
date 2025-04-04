@@ -37,17 +37,6 @@ struct Episode: Codable, Hashable {
         self.description = try container.decode(String.self, forKey: .description)
         
         let dateString = try container.decode(String.self, forKey: .date)
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
-        if let airDate = formatter.date(from: dateString) {
-            date = airDate
-        } else {
-            throw DecodingError.dataCorruptedError(
-                forKey: .date,
-                in: container,
-                debugDescription: "Date string does not match expected format"
-            )
-        }
+        date = try Formatter.shared.stringToDate(str: dateString, format: "yyyy-MM-dd")
     }
 }

@@ -31,8 +31,8 @@ class SerieDetailsRouter: ObservableObject {
         rootCoordinator.push(router)
     }
     
-    func routeToSeasonDetailsView(id: Int, season: Int) {
-        let router = SeasonDetailsRouter(rootCoordinator: rootCoordinator, id: id, season: season)
+    func routeToSeasonDetailsView(serie: Serie, season: Season) {
+        let router = SeasonDetailsRouter(rootCoordinator: rootCoordinator, serie: serie, season: season)
         rootCoordinator.push(router)
     }
 }

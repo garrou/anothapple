@@ -49,18 +49,7 @@ class Serie: NSObject, Codable {
         watch = (try? container.decode(Bool.self, forKey: .watch)) ?? false
         seasons = try container.decode(Int.self, forKey: .seasons)
         
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        let dateString = (try? container.decode(String.self, forKey: .addedAt)) ?? formatter.string(from: Date())
-        
-        if let date = formatter.date(from: dateString) {
-            addedAt = date
-        } else {
-            throw DecodingError.dataCorruptedError(
-                forKey: .addedAt,
-                in: container,
-                debugDescription: "Date string does not match expected format"
-            )
-        }
+        let dateString = (try? container.decode(String.self, forKey: .addedAt)) ?? Formatter.shared.dateToString(date: Date())
+        addedAt = try Formatter.shared.stringToDate(str: dateString)
     }
 }

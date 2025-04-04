@@ -23,12 +23,12 @@ class HomeRouter {
         DiscoverRouter(rootCoordinator: rootCoordinator).makeView()
     }
     
-    func getFavoritesView() -> AnyView {
-        FavoritesRouter(rootCoordinator: rootCoordinator).makeView()
+    func getSeriesStatusView(series: [Serie]) -> AnyView {
+        SeriesStatusRouter(rootCoordinator: rootCoordinator, series: series).makeView()
     }
     
-    func getWatchListView() -> AnyView {
-        WatchListRouter(rootCoordinator: rootCoordinator).makeView()
+    func getTimelineView() -> AnyView {
+        TimelineRouter(rootCoordinator: rootCoordinator).makeView()
     }
     
     func routeToWelcomePage() {

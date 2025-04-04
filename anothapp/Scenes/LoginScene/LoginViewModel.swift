@@ -34,7 +34,7 @@ class LoginViewModel: ObservableObject {
     }
 }
 
-// MARK: - LoginPageViewModel mock for preview
+// MARK: - LoginViewModel mock for preview
 
 extension LoginViewModel {
     static let mock: LoginViewModel = .init(router: LoginRouter.mock)

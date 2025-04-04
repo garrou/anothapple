@@ -33,8 +33,12 @@ class PlatformsCacheManager {
         cache.object(forKey: String(id) as NSString)
     }
     
-    func getPlatforms() async -> [Platform] {
-        let platforms = keys.compactMap { id in getPlatform(id: id) }
+    func getPlatforms() -> [Platform] {
+        keys.compactMap { id in getPlatform(id: id) }
+    }
+    
+    func loadPlatforms() async -> [Platform] {
+        let platforms = getPlatforms()
         if !platforms.isEmpty { return platforms }
         
         do {
@@ -42,7 +46,6 @@ class PlatformsCacheManager {
             fetched.forEach { storePlatform(id: $0.id!, value: $0) }
             return fetched
         } catch {
-            print(error)
             ToastManager.shared.setToast(message: "Erreur lors du chargement des plateformes")
             return []
         }

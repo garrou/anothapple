@@ -30,7 +30,7 @@ class EpisodesViewModel: ObservableObject {
     }
 }
 
-// MARK: - WatchListViewModel mock for preview
+// MARK: - EpisodesViewModel mock for preview
 
 extension EpisodesViewModel {
     static let mock: EpisodesViewModel = .init(router: EpisodesRouter.mock)

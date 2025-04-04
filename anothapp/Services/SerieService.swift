@@ -12,7 +12,7 @@ class SerieService {
     private let baseUrl = "\(BaseService.serverUrl)/shows"
     private let decoder: JSONDecoder = JSONDecoder()
     
-    func fetchSeries(status: String?) async throws -> [Serie] {
+    func fetchSeries(status: String? = nil) async throws -> [Serie] {
         let url = status == nil ? baseUrl : "\(baseUrl)?status=\(status!)"
         let (data, ok) = try await BaseService.shared.request(url: url)
         return ok ? try decoder.decode([Serie].self, from: data) : []

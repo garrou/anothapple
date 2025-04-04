@@ -51,7 +51,7 @@ struct EpisodeView: View {
             Spacer()
             
             HStack {
-                Text("\(formattedDate(episode.date))")
+                Text("\(Formatter.shared.dateToString(date: episode.date, style: .medium))")
                     .font(.caption)
                     .foregroundColor(.primary.opacity(0.8))
                 
@@ -69,12 +69,6 @@ struct EpisodeView: View {
         .frame(maxWidth: .infinity, minHeight: 120)
         .cornerRadius(12)
         .shadow(radius: 4)
-    }
-    
-    private func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter.string(from: date)
     }
 }
 

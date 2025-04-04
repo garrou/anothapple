@@ -13,31 +13,35 @@ struct SeasonDetailsView: View {
     
     var body: some View {
         ScrollView {
+            
+            Text(Formatter.shared.formatPlural(str: "visionnage", num: viewModel.seasons.count))
+                .font(.headline)
+                .foregroundColor(.primary)
+            
+            
+            Text(viewModel.viewingTime)
+                .font(.headline)
+                .foregroundColor(.primary)
+            
             GridView(items: viewModel.seasons, columns: 2) { season in
                 VStack {
                     if season.platform.logo.isEmpty {
+                        Image(systemName: "play.circle")
                         Text(season.platform.name)
                     } else {
                         ImageCardView(url: season.platform.logo)
                     }
-                    Text("\(formattedDate(season.addedAt))")
+                    Text("\(Formatter.shared.dateToString(date: season.addedAt, style: .medium))")
                 }
                 
             }
         }
         .padding(.vertical, 10)
-        .navigationTitle("\(viewModel.seasons.count) visionnage(s)")
         .onAppear {
             Task {
                 await viewModel.loadSeasonDetails()
             }
         }
-    }
-    
-    private func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter.string(from: date)
     }
 }
 

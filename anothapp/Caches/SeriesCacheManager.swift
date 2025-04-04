@@ -79,11 +79,11 @@ class SeriesCacheManager {
         }
         
         do {
-            let fetched = try await serieService.fetchSeries(status: nil)
+            let fetched = try await serieService.fetchSeries()
             fetched.forEach { storeSerie(id: $0.id, value: $0) }
             return fetched
         } catch {
-            ToastManager.shared.setToast(message: "Erreur durant la récupération des séries")
+            ToastManager.shared.setToast(message: "Erreur durant la récupération de vos séries")
             return []
         }
     }
@@ -91,6 +91,11 @@ class SeriesCacheManager {
     func getFavorites() -> [Serie] {
         let series = keys.compactMap { id in getSerie(id: id) }
         return series.filter { $0.favorite }.sorted { $0.title.lowercased() < $1.title.lowercased() }
+    }
+    
+    func getSeriesByWatching(watching: Bool) -> [Serie] {
+        let series = keys.compactMap { id in getSerie(id: id) }
+        return series.filter { $0.watch == watching }.sorted { $0.title.lowercased() < $1.title.lowercased() }
     }
     
     func changeFavorite(serie: Serie) async -> Serie {

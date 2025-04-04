@@ -28,6 +28,11 @@ struct SeriesView: View {
                         await viewModel.loadSeries()
                     }
                 }
+                .onSubmit {
+                    Task {
+                        await viewModel.loadSeries()
+                    }
+                }
             
             if viewModel.isLoading {
                 LoadingView()
@@ -51,7 +56,7 @@ struct SeriesView: View {
         .padding(.vertical, 10)
         .onAppear {
             Task {
-                await viewModel.loadData()
+                await viewModel.loadSeries()
             }
         }
     }

@@ -10,12 +10,12 @@ import SwiftUI
 class SeasonDetailsRouter {
     
     private let rootCoordinator: NavigationCoordinator
-    let id: Int
-    let season: Int
+    let serie: Serie
+    let season: Season
     
-    init(rootCoordinator: NavigationCoordinator, id: Int, season: Int) {
+    init(rootCoordinator: NavigationCoordinator, serie: Serie, season: Season) {
         self.rootCoordinator = rootCoordinator
-        self.id = id
+        self.serie = serie
         self.season = season
     }
 }
@@ -45,5 +45,5 @@ extension SeasonDetailsRouter {
 }
 
 extension SeasonDetailsRouter {
-    static let mock: SeasonDetailsRouter = .init(rootCoordinator: AppRouter(), id: 10051, season: 1)
+    static let mock: SeasonDetailsRouter = .init(rootCoordinator: AppRouter(), serie: Datasource.mockSerie, season: Datasource.mockSeason)
 }

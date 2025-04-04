@@ -42,12 +42,12 @@ struct SerieDetailsView: View {
                         
                         HStack {
                             Image(systemName: "film.stack")
-                            Text("\(viewModel.infos.seasons.count) / \(viewModel.serie.seasons) saison(s)")
+                            Text("\(viewModel.infos.seasons.count) / " + Formatter.shared.formatPlural(str: "saison", num: viewModel.serie.seasons))
                         }
                         
                         HStack {
                             Image(systemName: "timer")
-                            Text("\(viewModel.infos.time) mins de visionnage")
+                            Text("\(Formatter.shared.formatMins(viewModel.infos.time)) de visionnage")
                         }
                         
                         if viewModel.serie.favorite {
@@ -75,7 +75,7 @@ struct SerieDetailsView: View {
                         // User seasons
                         GridView(items: viewModel.infos.seasons, columns: 2) { season in
                             Button(action: {
-                                viewModel.routeToSeasonDetails(season: season.number)
+                                viewModel.routeToSeasonDetails(season: season)
                             }) {
                                 SeasonCardView(season: season)
                             }

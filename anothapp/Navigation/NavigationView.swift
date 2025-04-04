@@ -10,6 +10,7 @@ import SwiftUI
 struct NavigationView: View {
     
     @StateObject var appRouter: AppRouter
+    @StateObject private var toastManager = ToastManager.shared
     
     var body: some View {
         NavigationStack(path: $appRouter.paths) {
@@ -18,6 +19,8 @@ struct NavigationView: View {
                 .navigationDestination(for: AnyRoutable.self) { router in
                     router.makeView()
                 }
-        }.tint(.secondary)
+        }
+        .tint(.secondary)
+        .toast(message: toastManager.message, isShowing: $toastManager.showToast, isError: toastManager.isError)
     }
 }

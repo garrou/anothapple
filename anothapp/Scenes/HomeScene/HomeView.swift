@@ -25,6 +25,18 @@ struct HomeView: View {
                         Label("Découvrir", systemImage: "magnifyingglass")
                     }
                     .tag(AppTab.discover)
+                
+                Text("Friends")
+                    .tabItem {
+                        Label("Amis", systemImage: "person.3")
+                    }
+                    .tag(AppTab.friends)
+                
+                Text("Stats")
+                    .tabItem {
+                        Label("Statistiques", systemImage: "chart.pie")
+                    }
+                    .tag(AppTab.statistics)
             }
             
             if viewModel.isMenuOpened {
@@ -46,16 +58,16 @@ struct HomeView: View {
                                 NavigationLink(destination: viewModel.getWatchListView()) {
                                     Label("Ma liste", systemImage: "list.bullet")
                                 }
-                                NavigationLink(destination: Text("Option 2 View")) {
+                                NavigationLink(destination: viewModel.continueWatchingView) {
                                     Label("Séries à continuer", systemImage: "play")
                                 }
-                                NavigationLink(destination: Text("Option 2 View")) {
+                                NavigationLink(destination: viewModel.getTimelineView()) {
                                     Label("Historique", systemImage: "calendar.day.timeline.left")
                                 }
                                 NavigationLink(destination: viewModel.getFavoritesView()) {
                                     Label("Favoris", systemImage: "heart")
                                 }
-                                NavigationLink(destination: Text("Option 3 View")) {
+                                NavigationLink(destination: viewModel.getStoppedSeriesView()) {
                                     Label("Séries arrêtées", systemImage: "pause")
                                 }
                                 NavigationLink(destination: Text("Option 3 View")) {
@@ -81,7 +93,18 @@ struct HomeView: View {
                         Spacer() // Drawer to the left
                     }
                     .transition(.move(edge: .leading))
-                }.zIndex(1)
+                }
+                .zIndex(1)
+                .onAppear {
+                    Task {
+                        await viewModel.loadSeriesToContinueView()
+                    }
+                }
+            }
+        }
+        .onAppear {
+            Task {
+                await StateManager.shared.loadCaches()
             }
         }
         .toolbar {

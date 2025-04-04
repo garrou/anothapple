@@ -47,4 +47,13 @@ class SeriesManager {
             return []
         }
     }
+    
+    func getSeriesByStatus(status: String) async -> [Serie] {
+        do {
+            return try await serieService.fetchSeries(status: status)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la récupération des séries par statut")
+            return []
+        }
+    }
 }

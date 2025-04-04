@@ -59,16 +59,21 @@ class SeriesListCacheManager {
         }
     }
     
-    func getSeries() async -> [Serie] {
+    func getWatchList() -> [Serie] {
         let series = keys.compactMap { id in getSerie(id: id) }
-        if !series.isEmpty { return series.sorted { $0.title.lowercased() < $1.title.lowercased() } }
+        return series.sorted { $0.title.lowercased() < $1.title.lowercased() }
+    }
+    
+    func loadWatchList() async -> [Serie] {
+        let series = getWatchList()
+        if !series.isEmpty { return series }
         
         do {
-            let fetched = try await serieService.fetchSeries(status: "not-started")
+            let fetched = try await serieService.fetchSeries(status: "watchlist")
             fetched.forEach { storeSerie(id: $0.id, value: $0) }
             return fetched
         } catch {
-            ToastManager.shared.setToast(message: "Erreur durant la récupération des séries")
+            ToastManager.shared.setToast(message: "Erreur durant la récupération des séries de la liste")
             return []
         }
     }

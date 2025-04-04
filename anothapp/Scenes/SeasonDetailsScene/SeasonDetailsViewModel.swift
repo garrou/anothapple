@@ -14,6 +14,11 @@ class SeasonDetailsViewModel: ObservableObject {
     
     private let router: SeasonDetailsRouter
     
+    var viewingTime: String {
+        let mins = seasons.count * router.season.episodes * router.serie.duration
+        return Formatter.shared.formatMins(mins)
+    }
+    
     init(router: SeasonDetailsRouter) {
         self.router = router
     }
@@ -21,7 +26,7 @@ class SeasonDetailsViewModel: ObservableObject {
     @MainActor
     func loadSeasonDetails() async {
         isLoading = true
-        seasons = await SeriesManager.shared.getSeasonDetails(id: router.id, num: router.season)
+        seasons = await SeriesManager.shared.getSeasonDetails(id: router.serie.id, num: router.season.number)
         isLoading = false
     }
     
