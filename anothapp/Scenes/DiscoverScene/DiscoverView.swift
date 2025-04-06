@@ -33,10 +33,9 @@ struct DiscoverView: View {
             }
         }
         .padding(.vertical, 10)
-        .onAppear {
-            Task {
-                await viewModel.loadDiscoverSeries(limit: 20)
-            }
+        .navigationTitle("Découvrir")
+        .task {
+            await viewModel.loadDiscoverSeries(limit: 20)
         }
     }
 }

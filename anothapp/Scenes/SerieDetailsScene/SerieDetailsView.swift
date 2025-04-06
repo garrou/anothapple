@@ -42,12 +42,12 @@ struct SerieDetailsView: View {
                         
                         HStack {
                             Image(systemName: "film.stack")
-                            Text("\(viewModel.infos.seasons.count) / " + Formatter.shared.formatPlural(str: "saison", num: viewModel.serie.seasons))
+                            Text("\(viewModel.infos.seasons.count) / " + Helper.shared.formatPlural(str: "saison", num: viewModel.serie.seasons))
                         }
                         
                         HStack {
                             Image(systemName: "timer")
-                            Text("\(Formatter.shared.formatMins(viewModel.infos.time)) de visionnage")
+                            Text("\(Helper.shared.formatMins(viewModel.infos.time)) de visionnage")
                         }
                         
                         if viewModel.serie.favorite {
@@ -89,10 +89,8 @@ struct SerieDetailsView: View {
                                 )
                             }
                         )
-                        .onAppear {
-                            Task {
-                                await viewModel.getSerieInfos()
-                            }
+                        .task {
+                            await viewModel.getSerieInfos()
                         }
                         
                         // Seasons to add
@@ -130,10 +128,8 @@ struct SerieDetailsView: View {
                                 )
                             }
                         )
-                        .onAppear {
-                            Task {
-                                await viewModel.getSeasonsToAdd()
-                            }
+                        .task {
+                            await viewModel.getSeasonsToAdd()
                         }
                         
                         // Friends who watched this serie
@@ -152,10 +148,8 @@ struct SerieDetailsView: View {
                                 )
                             }
                         )
-                        .onAppear {
-                            Task {
-                                await viewModel.getFriendsWhoWatch()
-                            }
+                        .task {
+                            await viewModel.getFriendsWhoWatch()
                         }
                     }
                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))

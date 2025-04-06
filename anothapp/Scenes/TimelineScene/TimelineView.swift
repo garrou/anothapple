@@ -26,10 +26,8 @@ struct TimelineView: View {
             .padding()
         }
         .navigationTitle("Historique")
-        .onAppear {
-            Task {
-                await viewModel.loadTimeline()
-            }
+        .task {
+            await viewModel.loadTimeline()
         }
     }
 }
@@ -42,7 +40,7 @@ struct TimelineItemView: View {
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
             VStack(alignment: .trailing) {
-                Text(Formatter.shared.dateToString(date: item.addedAt, style: .medium))
+                Text(Helper.shared.dateToString(date: item.addedAt, style: .medium))
                     .font(.caption)
                     .foregroundColor(.secondary)
                 

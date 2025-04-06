@@ -23,10 +23,8 @@ struct EpisodesView: View {
         }
         .padding(.vertical, 10)
         .navigationTitle("Saison \(viewModel.season) - \(viewModel.episodes.count) épisodes")
-        .onAppear {
-            Task {
-                await viewModel.loadEpisodes()
-            }
+        .task {
+            await viewModel.loadEpisodes()
         }
     }
 }
@@ -51,7 +49,7 @@ struct EpisodeView: View {
             Spacer()
             
             HStack {
-                Text("\(Formatter.shared.dateToString(date: episode.date, style: .medium))")
+                Text("\(Helper.shared.dateToString(date: episode.date, style: .medium))")
                     .font(.caption)
                     .foregroundColor(.primary.opacity(0.8))
                 

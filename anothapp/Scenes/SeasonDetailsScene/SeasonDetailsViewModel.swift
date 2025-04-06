@@ -16,7 +16,7 @@ class SeasonDetailsViewModel: ObservableObject {
     
     var viewingTime: String {
         let mins = seasons.count * router.season.episodes * router.serie.duration
-        return Formatter.shared.formatMins(mins)
+        return Helper.shared.formatMins(mins)
     }
     
     init(router: SeasonDetailsRouter) {
@@ -31,7 +31,7 @@ class SeasonDetailsViewModel: ObservableObject {
     }
     
     func getPlatform(id: Int) -> Platform? {
-        PlatformsCacheManager.shared.getPlatform(id: id)
+        PlatformsCacheManager.shared.getById(id: id)
     }
 }
 

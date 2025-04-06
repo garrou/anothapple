@@ -71,4 +71,8 @@ class SecurityManager {
         }
         return nil
     }
+    
+    func isLoggedIn() -> Bool {
+        getUser() != nil
+    }
 }

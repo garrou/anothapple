@@ -11,9 +11,9 @@ enum FormatterError: Error {
     case decodingFailed(String)
 }
 
-class Formatter {
+class Helper {
     
-    static let shared = Formatter()
+    static let shared = Helper()
     private let dateFormatter = DateFormatter()
     
     func stringToDate(str: String, format: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") throws -> Date {
@@ -46,5 +46,9 @@ class Formatter {
         if hours > 0 { str += formatPlural(str: "heure", num: hours) + " " }
         if minutes > 0 { str += formatPlural(str: "min", num: minutes) }
         return str.isEmpty ? formatPlural(str: "min", num: mins) : str
+    }
+    
+    func compareString(_ str1: String, _ str2: String) -> Bool {
+        str1.lowercased().folding(options: .diacriticInsensitive, locale: .current).contains(str2.lowercased())
     }
 }

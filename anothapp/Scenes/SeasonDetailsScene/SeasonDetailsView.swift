@@ -14,7 +14,7 @@ struct SeasonDetailsView: View {
     var body: some View {
         ScrollView {
             
-            Text(Formatter.shared.formatPlural(str: "visionnage", num: viewModel.seasons.count))
+            Text(Helper.shared.formatPlural(str: "visionnage", num: viewModel.seasons.count))
                 .font(.headline)
                 .foregroundColor(.primary)
             
@@ -31,16 +31,14 @@ struct SeasonDetailsView: View {
                     } else {
                         ImageCardView(url: season.platform.logo)
                     }
-                    Text("\(Formatter.shared.dateToString(date: season.addedAt, style: .medium))")
+                    Text("\(Helper.shared.dateToString(date: season.addedAt, style: .medium))")
                 }
                 
             }
         }
         .padding(.vertical, 10)
-        .onAppear {
-            Task {
-                await viewModel.loadSeasonDetails()
-            }
+        .task {
+            await viewModel.loadSeasonDetails()
         }
     }
 }

@@ -28,6 +28,6 @@ struct Timeline: Codable, Hashable {
         self.season = try container.decode(Season.self, forKey: .season)
         
         let dateString = try container.decode(String.self, forKey: .addedAt)
-        addedAt = try Formatter.shared.stringToDate(str: dateString)
+        addedAt = try Helper.shared.stringToDate(str: dateString)
     }
 }

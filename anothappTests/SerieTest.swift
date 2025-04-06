@@ -12,13 +12,23 @@ class SerieTest: XCTestCase {
     
     private let decoder = JSONDecoder()
     
+    func testStringFormattingError() {
+        XCTAssertThrowsError(try Helper.shared.stringToDate(str: ""))
+    }
+    
+    
     func testDateFormatting() {
-        XCTAssertNoThrow(try Formatter.shared.stringToDate(str: "2024-10-10T17:56:24.228Z"))
+        XCTAssertNoThrow(try Helper.shared.stringToDate(str: "2024-10-10T17:56:24.228Z"))
+    }
+    
+    func testDateToString() {
+        let string = Helper.shared.dateToString(date: Date())
+        XCTAssertNotEqual(string, "")
     }
     
     func testCompareDate() throws {
-        let first = try Formatter.shared.stringToDate(str: "2024-10-10T17:56:24.228Z")
-        let second = try Formatter.shared.stringToDate(str: "2025-02-12T13:12:58.024Z")
+        let first = try Helper.shared.stringToDate(str: "2024-10-10T17:56:24.228Z")
+        let second = try Helper.shared.stringToDate(str: "2025-02-12T13:12:58.024Z")
         XCTAssertTrue(first < second)
     }
     

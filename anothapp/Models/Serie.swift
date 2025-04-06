@@ -49,7 +49,10 @@ class Serie: NSObject, Codable {
         watch = (try? container.decode(Bool.self, forKey: .watch)) ?? false
         seasons = try container.decode(Int.self, forKey: .seasons)
         
-        let dateString = (try? container.decode(String.self, forKey: .addedAt)) ?? Formatter.shared.dateToString(date: Date())
-        addedAt = try Formatter.shared.stringToDate(str: dateString)
+        if let dateString = (try? container.decode(String.self, forKey: .addedAt)) {
+            addedAt = try Helper.shared.stringToDate(str: dateString)
+        } else {
+            addedAt = Date()
+        }
     }
 }

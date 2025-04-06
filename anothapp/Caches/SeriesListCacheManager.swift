@@ -14,14 +14,29 @@ class SeriesListCacheManager {
     private let serieService = SerieService()
     private var keys: Set<Int> = []
     
-    private func storeSerie(id: Int, value: Serie) {
+    private func store(id: Int, value: Serie) {
         cache.setObject(value, forKey: String(id) as NSString)
         keys.insert(id)
     }
     
-    private func removeSerie(id: Int) {
+    private func remove(id: Int) {
         cache.removeObject(forKey: String(id) as NSString)
         keys.remove(id)
+    }
+    
+    private func loadWatchList() async -> [Serie] {
+        do {
+            let fetched = try await serieService.fetchSeries(status: "watchlist")
+            fetched.forEach { store(id: $0.id, value: $0) }
+            return fetched
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la récupération des séries de la liste")
+            return []
+        }
+    }
+    
+    private func getAll() -> [Serie] {
+        keys.compactMap { id in getById(id: id) }
     }
     
     func clear() {
@@ -29,7 +44,7 @@ class SeriesListCacheManager {
         keys.removeAll()
     }
     
-    func getSerie(id: Int) -> Serie? {
+    func getById(id: Int) -> Serie? {
         cache.object(forKey: String(id) as NSString)
     }
     
@@ -40,7 +55,7 @@ class SeriesListCacheManager {
             let (data, added) = try await serieService.addSerie(request: request)
             if !added { return false }
             let show = try JSONDecoder().decode(Serie.self, from: data)
-            storeSerie(id: show.id, value: show)
+            store(id: show.id, value: show)
             return true
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant l'ajout")
@@ -51,7 +66,7 @@ class SeriesListCacheManager {
     func deleteSerie(id: Int) async -> Bool {
         do {
             let removed = try await serieService.deleteSerie(id: id, fromList: true)
-            if removed { self.removeSerie(id: id) }
+            if removed { remove(id: id) }
             return removed
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant la suppression")
@@ -59,22 +74,11 @@ class SeriesListCacheManager {
         }
     }
     
-    func getWatchList() -> [Serie] {
-        let series = keys.compactMap { id in getSerie(id: id) }
-        return series.sorted { $0.title.lowercased() < $1.title.lowercased() }
-    }
-    
-    func loadWatchList() async -> [Serie] {
-        let series = getWatchList()
-        if !series.isEmpty { return series }
-        
-        do {
-            let fetched = try await serieService.fetchSeries(status: "watchlist")
-            fetched.forEach { storeSerie(id: $0.id, value: $0) }
-            return fetched
-        } catch {
-            ToastManager.shared.setToast(message: "Erreur durant la récupération des séries de la liste")
-            return []
-        }
+    func getWatchList(title: String = "") async -> [Serie] {
+        var series = getAll()
+        if series.isEmpty { series = await loadWatchList() }
+        return title.isEmpty
+        ? series.sorted { $0.title.lowercased() < $1.title.lowercased() }
+        : series.filter { Helper.shared.compareString($0.title, title) }
     }
 }

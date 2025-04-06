@@ -8,12 +8,13 @@
 class StateManager {
     
     static let shared = StateManager()
-    var hasLoaded: Bool = false
+    private var hasLoaded: Bool = false
     
     func loadCaches() async {
         guard !hasLoaded else { return }
-        let _ = await SeriesListCacheManager.shared.loadWatchList()
-        let _ = await PlatformsCacheManager.shared.loadPlatforms()
+        let _ = await SeriesCacheManager.shared.getSeries()
+        let _ = await SeriesListCacheManager.shared.getWatchList()
+        let _ = await PlatformsCacheManager.shared.getPlatforms()
         hasLoaded = true
     }
 }

@@ -16,11 +16,7 @@ class AppRouter: ObservableObject {
     }
     
     func resolveInitialRouter() -> any Routable {
-        isLoggedIn() ? HomeRouter(rootCoordinator: self) : WelcomeRouter(rootCoordinator: self)
-    }
-    
-    private func isLoggedIn() -> Bool {
-        SecurityManager.shared.getUser() != nil
+        SecurityManager.shared.isLoggedIn() ? HomeRouter(rootCoordinator: self) : WelcomeRouter(rootCoordinator: self)
     }
 }
 

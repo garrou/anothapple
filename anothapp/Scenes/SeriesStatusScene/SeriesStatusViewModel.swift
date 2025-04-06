@@ -11,12 +11,14 @@ class SeriesStatusViewModel: ObservableObject {
     
     @Published var isLoading = false
     @Published var series: [Serie]
+    @Published var title: String
     
     private let router: SeriesStatusRouter
     
     init(router: SeriesStatusRouter) {
         self.router = router
         self.series = router.series
+        self.title = router.title
     }
     
     func routeToSerieDetail(serie: Serie) {

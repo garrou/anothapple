@@ -30,7 +30,7 @@ struct SeriesStatusView: View {
             }
         }
         .padding(.vertical, 10)
-        .navigationTitle(Formatter.shared.formatPlural(str: "série", num: viewModel.series.count))
+        .navigationTitle(viewModel.title)
     }
 }
 

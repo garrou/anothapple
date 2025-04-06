@@ -18,7 +18,7 @@ class TimelineViewModel: ObservableObject {
     }
     
     func routeToSerieDetails(id: Int) {
-        if let serie = SeriesCacheManager.shared.getSerie(id: id) {
+        if let serie = SeriesCacheManager.shared.getById(id: id) {
             router.routeToSerieDetails(serie: serie)
         }
     }

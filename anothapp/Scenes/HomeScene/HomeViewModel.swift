@@ -20,9 +20,8 @@ class HomeViewModel: ObservableObject {
     private let router: HomeRouter
     
     @Published var selectedTab: AppTab = .series
-    @Published var isMenuOpened: Bool = false
-    @Published var View = EmptyView()
-    @Published var continueWatchingView: AnyView?
+    @Published var isMenuOpened = false
+    @Published var isLoading = false
     
     init(router: HomeRouter) {
         self.router = router
@@ -36,29 +35,35 @@ class HomeViewModel: ObservableObject {
         router.getDiscoverTabView()
     }
     
-    func getTimelineView() -> AnyView {
-        router.getTimelineView()
+    func routeToTimelineView() {
+        router.routeToTimelineView()
     }
     
-    func getFavoritesView() -> AnyView {
+    func routeToFavoritesView() {
         let series = SeriesCacheManager.shared.getFavorites()
-        return router.getSeriesStatusView(series: series)
+        return router.routeToSeriesStatusView(series: series, title: "Favoris")
     }
     
-    func getWatchListView() -> AnyView {
-        let series = SeriesListCacheManager.shared.getWatchList()
-        return router.getSeriesStatusView(series: series)
+    func routeToWatchListView() async {
+        let series = await SeriesListCacheManager.shared.getWatchList()
+        router.routeToSeriesStatusView(series: series, title: "Ma liste")
+    }
+    
+    func routeToSeriesToContinueView() async {
+        let seriesToContinue = await SeriesManager.shared.getSeriesByStatus(status: "continue")
+        router.routeToSeriesStatusView(series: seriesToContinue, title: "En cours")
+    }
+    
+    func routeToStoppedSeriesView() {
+        let seriesStopped = SeriesCacheManager.shared.getSeriesByWatching(watching: false)
+        return router.routeToSeriesStatusView(series: seriesStopped, title: "Arrêtées")
     }
     
     @MainActor
-    func loadSeriesToContinueView() async {
-        let seriesToContinue = await SeriesManager.shared.getSeriesByStatus(status: "continue")
-        continueWatchingView = router.getSeriesStatusView(series: seriesToContinue)
-    }
-    
-    func getStoppedSeriesView() -> AnyView {
-        let seriesStopped = SeriesCacheManager.shared.getSeriesByWatching(watching: false)
-        return router.getSeriesStatusView(series: seriesStopped)
+    func loadCaches() async {
+        isLoading = true
+        await StateManager.shared.loadCaches()
+        isLoading = false
     }
     
     func logout() {

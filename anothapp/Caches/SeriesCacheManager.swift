@@ -8,28 +8,44 @@
 import Foundation
 
 class SeriesCacheManager {
-
+    
     static let shared = SeriesCacheManager()
     private let cache = NSCache<NSString, Serie>()
     private var keys: Set<Int> = []
     private let serieService = SerieService()
-
-    private func storeSerie(id: Int, value: Serie) {
+    
+    private func store(id: Int, value: Serie) {
         cache.setObject(value, forKey: String(id) as NSString)
         keys.insert(id)
     }
     
-    private func removeSerie(id: Int) {
+    private func remove(id: Int) {
         cache.removeObject(forKey: String(id) as NSString)
         keys.remove(id)
+    }
+    
+    private func loadSeries() async -> [Serie] {
+        do {
+            let fetched = try await serieService.fetchSeries()
+            fetched.forEach { store(id: $0.id, value: $0) }
+            return fetched
+        } catch {
+            print(error)
+            ToastManager.shared.setToast(message: "Erreur durant la récupération des séries")
+            return []
+        }
+    }
+    
+    private func getAll() -> [Serie] {
+        keys.compactMap { id in getById(id: id) }
     }
     
     func clear() {
         cache.removeAllObjects()
         keys.removeAll()
     }
-
-    func getSerie(id: Int) -> Serie? {
+    
+    func getById(id: Int) -> Serie? {
         cache.object(forKey: String(id) as NSString)
     }
     
@@ -44,7 +60,7 @@ class SeriesCacheManager {
             if isAdded {
                 let show = try JSONDecoder().decode(Serie.self, from: data)
                 show.addedAt = Date()
-                storeSerie(id: show.id, value: show)
+                store(id: show.id, value: show)
             }
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant l'ajout")
@@ -59,7 +75,7 @@ class SeriesCacheManager {
             let deleted = try await serieService.deleteSerie(id: id)
             
             if deleted {
-                self.removeSerie(id: id)
+                remove(id: id)
             } else {
                 ToastManager.shared.setToast(message: "Impossible de supprimer la série")
             }
@@ -70,32 +86,26 @@ class SeriesCacheManager {
         }
     }
     
-    func getSeries(title: String) async -> [Serie] {
-        let series = keys.compactMap { id in getSerie(id: id) }
-        
-        if !series.isEmpty {
-            let stored = series.sorted { $0.addedAt > $1.addedAt }
-            return title.isEmpty ? stored : stored.filter { $0.title.lowercased().contains(title.lowercased()) }
-        }
-        
-        do {
-            let fetched = try await serieService.fetchSeries()
-            fetched.forEach { storeSerie(id: $0.id, value: $0) }
-            return fetched
-        } catch {
-            ToastManager.shared.setToast(message: "Erreur durant la récupération de vos séries")
-            return []
-        }
+    func getSeries(title: String = "") async -> [Serie] {
+        var series = getAll()
+        if series.isEmpty { series = await loadSeries() }
+        return title.isEmpty
+        ? series.sorted { $0.addedAt > $1.addedAt }
+        : series.filter { Helper.shared.compareString($0.title, title) }
     }
     
-    func getFavorites() -> [Serie] {
-        let series = keys.compactMap { id in getSerie(id: id) }
-        return series.filter { $0.favorite }.sorted { $0.title.lowercased() < $1.title.lowercased() }
+    func getFavorites(title: String = "") -> [Serie] {
+        let series = getAll().filter { $0.favorite }
+        return title.isEmpty
+        ? series.sorted { $0.title.lowercased() < $1.title.lowercased() }
+        : series.filter { Helper.shared.compareString($0.title, title) }
     }
     
-    func getSeriesByWatching(watching: Bool) -> [Serie] {
-        let series = keys.compactMap { id in getSerie(id: id) }
-        return series.filter { $0.watch == watching }.sorted { $0.title.lowercased() < $1.title.lowercased() }
+    func getSeriesByWatching(watching: Bool, title: String = "") -> [Serie] {
+        let series = getAll().filter { $0.watch == watching }
+        return title.isEmpty
+        ? series.sorted { $0.title.lowercased() < $1.title.lowercased() }
+        : series.filter { Helper.shared.compareString($0.title, title) }
     }
     
     func changeFavorite(serie: Serie) async -> Serie {
@@ -104,7 +114,7 @@ class SeriesCacheManager {
         do {
             if try await serieService.changeFavorite(id: serie.id, request: request) {
                 serie.favorite.toggle()
-                storeSerie(id: serie.id, value: serie)
+                store(id: serie.id, value: serie)
             }
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant la modification")
@@ -118,12 +128,12 @@ class SeriesCacheManager {
         do {
             if try await serieService.changeWatching(id: serie.id, request: request) {
                 serie.watch.toggle()
-                storeSerie(id: serie.id, value: serie)
+                store(id: serie.id, value: serie)
             }
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant la modification")
         }
         return serie
     }
-
+    
 }

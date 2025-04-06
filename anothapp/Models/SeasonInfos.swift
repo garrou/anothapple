@@ -28,6 +28,6 @@ struct SeasonInfos: Codable, Hashable {
         platform = try container.decode(Platform.self, forKey: .platform)
         
         let dateString = try container.decode(String.self, forKey: .addedAt)
-        addedAt = try Formatter.shared.stringToDate(str: dateString)
+        addedAt = try Helper.shared.stringToDate(str: dateString)
     }
 }

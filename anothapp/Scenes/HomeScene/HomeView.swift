@@ -13,99 +13,96 @@ struct HomeView: View {
     
     var body: some View {
         ZStack {
-            TabView(selection: $viewModel.selectedTab) {
-                viewModel.getSeriesTabView()
-                    .tabItem {
-                        Label("Mes séries", systemImage: "play.rectangle")
-                    }
-                    .tag(AppTab.series)
-                
-                viewModel.getDiscoverTabView()
-                    .tabItem {
-                        Label("Découvrir", systemImage: "magnifyingglass")
-                    }
-                    .tag(AppTab.discover)
-                
-                Text("Friends")
-                    .tabItem {
-                        Label("Amis", systemImage: "person.3")
-                    }
-                    .tag(AppTab.friends)
-                
-                Text("Stats")
-                    .tabItem {
-                        Label("Statistiques", systemImage: "chart.pie")
-                    }
-                    .tag(AppTab.statistics)
-            }
-            
-            if viewModel.isMenuOpened {
-                ZStack {
-                    Color.black.opacity(0.3)
-                        .edgesIgnoringSafeArea(.all)
-                        .onTapGesture {
-                            withAnimation {
-                                viewModel.isMenuOpened.toggle()
-                            }
+            if viewModel.isLoading {
+                LoadingView()
+            } else {
+                TabView(selection: $viewModel.selectedTab) {
+                    viewModel.getSeriesTabView()
+                        .tabItem {
+                            Label("Mes séries", systemImage: "play.rectangle")
                         }
+                        .tag(AppTab.series)
                     
-                    HStack {
-                        VStack(alignment: .leading) {
-                            
-                            Spacer().frame(height: 120)
-                            
-                            List {
-                                NavigationLink(destination: viewModel.getWatchListView()) {
-                                    Label("Ma liste", systemImage: "list.bullet")
+                    viewModel.getDiscoverTabView()
+                        .tabItem {
+                            Label("Découvrir", systemImage: "magnifyingglass")
+                        }
+                        .tag(AppTab.discover)
+                    
+                    Text("Friends")
+                        .tabItem {
+                            Label("Amis", systemImage: "person.3")
+                        }
+                        .tag(AppTab.friends)
+                    
+                    Text("Stats")
+                        .tabItem {
+                            Label("Statistiques", systemImage: "chart.pie")
+                        }
+                        .tag(AppTab.statistics)
+                }
+                
+                if viewModel.isMenuOpened {
+                    ZStack {
+                        Color.black.opacity(0.3)
+                            .edgesIgnoringSafeArea(.all)
+                            .onTapGesture {
+                                withAnimation {
+                                    viewModel.isMenuOpened.toggle()
                                 }
-                                NavigationLink(destination: viewModel.continueWatchingView) {
-                                    Label("Séries à continuer", systemImage: "play")
-                                }
-                                NavigationLink(destination: viewModel.getTimelineView()) {
-                                    Label("Historique", systemImage: "calendar.day.timeline.left")
-                                }
-                                NavigationLink(destination: viewModel.getFavoritesView()) {
-                                    Label("Favoris", systemImage: "heart")
-                                }
-                                NavigationLink(destination: viewModel.getStoppedSeriesView()) {
-                                    Label("Séries arrêtées", systemImage: "pause")
-                                }
-                                NavigationLink(destination: Text("Option 3 View")) {
-                                    Label("Calendrier", systemImage: "calendar")
-                                }
-                                NavigationLink(destination: Text("Option 3 View")) {
-                                    Label("Paramètres", systemImage: "gear")
-                                }
-                                Button(action: { viewModel.logout() }) {
-                                    HStack {
-                                        Image(systemName: "arrow.left.to.line").padding(.leading, 5)
-                                        Text("Se déconnecter")
+                            }
+                        
+                        HStack {
+                            VStack(alignment: .leading) {
+                                
+                                Spacer().frame(height: 120)
+                                
+                                List {
+                                    Button(action: { Task { await viewModel.routeToWatchListView() }}) {
+                                        Label("Ma liste", systemImage: "list.bullet")
+                                    }
+                                    Button(action: { Task { await viewModel.routeToSeriesToContinueView() }}) {
+                                        Label("Séries en cours", systemImage: "play")
+                                    }
+                                    Button(action: { viewModel.routeToTimelineView() }) {
+                                        Label("Historique", systemImage: "calendar.day.timeline.left")
+                                    }
+                                    Button(action: { viewModel.routeToFavoritesView() }) {
+                                        Label("Favoris", systemImage: "heart")
+                                    }
+                                    Button(action: { viewModel.routeToStoppedSeriesView() }) {
+                                        Label("Séries arrêtées", systemImage: "pause")
+                                    }
+                                    NavigationLink(destination: Text("Option 3 View")) {
+                                        Label("Calendrier", systemImage: "calendar")
+                                    }
+                                    NavigationLink(destination: Text("Option 3 View")) {
+                                        Label("Paramètres", systemImage: "gear")
+                                    }
+                                    Button(action: { viewModel.logout() }) {
+                                        HStack {
+                                            Image(systemName: "arrow.left.to.line").padding(.leading, 5)
+                                            Text("Se déconnecter")
+                                        }
                                     }
                                 }
+                                .listStyle(PlainListStyle())
+                                .frame(maxHeight: .infinity)
                             }
-                            .listStyle(PlainListStyle())
-                            .frame(maxHeight: .infinity)
+                            .frame(width: 250)
+                            .background(Color(UIColor.systemBackground))
+                            .edgesIgnoringSafeArea(.all)
+                            
+                            Spacer() // Drawer to the left
                         }
-                        .frame(width: 250)
-                        .background(Color(UIColor.systemBackground))
-                        .edgesIgnoringSafeArea(.all)
-                        
-                        Spacer() // Drawer to the left
+                        .transition(.move(edge: .leading))
                     }
-                    .transition(.move(edge: .leading))
-                }
-                .zIndex(1)
-                .onAppear {
-                    Task {
-                        await viewModel.loadSeriesToContinueView()
-                    }
+                    .zIndex(1)
                 }
             }
         }
-        .onAppear {
-            Task {
-                await StateManager.shared.loadCaches()
-            }
+        .task {
+            await viewModel.loadCaches()
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {

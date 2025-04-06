@@ -11,10 +11,12 @@ class SeriesStatusRouter {
     
     private let rootCoordinator: NavigationCoordinator
     let series: [Serie]
+    let title: String
     
-    init(rootCoordinator: NavigationCoordinator, series: [Serie]) {
+    init(rootCoordinator: NavigationCoordinator, series: [Serie], title: String) {
         self.rootCoordinator = rootCoordinator
         self.series = series
+        self.title = title
     }
     
     func routeToSerieDetail(serie: Serie) {
@@ -48,5 +50,5 @@ extension SeriesStatusRouter {
 }
 
 extension SeriesStatusRouter {
-    static let mock: SeriesStatusRouter = .init(rootCoordinator: AppRouter(), series: [Datasource.mockSerie])
+    static let mock: SeriesStatusRouter = .init(rootCoordinator: AppRouter(), series: [Datasource.mockSerie], title: "Mock")
 }

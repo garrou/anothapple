@@ -24,11 +24,11 @@ class DiscoverDetailsViewModel: ObservableObject {
     }
     
     func checkIfAlreadyAdded() -> Bool {
-        SeriesCacheManager.shared.getSerie(id: serie.id) != nil
+        SeriesCacheManager.shared.getById(id: serie.id) != nil
     }
     
     func checkIfAlreadyInList() -> Bool {
-        SeriesListCacheManager.shared.getSerie(id: serie.id) != nil
+        SeriesListCacheManager.shared.getById(id: serie.id) != nil
     }
     
     @MainActor

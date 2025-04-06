@@ -30,10 +30,8 @@ struct WelcomeView: View {
             }
         }
         .padding(.vertical, 10)
-        .onAppear {
-            Task {
-                await viewModel.loadImages(limit: 9)
-            }
+        .task {
+            await viewModel.loadImages(limit: 9)
         }
     }
 }

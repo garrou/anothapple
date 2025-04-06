@@ -14,14 +14,29 @@ class PlatformsCacheManager {
     private var keys: Set<Int> = []
     private let searchService = SearchService()
     
-    private func storePlatform(id: Int, value: Platform) {
+    private func store(id: Int, value: Platform) {
         cache.setObject(value, forKey: String(id) as NSString)
         keys.insert(id)
     }
     
-    private func removeSerie(id: Int) {
+    private func remove(id: Int) {
         cache.removeObject(forKey: String(id) as NSString)
         keys.remove(id)
+    }
+    
+    private func loadPlatforms() async -> [Platform] {
+        do {
+            let fetched = try await searchService.fetchPlatforms()
+            fetched.forEach { store(id: $0.id!, value: $0) }
+            return fetched
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur lors du chargement des plateformes")
+            return []
+        }
+    }
+    
+    private func getAll() -> [Platform] {
+        keys.compactMap { id in getById(id: id) }
     }
     
     func clear() {
@@ -29,25 +44,13 @@ class PlatformsCacheManager {
         keys.removeAll()
     }
     
-    func getPlatform(id: Int) -> Platform? {
+    func getById(id: Int) -> Platform? {
         cache.object(forKey: String(id) as NSString)
     }
     
-    func getPlatforms() -> [Platform] {
-        keys.compactMap { id in getPlatform(id: id) }
-    }
-    
-    func loadPlatforms() async -> [Platform] {
-        let platforms = getPlatforms()
-        if !platforms.isEmpty { return platforms }
-        
-        do {
-            let fetched = try await searchService.fetchPlatforms()
-            fetched.forEach { storePlatform(id: $0.id!, value: $0) }
-            return fetched
-        } catch {
-            ToastManager.shared.setToast(message: "Erreur lors du chargement des plateformes")
-            return []
-        }
+    func getPlatforms() async -> [Platform] {
+        var platforms = getAll()
+        if platforms.isEmpty { platforms = await loadPlatforms() }
+        return platforms
     }
 }

@@ -37,6 +37,6 @@ struct Episode: Codable, Hashable {
         self.description = try container.decode(String.self, forKey: .description)
         
         let dateString = try container.decode(String.self, forKey: .date)
-        date = try Formatter.shared.stringToDate(str: dateString, format: "yyyy-MM-dd")
+        date = try Helper.shared.stringToDate(str: dateString, format: "yyyy-MM-dd")
     }
 }

@@ -14,22 +14,26 @@ class ApiSeriesCacheManager {
     private var keys: Set<Int> = []
     private let searchService = SearchService()
 
-    private func storeSerie(id: Int, value: ApiSerie) {
+    private func store(id: Int, value: ApiSerie) {
         cache.setObject(value, forKey: String(id) as NSString)
         keys.insert(id)
     }
     
-    private func removeSerie(id: Int) {
+    private func remove(id: Int) {
         cache.removeObject(forKey: String(id) as NSString)
         keys.remove(id)
     }
     
-    private func getFromCache(id: Int) -> ApiSerie? {
+    private func getById(id: Int) -> ApiSerie? {
         cache.object(forKey: String(id) as NSString)
     }
     
+    private func getAll() -> [ApiSerie] {
+        keys.compactMap { id in getById(id: id) }
+    }
+    
     func getSerie(id: Int) async -> ApiSerie? {
-        if let serie = cache.object(forKey: String(id) as NSString) { return serie }
+        if let serie = getById(id: id) { return serie }
         
         do {
             return try await searchService.fetchSerie(id: id)
@@ -40,13 +44,13 @@ class ApiSeriesCacheManager {
     }
     
     func getSeries(limit: Int) async -> [ApiSerie] {
-        let series = keys.compactMap { id in getFromCache(id: id) }
+        let series = getAll()
         if !series.isEmpty { return series.sorted { $0.id > $1.id } }
         var fetched: [ApiSerie] = []
         
         do {
             fetched = try await searchService.fetchSuggestions(limit: limit)
-            fetched.forEach { storeSerie(id: $0.id, value: $0) }
+            fetched.forEach { store(id: $0.id, value: $0) }
         } catch {
             ToastManager.shared.setToast(message: "Erreur lors du chargement des séries")
         }
