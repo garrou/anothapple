@@ -20,4 +20,16 @@ class SeasonsManager {
             return []
         }
     }
+    
+    func updateSeason(id: Int, platformId: Int) async -> Bool {
+        var updated = false
+        do {
+            let request = PlatformRequest(id: id, platform: platformId)
+            updated = try await seasonService.updateSeason(request: request)
+            ToastManager.shared.setToast(message: updated ? "Saison modifiée" : "Erreur durant la modification", isError: !updated)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur lors de la mise à jour")
+        }
+        return updated
+    }
 }

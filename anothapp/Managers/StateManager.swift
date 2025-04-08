@@ -5,10 +5,12 @@
 //  Created by Adrien Garrouste on 05/04/2025.
 //
 
-class StateManager {
+import Foundation
+
+class StateManager: ObservableObject {
     
     static let shared = StateManager()
-    private var hasLoaded: Bool = false
+    @Published var hasLoaded = false
     
     func loadCaches() async {
         guard !hasLoaded else { return }

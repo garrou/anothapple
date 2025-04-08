@@ -50,8 +50,11 @@ struct SeriesView: View {
         }
         .navigationTitle("Mes séries")
         .padding(.vertical, 10)
-        .task {
-            await viewModel.loadSeries()
+        .onReceive(StateManager.shared.$hasLoaded) { newValue in
+            Task {
+                if !newValue { return }
+                await viewModel.loadSeries()
+            }
         }
     }
 }

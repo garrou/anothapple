@@ -14,7 +14,6 @@ class SeriesViewModel: ObservableObject {
     @Published var isLoading = false
     
     private let router: SeriesRouter
-    private let seriesService = SerieService()
     
     init(router: SeriesRouter) {
         self.router = router
