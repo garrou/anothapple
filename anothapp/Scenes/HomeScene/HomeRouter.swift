@@ -23,6 +23,10 @@ class HomeRouter {
         DiscoverRouter(rootCoordinator: rootCoordinator).makeView()
     }
     
+    func getStatisticsTabView() -> AnyView {
+        DashboardRouter(rootCoordinator: rootCoordinator).makeView()
+    }
+    
     func routeToSeriesStatusView(series: [Serie], title: String) {
         let router = SeriesStatusRouter(rootCoordinator: rootCoordinator, series: series, title: title)
         rootCoordinator.push(router)

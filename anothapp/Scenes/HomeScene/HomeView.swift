@@ -35,7 +35,7 @@ struct HomeView: View {
                         }
                         .tag(AppTab.friends)
                     
-                    Text("Stats")
+                    viewModel.getStatisticsTabView()
                         .tabItem {
                             Label("Statistiques", systemImage: "chart.pie")
                         }

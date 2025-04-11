@@ -43,6 +43,12 @@ struct LoginView: View {
                         .stroke(isPasswordFieldFocused ? .primary : .secondary, lineWidth: 1)
                 )
                 .focused($isPasswordFieldFocused)
+                .onSubmit {
+                    Task {
+                        if viewModel.isInvalidForm { return }
+                        await viewModel.performLogin()
+                    }
+                }
             
             Button(action: {
                 Task {

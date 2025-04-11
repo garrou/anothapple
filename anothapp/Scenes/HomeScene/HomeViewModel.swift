@@ -35,6 +35,10 @@ class HomeViewModel: ObservableObject {
         router.getDiscoverTabView()
     }
     
+    func getStatisticsTabView() -> AnyView {
+        router.getStatisticsTabView()
+    }
+    
     func routeToTimelineView() {
         router.routeToTimelineView()
     }

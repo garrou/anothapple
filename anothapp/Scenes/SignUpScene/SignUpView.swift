@@ -57,6 +57,12 @@ struct SignUpView: View {
                         .stroke(isConfirmPasswordFieldFocused ? .primary : .secondary, lineWidth: 1)
                 )
                 .focused($isConfirmPasswordFieldFocused)
+                .onSubmit {
+                    Task {
+                        if viewModel.isInvalidForm { return }
+                        await viewModel.performSignUp()
+                    }
+                }
             
             Button(action: {
                 Task {
