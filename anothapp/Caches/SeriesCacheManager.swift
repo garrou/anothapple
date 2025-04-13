@@ -30,7 +30,6 @@ class SeriesCacheManager {
             fetched.forEach { store(id: $0.id, value: $0) }
             return fetched
         } catch {
-            print(error)
             ToastManager.shared.setToast(message: "Erreur durant la récupération des séries")
             return []
         }

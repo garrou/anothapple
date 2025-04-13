@@ -51,4 +51,14 @@ class Helper {
     func compareString(_ str1: String, _ str2: String) -> Bool {
         str1.lowercased().folding(options: .diacriticInsensitive, locale: .current).contains(str2.lowercased())
     }
+    
+    func buildUrlWithParams(url: String, params: [Param]) -> String {
+        return params.reduce(url) { acc, curr in
+            buildUrl(url: acc, query: curr.name, param: curr.value)
+        }
+    }
+    
+    private func buildUrl(url: String, query: String, param: Any?) -> String {
+        param == nil ? url : url + (url.contains("?") ? "&" : "?") + "\(query)=\(param!)"
+    }
 }
