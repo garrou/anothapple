@@ -7,9 +7,7 @@
 
 import Foundation
 
-class ApiSerie: NSObject, Codable {
-    let id: Int
-    let title: String
+class ApiSerie: BaseSerie {
     let poster: String
     let kinds: [String]
     let duration: Int
@@ -24,25 +22,10 @@ class ApiSerie: NSObject, Codable {
     let platforms: [Platform]
     
     enum CodingKeys: String, CodingKey {
-        case id
-        case title
-        case poster
-        case kinds
-        case duration
-        case country
-        case synopsis = "description"
-        case seasons
-        case episodes
-        case network
-        case note
-        case status
-        case creation
-        case platforms
+        case poster, kinds, duration, country, synopsis = "description", seasons, episodes, network, note, status, creation, platforms
     }
     
     init(id: Int, title: String, poster: String, kinds: [String], duration: Int, country: String, synopsis: String, seasons: Int, episodes: Int, network: String, note: Float, status: String, creation: String, platforms: [Platform]) {
-        self.id = id
-        self.title = title
         self.poster = poster
         self.kinds = kinds
         self.duration = duration
@@ -55,5 +38,23 @@ class ApiSerie: NSObject, Codable {
         self.status = status
         self.creation = creation
         self.platforms = platforms
+        super.init(id: id, title: title)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.poster = try container.decode(String.self, forKey: .poster)
+        self.kinds = try container.decode([String].self, forKey: .kinds)
+        self.duration = try container.decode(Int.self, forKey: .duration)
+        self.country = try container.decode(String.self, forKey: .country)
+        self.synopsis = try container.decode(String.self, forKey: .synopsis)
+        self.seasons = try container.decode(Int.self, forKey: .seasons)
+        self.episodes = try container.decode(Int.self, forKey: .episodes)
+        self.network = try container.decode(String.self, forKey: .network)
+        self.note = try container.decode(Float.self, forKey: .note)
+        self.status = try container.decode(String.self, forKey: .status)
+        self.creation = try container.decode(String.self, forKey: .creation)
+        self.platforms = try container.decode([Platform].self, forKey: .platforms)
+        try super.init(from: decoder)
     }
 }

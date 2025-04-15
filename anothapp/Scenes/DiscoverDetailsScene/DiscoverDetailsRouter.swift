@@ -21,6 +21,11 @@ class DiscoverDetailsRouter {
         let router = SerieDetailsRouter(rootCoordinator: rootCoordinator, serie: serie)
         rootCoordinator.push(router)
     }
+    
+    func routeToDiscoverDetails(serie: ApiSerie) {
+        let router = DiscoverDetailsRouter(rootCoordinator: rootCoordinator, serie: serie)
+        rootCoordinator.push(router)
+    }
 }
 
 // MARK: ViewFactory implementation

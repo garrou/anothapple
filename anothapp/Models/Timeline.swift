@@ -15,10 +15,7 @@ struct Timeline: Codable, Hashable {
     let season: Season
     
     enum CodingKeys: String, CodingKey {
-        case showId
-        case showTitle
-        case addedAt
-        case season
+        case showId, showTitle, addedAt, season
     }
     
     init(from decoder: any Decoder) throws {

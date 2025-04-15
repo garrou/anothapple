@@ -8,9 +8,7 @@
 import Foundation
 
 enum SerieDetailsTab {
-    case seasons
-    case add
-    case viewedBy
+    case seasons, add, viewedBy
 }
 
 class SerieDetailsViewModel: ObservableObject {

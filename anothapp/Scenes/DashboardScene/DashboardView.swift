@@ -25,7 +25,7 @@ struct DashboardView: View {
                 BarChart(title: "Episodes par années", xLabel: "Années", yLabel: "Episodes", data: viewModel.episodesPerYears)
                 BarChart(title: "Saisons par mois", xLabel: "Mois", yLabel: "Saisons", data: viewModel.seasonsByMonths)
                 BarChart(title: "Mois record en heures", xLabel: "Mois", yLabel: "Heures", data: viewModel.monthsRankingHours)
-                PieChart(title: "Série les plus chronophages", data: viewModel.timeConsumingSeries)
+                PieChart(title: "Série les plus chronophages en heures", data: viewModel.timeConsumingSeries)
                 PieChart(title: "Genre les plus regardés", data: viewModel.mostViewedKinds)
                 PieChart(title: "Saisons par plateformes", data: viewModel.seasonsByPlatforms)
                 PieChart(title: "Pays des séries", data: viewModel.seriesCountries)
@@ -132,6 +132,11 @@ struct PieChart: View {
                 )
                 .foregroundStyle(by: .value("Label", item.label))
                 .foregroundStyle(.primary)
+                .annotation(position: .overlay) {
+                    Text("\(item.value)")
+                        .foregroundStyle(.white)
+                        .font(.caption)
+                }
             }
             .chartLegend(position: .bottom, alignment: .center)
             .frame(height: 300)

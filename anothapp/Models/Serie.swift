@@ -7,9 +7,7 @@
 
 import Foundation
 
-class Serie: NSObject, Codable {
-    let id: Int
-    let title: String
+class Serie: BaseSerie {
     let poster: String
     let kinds: [String]
     let duration: Int
@@ -20,12 +18,10 @@ class Serie: NSObject, Codable {
     var watch: Bool
     
     enum CodingKeys: String, CodingKey {
-        case id, title, poster, kinds, duration, country, seasons, favorite, addedAt, watch
+        case poster, kinds, duration, country, seasons, favorite, addedAt, watch
     }
     
     init(id: Int, title: String, poster: String, kinds: [String], duration: Int, country: String, seasons: Int, favorite: Bool, addedAt: Date, watch: Bool) {
-        self.id = id
-        self.title = title
         self.poster = poster
         self.kinds = kinds
         self.duration = duration
@@ -34,13 +30,11 @@ class Serie: NSObject, Codable {
         self.favorite = favorite
         self.addedAt = addedAt
         self.watch = watch
+        super.init(id: id, title: title)
     }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        id = try container.decode(Int.self, forKey: .id)
-        title = try container.decode(String.self, forKey: .title)
         poster = try container.decode(String.self, forKey: .poster)
         kinds = try container.decode([String].self, forKey: .kinds)
         favorite = (try? container.decode(Bool.self, forKey: .favorite)) ?? false
@@ -54,5 +48,6 @@ class Serie: NSObject, Codable {
         } else {
             addedAt = Date()
         }
+        try super.init(from: decoder)
     }
 }

@@ -41,4 +41,19 @@ class SearchService {
         let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/platforms")
         return ok ? try JSONDecoder().decode([Platform].self, from: data) : []
     }
+    
+    func fetchSimilars(id: Int) async throws -> [BaseSerie] {
+        let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/shows/\(id)/similars")
+        return ok ? try JSONDecoder().decode([BaseSerie].self, from: data) : []
+    }
+    
+    func fetchImages(id: Int) async throws -> [String] {
+        let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/shows/\(id)/images")
+        return ok ? try JSONDecoder().decode([String].self, from: data) : []
+    }
+    
+    func fetchCharacters(id: Int) async throws -> [Person] {
+        let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/shows/\(id)/characters")
+        return ok ? try JSONDecoder().decode([Person].self, from: data) : []
+    }
 }

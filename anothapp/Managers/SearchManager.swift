@@ -38,4 +38,31 @@ class SearchManager {
             return []
         }
     }
+    
+    func getSimilars(id: Int) async -> [BaseSerie] {
+        do {
+            return try await searchService.fetchSimilars(id: id)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur lors du chargement des séries similaires")
+            return []
+        }
+    }
+    
+    func getSerieImages(id: Int) async -> [String] {
+        do {
+            return try await searchService.fetchImages(id: id)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur lors du chargement des images de la série")
+            return []
+        }
+    }
+    
+    func getCharacters(id: Int) async -> [Person] {
+        do {
+            return try await searchService.fetchCharacters(id: id)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur lors du chargement des acteurs de la série")
+            return []
+        }
+    }
 }

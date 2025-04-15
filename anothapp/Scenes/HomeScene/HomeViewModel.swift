@@ -9,10 +9,7 @@ import Foundation
 import SwiftUI
 
 enum AppTab {
-    case series
-    case discover
-    case friends
-    case statistics
+    case series, discover, friends, statistics
 }
 
 class HomeViewModel: ObservableObject {
