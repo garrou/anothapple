@@ -31,7 +31,7 @@ struct HomeView: View {
                     
 //                    Text("Friends")
 //                        .tabItem {
-//                            Label("Amis", systemImage: "person.3")
+//                            Label("Amis", systemImage: "person.fill.checkmark")
 //                        }
 //                        .tag(AppTab.friends)
                     
@@ -44,7 +44,7 @@ struct HomeView: View {
                 
                 if viewModel.isMenuOpened {
                     ZStack {
-                        Color.black.opacity(0.3)
+                        Color.primary.opacity(0.3)
                             .edgesIgnoringSafeArea(.all)
                             .onTapGesture {
                                 withAnimation {

@@ -36,14 +36,16 @@ class ApiSeriesCacheManager {
         if let serie = getById(id: id) { return serie }
         
         do {
-            return try await searchService.fetchSerie(id: id)
+            let fetched = try await searchService.fetchSerie(id: id)
+            if fetched != nil { store(id: fetched!.id, value: fetched!) }
+            return fetched
         } catch {
             ToastManager.shared.setToast(message: "Erreur lors du chargement de la série")
             return nil
         }
     }
     
-    func getSeries(limit: Int) async -> [ApiSerie] {
+    func getSeries(limit: Int = 20) async -> [ApiSerie] {
         let series = getAll()
         if !series.isEmpty { return series.sorted { $0.id > $1.id } }
         var fetched: [ApiSerie] = []

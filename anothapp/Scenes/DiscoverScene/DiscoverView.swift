@@ -10,9 +10,24 @@ import SwiftUI
 struct DiscoverView: View {
     
     @StateObject var viewModel: DiscoverViewModel
+    @FocusState private var isSearchFocused: Bool
     
     var body: some View {
         ScrollView {
+            
+            TextField("Titre de la série", text: $viewModel.titleSearch)
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(isSearchFocused ? .primary : .secondary, lineWidth: 1)
+                )
+                .padding(.horizontal, 10)
+                .focused($isSearchFocused)
+                .onSubmit {
+                    Task {
+                        await viewModel.loadSeries()
+                    }
+                }
             
             if viewModel.isLoading {
                 LoadingView()
@@ -21,7 +36,9 @@ struct DiscoverView: View {
             } else {
                 GridView(items: viewModel.series, columns: 2) { serie in
                     Button(action: {
-                        viewModel.routeToDiscoverDetail(serie: serie)
+                        Task {
+                            await viewModel.routeToDiscoverDetail(id: serie.id)
+                        }
                     })
                     {
                         VStack {
@@ -35,7 +52,7 @@ struct DiscoverView: View {
         .padding(.vertical, 10)
         .navigationTitle("Découvrir")
         .task {
-            await viewModel.loadDiscoverSeries(limit: 20)
+            await viewModel.loadSeries()
         }
     }
 }

@@ -65,4 +65,13 @@ class SearchManager {
             return []
         }
     }
+    
+    func getSeriesByFilter(title: String) async -> [ApiSeriePreview] {
+        do {
+            return try await searchService.fetchSeriesByFilter(title: title)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur lors de la recherche de séries")
+            return []
+        }
+    }
 }

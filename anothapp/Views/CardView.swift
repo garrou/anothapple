@@ -16,6 +16,9 @@ struct CardView: View {
         VStack {
             if picture != nil {
                 ImageCardView(url: picture!)
+            } else {
+                Image(systemName: "photo")
+                    .frame(width: 50, height: 50)
             }
             Text(text).font(.headline)
         }

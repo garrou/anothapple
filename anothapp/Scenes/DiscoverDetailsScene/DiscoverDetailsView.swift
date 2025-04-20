@@ -15,24 +15,15 @@ struct DiscoverDetailsView: View {
         ZStack {
             ScrollView {
                 
-                AsyncImage(url: URL(string: viewModel.serie.poster)) { image in
-                    image.resizable()
-                        .scaledToFill()
-                } placeholder: {
-                    Color.gray.opacity(0.3)
-                }
-                .frame(height: 300)
-                .clipped()
-                .cornerRadius(12)
-                .shadow(radius: 5)
+                ImageCardView(url: viewModel.serie.poster)
                 
                 // Tabs
                 Picker("", selection: $viewModel.selectedTab) {
                     Image(systemName: "info.circle").tag(DiscoverDetailsTab.details)
                     Image(systemName: "list.bullet").tag(DiscoverDetailsTab.similars)
                     Image(systemName: "photo.stack").tag(DiscoverDetailsTab.images)
-                    Image(systemName: "popcorn").tag(DiscoverDetailsTab.characters)
-                    Image(systemName: "person.3").tag(DiscoverDetailsTab.friends)
+                    Image(systemName: "person.3").tag(DiscoverDetailsTab.characters)
+                    Image(systemName: "person.fill.checkmark").tag(DiscoverDetailsTab.friends)
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding()
@@ -53,39 +44,36 @@ struct DiscoverDetailsView: View {
                                     Text(kind)
                                         .font(.caption)
                                         .padding(6)
-                                        .background(.black.opacity(0.2))
+                                        .background(.primary.opacity(0.2))
                                         .cornerRadius(8)
                                 }
                             }
                         }
                         
                         VStack(alignment: .leading, spacing: 8) {
-                            DetailRow(title: "Saisons :", value: "\(viewModel.serie.seasons)")
-                            DetailRow(title: "Episodes :", value: "\(viewModel.serie.episodes)")
-                            DetailRow(title: "Durée :", value: "\(viewModel.serie.duration) mins")
-                            DetailRow(title: "Pays :", value: viewModel.serie.country)
-                            DetailRow(title: "Platforme :", value: viewModel.serie.network)
-                            DetailRow(title: "Status :", value: viewModel.serie.status)
-                            DetailRow(title: "Création :", value: viewModel.serie.creation)
-                        }
-                        
-                        if !viewModel.serie.platforms.isEmpty {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack {
-                                    ForEach(viewModel.serie.platforms, id: \.name) { platform in
-                                        VStack {
-                                            AsyncImage(url: URL(string: platform.logo)) { image in
-                                                image.resizable()
-                                                    .scaledToFit()
-                                            } placeholder: {
-                                                Color.gray.opacity(0.3)
+                            DetailRow(title: "Saisons", value: "\(viewModel.serie.seasons)")
+                            DetailRow(title: "Episodes", value: "\(viewModel.serie.episodes)")
+                            DetailRow(title: "Durée", value: "\(viewModel.serie.duration) mins")
+                            DetailRow(title: "Pays", value: viewModel.serie.country)
+                            DetailRow(title: "Platforme", value: viewModel.serie.network)
+                            DetailRow(title: "Status", value: viewModel.serie.status)
+                            DetailRow(title: "Création", value: "\(viewModel.serie.creation)")
+                            
+                            if !viewModel.serie.platforms.isEmpty {
+                                Text("Plateformes")
+                                    .fontWeight(.semibold)
+                                
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack {
+                                        ForEach(viewModel.serie.platforms, id: \.name) { platform in
+                                            VStack {
+                                                ImageCardView(url: platform.logo)
+                                                    .frame(width: 100, height: 100)
+                                                Text(platform.name)
+                                                    .font(.caption)
                                             }
-                                            .frame(width: 50, height: 50)
-                                            .cornerRadius(8)
-                                            Text(platform.name)
-                                                .font(.caption)
+                                            .padding(.horizontal, 8)
                                         }
-                                        .padding(.horizontal, 8)
                                     }
                                 }
                             }
@@ -103,7 +91,7 @@ struct DiscoverDetailsView: View {
                         GeometryReader { geometry in
                             Color.clear.preference(
                                 key: ContentHeightPreferenceKey.self,
-                                value: geometry.size.height
+                                value: geometry.size.height * 1.1 // TODO ???
                             )
                         }
                     )
@@ -204,11 +192,11 @@ struct DiscoverDetailsView: View {
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 .onPreferenceChange(ContentHeightPreferenceKey.self) { height in
-                    withAnimation {
-                        if abs(viewModel.tabContentHeight - height) > 1 {
-                            viewModel.tabContentHeight = height
-                        }
+                    
+                    if abs(viewModel.tabContentHeight - height) > 1 {
+                        viewModel.tabContentHeight = height
                     }
+                    
                 }
                 .frame(minHeight: viewModel.tabContentHeight)
             }
@@ -217,7 +205,7 @@ struct DiscoverDetailsView: View {
             // Right drawer
             if viewModel.isMenuOpened {
                 ZStack {
-                    Color.black.opacity(0.3)
+                    Color.primary.opacity(0.3)
                         .edgesIgnoringSafeArea(.all)
                         .onTapGesture {
                             withAnimation {

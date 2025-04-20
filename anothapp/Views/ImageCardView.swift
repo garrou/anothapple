@@ -18,23 +18,32 @@ struct ImageCardView: View {
     
     var body: some View {
         VStack {
-            if url != nil {
+            if url != nil && url?.isEmpty == false {
                 KFImage.url(URL(string: url!))
                     .fade(duration: 0.25)
                     .placeholder {
                         LoadingView().scaledToFill()
                     }
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
+            } else {
+                Image(systemName: "photo")
+                    .resizable()
+                    .frame(width: 50, height: 50)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(.systemBackground))
+                            .shadow(color: Color.primary.opacity(0.3), radius: 5, x: 0, y: 2)
+                    )
+                    .padding()
             }
         }
         .frame(maxWidth: .infinity)
-        .background(.secondary)
         .cornerRadius(radius)
         .padding(.all, 1)
     }
 }
 
 #Preview {
-    ImageCardView(url: Datasource.mockImages[0])
+    ImageCardView(url: nil)
 }

@@ -29,7 +29,7 @@ struct SeasonDetailsView: View {
             .background(
                 RoundedRectangle(cornerRadius: 12)
                     .fill(Color(.systemBackground))
-                    .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 2)
+                    .shadow(color: Color.primary.opacity(0.3), radius: 5, x: 0, y: 2)
             )
             .padding(.horizontal)
             
@@ -49,14 +49,8 @@ struct SeasonDetailsView: View {
                     }
                 } label: {
                     HStack {
-                        if season.platform.logo.isEmpty {
-                            Image(systemName: "play")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                        } else {
-                            ImageCardView(url: season.platform.logo)
-                                .frame(width: 100, height: 100)
-                        }
+                        ImageCardView(url: season.platform.logo)
+                            .frame(width: 50, height: 50)
                         
                         Spacer()
                         
@@ -67,7 +61,7 @@ struct SeasonDetailsView: View {
                 .background(
                     RoundedRectangle(cornerRadius: 12)
                         .fill(Color(.systemBackground))
-                        .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 2)
+                        .shadow(color: Color.primary.opacity(0.3), radius: 5, x: 0, y: 2)
                 )
                 .padding(.horizontal)
             }

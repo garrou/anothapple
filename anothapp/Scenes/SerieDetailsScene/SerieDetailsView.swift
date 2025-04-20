@@ -65,7 +65,7 @@ struct SerieDetailsView: View {
                     Picker("", selection: $viewModel.selectedTab) {
                         Image(systemName: "square.grid.2x2").tag(SerieDetailsTab.seasons)
                         Image(systemName: "play.square.stack").tag(SerieDetailsTab.add)
-                        Image(systemName: "person.3").tag(SerieDetailsTab.viewedBy)
+                        Image(systemName: "person.fill.checkmark").tag(SerieDetailsTab.viewedBy)
                     }
                     .pickerStyle(SegmentedPickerStyle())
                     .padding()
@@ -154,10 +154,9 @@ struct SerieDetailsView: View {
                     }
                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                     .onPreferenceChange(ContentHeightPreferenceKey.self) { height in
-                        withAnimation {
-                            if abs(viewModel.tabContentHeight - height) > 1 {
-                                viewModel.tabContentHeight = height
-                            }
+                        if abs(viewModel.tabContentHeight - height) > 1 {
+                            viewModel.tabContentHeight = height
+                            
                         }
                     }
                     .frame(minHeight: viewModel.tabContentHeight)
@@ -168,7 +167,7 @@ struct SerieDetailsView: View {
             // Right drawer
             if viewModel.isMenuOpened {
                 ZStack {
-                    Color.black.opacity(0.3)
+                    Color.primary.opacity(0.3)
                         .edgesIgnoringSafeArea(.all)
                         .onTapGesture {
                             withAnimation {

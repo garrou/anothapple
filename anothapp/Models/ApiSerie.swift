@@ -18,14 +18,14 @@ class ApiSerie: BaseSerie {
     let network: String
     let note: Float
     let status: String
-    let creation: String
+    let creation: Int
     let platforms: [Platform]
     
     enum CodingKeys: String, CodingKey {
         case poster, kinds, duration, country, synopsis = "description", seasons, episodes, network, note, status, creation, platforms
     }
     
-    init(id: Int, title: String, poster: String, kinds: [String], duration: Int, country: String, synopsis: String, seasons: Int, episodes: Int, network: String, note: Float, status: String, creation: String, platforms: [Platform]) {
+    init(id: Int, title: String, poster: String, kinds: [String], duration: Int, country: String, synopsis: String, seasons: Int, episodes: Int, network: String, note: Float, status: String, creation: Int, platforms: [Platform]) {
         self.poster = poster
         self.kinds = kinds
         self.duration = duration
@@ -53,7 +53,7 @@ class ApiSerie: BaseSerie {
         self.network = try container.decode(String.self, forKey: .network)
         self.note = try container.decode(Float.self, forKey: .note)
         self.status = try container.decode(String.self, forKey: .status)
-        self.creation = try container.decode(String.self, forKey: .creation)
+        self.creation = try container.decode(Int.self, forKey: .creation)
         self.platforms = try container.decode([Platform].self, forKey: .platforms)
         try super.init(from: decoder)
     }

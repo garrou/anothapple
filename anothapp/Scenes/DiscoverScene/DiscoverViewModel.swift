@@ -9,8 +9,9 @@ import Foundation
 
 class DiscoverViewModel: ObservableObject {
     
-    @Published var series: [ApiSerie] = []
+    @Published var series: [ApiSeriePreview] = []
     @Published var isLoading = false
+    @Published var titleSearch = ""
     
     private let router: DiscoverRouter
     private let searchService = SearchService()
@@ -19,14 +20,18 @@ class DiscoverViewModel: ObservableObject {
         self.router = router
     }
     
-    func routeToDiscoverDetail(serie: ApiSerie) {
-        router.routeToDiscoverDetail(serie: serie)
+    func routeToDiscoverDetail(id: Int) async {
+        if let serie = await ApiSeriesCacheManager.shared.getSerie(id: id) {
+            router.routeToDiscoverDetail(serie: serie)
+        }
     }
     
     @MainActor
-    func loadDiscoverSeries(limit: Int) async {
+    func loadSeries() async {
         isLoading = true
-        series = await ApiSeriesCacheManager.shared.getSeries(limit: limit)
+        series = titleSearch.isEmpty
+        ? (await ApiSeriesCacheManager.shared.getSeries()).map { ApiSeriePreview(id: $0.id, title: $0.title, poster: $0.poster) }
+        : await SearchManager.shared.getSeriesByFilter(title: titleSearch)
         isLoading = false
     }
 }

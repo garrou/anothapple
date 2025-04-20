@@ -22,6 +22,11 @@ class SearchService {
         return ok ? try JSONDecoder().decode([ApiSerie].self, from: data) : []
     }
     
+    func fetchSeriesByFilter(title: String) async throws -> [ApiSeriePreview] {
+        let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/shows?title=\(title)")
+        return ok ? try JSONDecoder().decode([ApiSeriePreview].self, from: data) : []
+    }
+    
     func fetchSerie(id: Int) async throws -> ApiSerie? {
         let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)/shows/\(id)")
         return ok ? try JSONDecoder().decode(ApiSerie.self, from: data) : nil
