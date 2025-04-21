@@ -37,6 +37,11 @@ class HomeRouter {
         rootCoordinator.push(router)
     }
     
+    func routeToProfileView() {
+        let router = ProfileRouter(rootCoordinator: rootCoordinator)
+        rootCoordinator.push(router)
+    }
+    
     func routeToWelcomePage() {
         rootCoordinator.popToRoot()
     }

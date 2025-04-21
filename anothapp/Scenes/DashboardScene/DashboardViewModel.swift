@@ -42,6 +42,7 @@ class DashboardViewModel: ObservableObject {
     
     @MainActor
     func loadStats() async {
+        if userStats != nil { return }
         isLoading = true
         userStats = await StatsManager.shared.getUserStats()
         seasonsMonthsCurrentYear = await StatsManager.shared.getSeasonsMonthCurrentYear()

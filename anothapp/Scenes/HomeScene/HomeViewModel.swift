@@ -40,6 +40,10 @@ class HomeViewModel: ObservableObject {
         router.routeToTimelineView()
     }
     
+    func routeToProfielView() {
+        router.routeToProfileView()
+    }
+    
     func routeToFavoritesView() {
         let series = SeriesCacheManager.shared.getFavorites()
         return router.routeToSeriesStatusView(series: series, title: "Favoris")
