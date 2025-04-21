@@ -63,7 +63,6 @@ extension HomeRouter: Routable {
 extension HomeRouter {
     
     func hash(into hasher: inout Hasher) {
-        
     }
     
     static func == (lhs: HomeRouter, rhs: HomeRouter) -> Bool {

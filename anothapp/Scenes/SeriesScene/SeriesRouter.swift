@@ -37,7 +37,6 @@ extension SeriesRouter: Routable {
 extension SeriesRouter {
     
     func hash(into hasher: inout Hasher) {
-        
     }
     
     static func == (lhs: SeriesRouter, rhs: SeriesRouter) -> Bool {

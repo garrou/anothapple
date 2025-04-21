@@ -41,7 +41,6 @@ extension SeriesStatusRouter: Routable {
 extension SeriesStatusRouter {
     
     func hash(into hasher: inout Hasher) {
-        
     }
     
     static func == (lhs: SeriesStatusRouter, rhs: SeriesStatusRouter) -> Bool {

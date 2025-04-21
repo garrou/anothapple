@@ -32,7 +32,6 @@ extension DashboardRouter: Routable {
 extension DashboardRouter {
     
     func hash(into hasher: inout Hasher) {
-        
     }
     
     static func == (lhs: DashboardRouter, rhs: DashboardRouter) -> Bool {

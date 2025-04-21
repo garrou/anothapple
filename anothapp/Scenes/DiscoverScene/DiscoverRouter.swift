@@ -37,7 +37,6 @@ extension DiscoverRouter: Routable {
 extension DiscoverRouter {
     
     func hash(into hasher: inout Hasher) {
-        
     }
     
     static func == (lhs: DiscoverRouter, rhs: DiscoverRouter) -> Bool {

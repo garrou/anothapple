@@ -37,7 +37,6 @@ extension SignUpRouter: Routable {
 extension SignUpRouter {
     
     func hash(into hasher: inout Hasher) {
-        
     }
     
     static func == (lhs: SignUpRouter, rhs: SignUpRouter) -> Bool {

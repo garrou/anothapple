@@ -32,7 +32,6 @@ extension ProfileRouter: Routable {
 extension ProfileRouter {
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(self.hashValue)
     }
     
     static func == (lhs: ProfileRouter, rhs: ProfileRouter) -> Bool {

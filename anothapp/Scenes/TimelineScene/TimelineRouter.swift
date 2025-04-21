@@ -37,7 +37,6 @@ extension TimelineRouter: Routable {
 extension TimelineRouter {
     
     func hash(into hasher: inout Hasher) {
-    
     }
     
     static func == (lhs: TimelineRouter, rhs: TimelineRouter) -> Bool {

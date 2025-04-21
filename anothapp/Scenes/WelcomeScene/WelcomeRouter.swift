@@ -42,7 +42,6 @@ extension WelcomeRouter: Routable {
 extension WelcomeRouter {
     
     func hash(into hasher: inout Hasher) {
-        
     }
     
     static func == (lhs: WelcomeRouter, rhs: WelcomeRouter) -> Bool {

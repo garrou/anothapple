@@ -36,7 +36,7 @@ extension SeasonDetailsRouter: Routable {
 extension SeasonDetailsRouter {
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(self.hashValue)
+        hasher.combine("\(serie.id)-\(season.number)")
     }
     
     static func == (lhs: SeasonDetailsRouter, rhs: SeasonDetailsRouter) -> Bool {
