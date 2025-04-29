@@ -79,6 +79,6 @@ class SeriesListCacheManager {
         if series.isEmpty { series = await loadWatchList() }
         return title.isEmpty
         ? series.sorted { $0.title.lowercased() < $1.title.lowercased() }
-        : series.filter { Helper.shared.compareString($0.title, title) }
+        : series.filter { Helper.shared.containsString($0.title, title) }
     }
 }

@@ -48,8 +48,14 @@ class Helper {
         return str.isEmpty ? formatPlural(str: "min", num: mins) : str
     }
     
-    func compareString(_ str1: String, _ str2: String) -> Bool {
+    func containsString(_ str1: String, _ str2: String) -> Bool {
         str1.lowercased().folding(options: .diacriticInsensitive, locale: .current).contains(str2.lowercased())
+    }
+    
+    func compareStrings(_ str1: String, _ str2: String) -> Bool {
+        let s1 = str1.lowercased().folding(options: .diacriticInsensitive, locale: .current)
+        let s2 = str2.lowercased().folding(options: .diacriticInsensitive, locale: .current)
+        return s1 < s2
     }
     
     func buildUrlWithParams(url: String, params: [Param]) -> String {

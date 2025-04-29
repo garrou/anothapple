@@ -85,26 +85,36 @@ class SeriesCacheManager {
         }
     }
     
-    func getSeries(title: String = "") async -> [Serie] {
+    func getCountries() -> [String] {
+        let series = getAll()
+        return Array(Set(series.map { $0.country }))
+            .sorted { Helper.shared.compareStrings($0, $1) }
+    }
+    
+    func getSeries(title: String = "", countries: [String] = []) async -> [Serie] {
         var series = getAll()
         if series.isEmpty { series = await loadSeries() }
+
+        if !countries.isEmpty {
+            series = series.filter { countries.contains($0.country) }
+        }
         return title.isEmpty
         ? series.sorted { $0.addedAt > $1.addedAt }
-        : series.filter { Helper.shared.compareString($0.title, title) }
+        : series.filter { Helper.shared.containsString($0.title, title) }
     }
     
     func getFavorites(title: String = "") -> [Serie] {
         let series = getAll().filter { $0.favorite }
         return title.isEmpty
         ? series.sorted { $0.title.lowercased() < $1.title.lowercased() }
-        : series.filter { Helper.shared.compareString($0.title, title) }
+        : series.filter { Helper.shared.containsString($0.title, title) }
     }
     
     func getSeriesByWatching(watching: Bool, title: String = "") -> [Serie] {
         let series = getAll().filter { $0.watch == watching }
         return title.isEmpty
         ? series.sorted { $0.title.lowercased() < $1.title.lowercased() }
-        : series.filter { Helper.shared.compareString($0.title, title) }
+        : series.filter { Helper.shared.containsString($0.title, title) }
     }
     
     func changeFavorite(serie: Serie) async -> Serie {
