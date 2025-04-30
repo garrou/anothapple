@@ -11,6 +11,7 @@
 		FCA0790A2D90B5BC00DC97A8 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = FCA079092D90B5B300DC97A8 /* .gitignore */; };
 		FCCFBD592D9B370000390973 /* Dev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = FCCFBD582D9B370000390973 /* Dev.xcconfig */; };
 		FCCFBD5B2D9B372400390973 /* Prod.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = FCCFBD5A2D9B372400390973 /* Prod.xcconfig */; };
+		FCFB1BB52DC2CC5F0018E90E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FCFB1BB42DC2CC570018E90E /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		FCA437C02D8C9A7D000510C2 /* anothappUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = anothappUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCCFBD582D9B370000390973 /* Dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Dev.xcconfig; sourceTree = "<group>"; };
 		FCCFBD5A2D9B372400390973 /* Prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Prod.xcconfig; sourceTree = "<group>"; };
+		FCFB1BB42DC2CC570018E90E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -106,6 +108,7 @@
 		FCA4379D2D8C9A7C000510C2 = {
 			isa = PBXGroup;
 			children = (
+				FCFB1BB42DC2CC570018E90E /* README.md */,
 				FCCFBD582D9B370000390973 /* Dev.xcconfig */,
 				FCCFBD5A2D9B372400390973 /* Prod.xcconfig */,
 				FCA079092D90B5B300DC97A8 /* .gitignore */,
@@ -251,6 +254,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCFB1BB52DC2CC5F0018E90E /* README.md in Resources */,
 				FCA0790A2D90B5BC00DC97A8 /* .gitignore in Resources */,
 				FCCFBD5B2D9B372400390973 /* Prod.xcconfig in Resources */,
 				FCCFBD592D9B370000390973 /* Dev.xcconfig in Resources */,
