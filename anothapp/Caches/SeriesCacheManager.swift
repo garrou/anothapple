@@ -91,12 +91,15 @@ class SeriesCacheManager {
             .sorted { Helper.shared.compareStrings($0, $1) }
     }
     
-    func getSeries(title: String = "", countries: [String] = []) async -> [Serie] {
+    func getSeries(title: String = "", countries: [String] = [], kinds: [Kind] = []) async -> [Serie] {
         var series = getAll()
         if series.isEmpty { series = await loadSeries() }
 
         if !countries.isEmpty {
             series = series.filter { countries.contains($0.country) }
+        }
+        if !kinds.isEmpty {
+            series = series.filter { Set($0.kinds).intersection(Set(kinds.map { $0.name })).count > 0 }
         }
         return title.isEmpty
         ? series.sorted { $0.addedAt > $1.addedAt }

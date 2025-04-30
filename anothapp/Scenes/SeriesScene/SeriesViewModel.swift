@@ -19,7 +19,10 @@ class SeriesViewModel: ObservableObject {
     @Published var isFiltersOpened = false
     @Published var selectedFilterTab: FilterTab = .kinds
     @Published var countries: [String] = []
+    @Published var kinds: [Kind] = []
+    
     @Published var selectedCountries: Set<String> = []
+    @Published var selectedKinds: Set<Kind> = []
     
     private let router: SeriesRouter
     
@@ -34,12 +37,17 @@ class SeriesViewModel: ObservableObject {
     @MainActor
     func loadSeries() async {
         isLoading = true
-        series = await SeriesCacheManager.shared.getSeries(title: titleSearch, countries: Array(selectedCountries))
+        series = await SeriesCacheManager.shared.getSeries(title: titleSearch, countries: Array(selectedCountries), kinds: Array(selectedKinds))
         isLoading = false
     }
     
     func loadCountries() {
         countries = SeriesCacheManager.shared.getCountries()
+    }
+    
+    @MainActor
+    func loadKinds() async {
+        kinds = await KindsCacheManager.shared.getKinds()
     }
     
     func selectCountry(_ country: String) async {
@@ -51,8 +59,21 @@ class SeriesViewModel: ObservableObject {
         await loadSeries()
     }
     
+    func selectKind(_ kind: Kind) async {
+        if selectedKinds.contains(kind) {
+            selectedKinds.remove(kind)
+        } else {
+            selectedKinds.insert(kind)
+        }
+        await loadSeries()
+    }
+    
     func isCountrySelected(_ country: String) -> Bool {
         selectedCountries.contains(country)
+    }
+    
+    func isKindSelected(_ kind: Kind) -> Bool {
+        selectedKinds.contains(kind)
     }
 }
 

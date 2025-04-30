@@ -18,12 +18,11 @@ struct SeriesView: View {
                 
                 HStack {
                     TextField("Titre de la série", text: $viewModel.titleSearch)
-                        .padding()
+                        .padding(.all, 10)
                         .background(
                             RoundedRectangle(cornerRadius: 8)
                                 .stroke(isSearchFocused ? .primary : .secondary, lineWidth: 1)
                         )
-                        .padding(.horizontal, 10)
                         .focused($isSearchFocused)
                         .onChange(of: viewModel.titleSearch) {
                             Task {
@@ -35,8 +34,8 @@ struct SeriesView: View {
                         Image(systemName: "line.3.horizontal.decrease")
                             .font(.system(size: 20, weight: .regular))
                     }
-                    .padding()
                 }
+                .padding(.horizontal, 4)
                 
                 if viewModel.isLoading {
                     LoadingView()
@@ -86,9 +85,32 @@ struct SeriesView: View {
                             TabView(selection: $viewModel.selectedFilterTab) {
                                 
                                 List {
-                                    // TODO
+                                    ForEach(viewModel.kinds, id: \.value) { kind in
+                                        HStack {
+                                            Text(kind.name)
+                                            
+                                            Spacer()
+                                            
+                                            if viewModel.isKindSelected(kind) {
+                                                Image(systemName: "checkmark.circle")
+                                                    .foregroundColor(.primary)
+                                            }
+                                        }
+                                        .contentShape(Rectangle())
+                                        .onTapGesture {
+                                            Task {
+                                                await viewModel.selectKind(kind)
+                                            }
+                                        }
+                                    }
                                 }
+                                .listStyle(PlainListStyle())
                                 .tag(FilterTab.kinds)
+                                .onAppear {
+                                    Task {
+                                        await viewModel.loadKinds()
+                                    }
+                                }
                                 
                                 List {
                                     ForEach(viewModel.countries, id: \.self) { country in
