@@ -10,17 +10,22 @@ import SwiftUI
 class SeriesStatusRouter {
     
     private let rootCoordinator: NavigationCoordinator
-    let series: [Serie]
+    let status: SerieStatus
     let title: String
     
-    init(rootCoordinator: NavigationCoordinator, series: [Serie], title: String) {
+    init(rootCoordinator: NavigationCoordinator, status: SerieStatus, title: String) {
         self.rootCoordinator = rootCoordinator
-        self.series = series
+        self.status = status
         self.title = title
     }
     
-    func routeToSerieDetail(serie: Serie) {
+    func routeToSerieDetails(serie: Serie) {
         let router = SerieDetailsRouter(rootCoordinator: rootCoordinator, serie: serie)
+        rootCoordinator.push(router)
+    }
+    
+    func routeToDiscoverDetails(serie: ApiSerie) {
+        let router = DiscoverDetailsRouter(rootCoordinator: rootCoordinator, serie: serie)
         rootCoordinator.push(router)
     }
 }
@@ -49,5 +54,5 @@ extension SeriesStatusRouter {
 }
 
 extension SeriesStatusRouter {
-    static let mock: SeriesStatusRouter = .init(rootCoordinator: AppRouter(), series: [Datasource.mockSerie], title: "Mock")
+    static let mock: SeriesStatusRouter = .init(rootCoordinator: AppRouter(), status: .favorite, title: "Favoris")
 }

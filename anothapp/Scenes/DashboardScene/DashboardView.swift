@@ -18,13 +18,13 @@ struct DashboardView: View {
                 LoadingView()
             } else {
                 GloablStatisticView(viewModel: viewModel)
-                BarChart(title: "Saisons par mois cette année", xLabel: "Mois", yLabel: "Saisons", data: viewModel.seasonsMonthsCurrentYear)
-                BarChart(title: "Episodes par mois cette année", xLabel: "Mois", yLabel: "Episodes", data: viewModel.epiodesMonthsCurrentYear)
-                LineChart(title: "Temps en heures par années", xLabel: "Années", yLabel: "Heures", data: viewModel.hoursPerYear)
-                BarChart(title: "Saisons par années", xLabel: "Années", yLabel: "Saisons", data: viewModel.seasonsPerYears)
-                BarChart(title: "Episodes par années", xLabel: "Années", yLabel: "Episodes", data: viewModel.episodesPerYears)
-                BarChart(title: "Saisons par mois", xLabel: "Mois", yLabel: "Saisons", data: viewModel.seasonsByMonths)
-                BarChart(title: "Mois record en heures", xLabel: "Mois", yLabel: "Heures", data: viewModel.monthsRankingHours)
+                BarChart(title: "Saisons par mois cette année", xLabel: "Mois", yLabel: "Saisons", data: viewModel.seasonsMonthsCurrentYear, color: .green)
+                BarChart(title: "Episodes par mois cette année", xLabel: "Mois", yLabel: "Episodes", data: viewModel.epiodesMonthsCurrentYear, color: .cyan)
+                LineChart(title: "Temps en heures par années", xLabel: "Années", yLabel: "Heures", data: viewModel.hoursPerYear, color: .yellow)
+                BarChart(title: "Saisons par années", xLabel: "Années", yLabel: "Saisons", data: viewModel.seasonsPerYears, color: .orange)
+                BarChart(title: "Episodes par années", xLabel: "Années", yLabel: "Episodes", data: viewModel.episodesPerYears, color: .pink)
+                BarChart(title: "Saisons par mois", xLabel: "Mois", yLabel: "Saisons", data: viewModel.seasonsByMonths, color: .mint)
+                BarChart(title: "Mois record en heures", xLabel: "Mois", yLabel: "Heures", data: viewModel.monthsRankingHours, color: .red)
                 PieChart(title: "Série les plus chronophages en heures", data: viewModel.timeConsumingSeries)
                 PieChart(title: "Genre les plus regardés", data: viewModel.mostViewedKinds)
                 PieChart(title: "Saisons par plateformes", data: viewModel.seasonsByPlatforms)
@@ -69,6 +69,7 @@ struct BarChart: View {
     let xLabel: String
     let yLabel: String
     let data: [Stat]
+    let color: Color
     
     var body: some View {
         VStack {
@@ -79,7 +80,7 @@ struct BarChart: View {
                     x: .value(xLabel, item.label),
                     y: .value(yLabel, item.value)
                 )
-                .foregroundStyle(.primary)
+                .foregroundStyle(color)
             }
             .frame(height: 300)
         }
@@ -96,6 +97,7 @@ struct LineChart: View {
     let xLabel: String
     let yLabel: String
     let data: [Stat]
+    let color: Color
     
     var body: some View {
         VStack {
@@ -106,7 +108,7 @@ struct LineChart: View {
                     x: .value(xLabel, item.label),
                     y: .value(yLabel, item.value)
                 )
-                .foregroundStyle(.primary)
+                .foregroundStyle(color)
             }
             .frame(height: 300)
         }

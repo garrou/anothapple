@@ -30,16 +30,8 @@ class DiscoverDetailsViewModel: ObservableObject {
     init(router: DiscoverDetailsRouter, serie: ApiSerie) {
         self.router = router
         self.serie = serie
-        self.isSerieAdded = checkIfAlreadyAdded()
-        self.isSerieInList = checkIfAlreadyInList()
-    }
-    
-    func checkIfAlreadyAdded() -> Bool {
-        SeriesCacheManager.shared.getById(id: serie.id) != nil
-    }
-    
-    func checkIfAlreadyInList() -> Bool {
-        SeriesListCacheManager.shared.getById(id: serie.id) != nil
+        self.isSerieAdded = SeriesCacheManager.shared.isAlreadyAdded(id: serie.id)
+        self.isSerieInList = SeriesListCacheManager.shared.isAlreadyAdded(id: serie.id)
     }
     
     func routeToDiscoverDetails(id: Int) async {

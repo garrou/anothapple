@@ -58,14 +58,14 @@ struct HomeView: View {
                                 Spacer().frame(height: 120)
                                 
                                 List {
-                                    Button(action: { viewModel.routeToProfielView() }) {
+                                    Button(action: { viewModel.routeToProfileView() }) {
                                         Label("Profil", systemImage: "person.crop.circle")
                                     }
                                     
-                                    Button(action: { Task { await viewModel.routeToWatchListView() }}) {
+                                    Button(action: { viewModel.routeToWatchListView() }) {
                                         Label("Ma liste", systemImage: "list.bullet")
                                     }
-                                    Button(action: { Task { await viewModel.routeToSeriesToContinueView() }}) {
+                                    Button(action: { viewModel.routeToSeriesToContinueView() }) {
                                         Label("Séries en cours", systemImage: "play")
                                     }
                                     Button(action: { viewModel.routeToTimelineView() }) {

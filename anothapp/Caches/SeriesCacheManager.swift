@@ -48,6 +48,10 @@ class SeriesCacheManager {
         cache.object(forKey: String(id) as NSString)
     }
     
+    func isAlreadyAdded(id: Int) -> Bool {
+        getById(id: id) != nil
+    }
+    
     func addSerie(id: Int) async -> Bool {
         let request = SerieRequest(id: id, list: false)
         var isAdded = false

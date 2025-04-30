@@ -18,7 +18,9 @@ struct SeriesStatusView: View {
             } else {
                 GridView(items: viewModel.series, columns: 2) { serie in
                     Button(action: {
-                        viewModel.routeToSerieDetail(serie: serie)
+                        Task {
+                            await viewModel.routeToSerieDetails(serie: serie)
+                        }
                     })
                     {
                         VStack {
@@ -31,6 +33,9 @@ struct SeriesStatusView: View {
         }
         .padding(.vertical, 10)
         .navigationTitle(viewModel.title)
+        .task {
+            await viewModel.loadSeries()
+        }
     }
 }
 

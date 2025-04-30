@@ -40,28 +40,24 @@ class HomeViewModel: ObservableObject {
         router.routeToTimelineView()
     }
     
-    func routeToProfielView() {
+    func routeToProfileView() {
         router.routeToProfileView()
     }
     
     func routeToFavoritesView() {
-        let series = SeriesCacheManager.shared.getFavorites()
-        return router.routeToSeriesStatusView(series: series, title: "Favoris")
+        router.routeToSeriesStatusView(status: .favorite, title: "Favoris")
     }
     
-    func routeToWatchListView() async {
-        let series = await SeriesListCacheManager.shared.getWatchList()
-        router.routeToSeriesStatusView(series: series, title: "Ma liste")
+    func routeToWatchListView() {
+        router.routeToSeriesStatusView(status: .watchlist, title: "Ma liste")
     }
     
-    func routeToSeriesToContinueView() async {
-        let seriesToContinue = await SeriesManager.shared.getSeriesByStatus(status: "continue")
-        router.routeToSeriesStatusView(series: seriesToContinue, title: "En cours")
+    func routeToSeriesToContinueView() {
+        router.routeToSeriesStatusView(status: .continueWatching, title: "En cours")
     }
     
     func routeToStoppedSeriesView() {
-        let seriesStopped = SeriesCacheManager.shared.getSeriesByWatching(watching: false)
-        return router.routeToSeriesStatusView(series: seriesStopped, title: "Arrêtées")
+        router.routeToSeriesStatusView(status: .stopped, title: "Arrêtées")
     }
     
     @MainActor
