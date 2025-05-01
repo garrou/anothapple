@@ -23,6 +23,8 @@ class DiscoverDetailsViewModel: ObservableObject {
     @Published var similars: [BaseSerie] = []
     @Published var images: [String] = []
     @Published var characters: [Person] = []
+    @Published var openActorDetails: Bool = false
+    @Published var selectedActor: PersonDetails? = nil
     @Published var tabContentHeight: CGFloat = ContentHeightPreferenceKey.defaultValue
     
     private let router: DiscoverDetailsRouter
@@ -79,6 +81,12 @@ class DiscoverDetailsViewModel: ObservableObject {
     func getCharacters() async {
         if !characters.isEmpty { return }
         characters = await SearchManager.shared.getCharacters(id: serie.id)
+    }
+    
+    @MainActor
+    func getActorDetails(id: Int) async {
+        selectedActor = await SearchManager.shared.getActorDetails(id: id)
+        openActorDetails = selectedActor != nil
     }
 }
 

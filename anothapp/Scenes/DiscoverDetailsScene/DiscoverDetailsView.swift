@@ -146,7 +146,11 @@ struct DiscoverDetailsView: View {
                     
                     // Actors
                     GridView(items: viewModel.characters, columns: 2) { character in
-                        Button(action: { print("actor") })
+                        Button(action: {
+                            Task {
+                                await viewModel.getActorDetails(id: character.id)
+                            }
+                        })
                         {
                             VStack {
                                 if let img = character.picture {
@@ -158,6 +162,9 @@ struct DiscoverDetailsView: View {
                         }
                     }
                     .tag(DiscoverDetailsTab.characters)
+                    .sheet(isPresented: $viewModel.openActorDetails) {
+                        ActorDetailView(viewModel: viewModel, person: viewModel.selectedActor!)
+                    }
                     .background(
                         GeometryReader { geometry in
                             Color.clear.preference(
@@ -192,7 +199,6 @@ struct DiscoverDetailsView: View {
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 .onPreferenceChange(ContentHeightPreferenceKey.self) { height in
-                    
                     if abs(viewModel.tabContentHeight - height) > 1 {
                         viewModel.tabContentHeight = height
                     }
@@ -284,6 +290,136 @@ struct DetailRow: View {
             Spacer()
             Text(value)
                 .foregroundColor(.secondary)
+        }
+    }
+}
+
+struct ActorDetailView : View {
+    
+    let viewModel: DiscoverDetailsViewModel
+    let person: PersonDetails
+    
+    var body: some View {
+        ScrollView {
+            headerSection
+            
+            VStack(alignment: .leading, spacing: 24) {
+                basicInfoSection
+                
+                descriptionSection
+                
+                seriesSection
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 30)
+        }
+        .edgesIgnoringSafeArea(.top)
+        .navigationBarTitleDisplayMode(.inline)
+        .background(Color(.systemBackground))
+    }
+    
+    private var headerSection: some View {
+        ZStack(alignment: .bottom) {
+   
+            if let posterUrl = person.poster {
+                ImageCardView(url: posterUrl)
+            } else {
+                Rectangle()
+                    .fill(LinearGradient(colors: [.blue.opacity(0.7), .purple.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .frame(height: 280)
+            }
+            
+            LinearGradient(
+                gradient: Gradient(colors: [.clear, .black.opacity(0.8)]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: 280)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(person.name)
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundColor(.white)
+                
+                Text(person.nationality)
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundColor(.white.opacity(0.9))
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 20)
+        }
+    }
+    
+    private var basicInfoSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Information")
+                .font(.system(size: 22, weight: .bold))
+                .foregroundColor(.primary)
+            
+            HStack(spacing: 24) {
+                infoItem(title: "Naissance", value: person.birthday)
+                
+                if let deathday = person.deathday {
+                    infoItem(title: "Décès", value: deathday)
+                }
+            }
+            .padding(.vertical, 4)
+        }
+    }
+    
+    private func infoItem(title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(.secondary)
+            
+            Text(value)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(.primary)
+        }
+    }
+    
+    private var descriptionSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Description")
+                .font(.system(size: 22, weight: .bold))
+                .foregroundColor(.primary)
+            
+            Text(person.description)
+                .font(.system(size: 16))
+                .foregroundColor(.primary)
+                .lineSpacing(4)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+    
+    private var seriesSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Séries")
+                .font(.system(size: 22, weight: .bold))
+                .foregroundColor(.primary)
+            
+            if person.series.isEmpty {
+                Text("Aucune série")
+                    .font(.system(size: 16))
+                    .foregroundColor(.secondary)
+                    .padding(.top, 8)
+            } else {
+                GridView(items: person.series, columns: 2) { serie in
+                    Button(action: {
+                        Task {
+                            viewModel.openActorDetails = false
+                            await viewModel.routeToDiscoverDetails(id: serie.id)
+                        }
+                    })
+                    {
+                        VStack {
+                            ImageCardView(url: serie.poster)
+                            Text(serie.title).font(.headline)
+                        }
+                    }
+                }
+            }
         }
     }
 }

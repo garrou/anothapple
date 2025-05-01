@@ -74,4 +74,13 @@ class SearchManager {
             return []
         }
     }
+    
+    func getActorDetails(id: Int) async -> PersonDetails? {
+        do {
+            return try await searchService.fetchCharacterById(id: id)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur lors de la récupération de l'acteur")
+            return nil
+        }
+    }
 }
