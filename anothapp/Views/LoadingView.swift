@@ -8,11 +8,7 @@
 import SwiftUI
 
 struct LoadingView: View {
-    
-    
-    
     var body: some View {
-        
         ProgressView()
             .progressViewStyle(CircularProgressViewStyle(tint: .primary))
             .scaleEffect(1.5)

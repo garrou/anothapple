@@ -25,4 +25,9 @@ class SeasonService {
         let (_, ok) = try await BaseService.shared.dataRequest(url: "\(baseUrl)/\(request.id)", method: "PATCH", data: request)
         return ok
     }
+    
+    func deleteSeason(id: Int) async throws -> Bool {
+        let (_, ok) = try await BaseService.shared.request(url: "\(baseUrl)/\(id)", method: "DELETE", successCode: 204)
+        return ok
+    }
 }

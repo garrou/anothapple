@@ -18,6 +18,10 @@ class SeasonDetailsRouter {
         self.serie = serie
         self.season = season
     }
+    
+    func goBack() {
+        rootCoordinator.popLast()
+    }
 }
 
 // MARK: ViewFactory implementation

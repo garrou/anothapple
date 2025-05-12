@@ -34,27 +34,42 @@ struct SeasonDetailsView: View {
             .padding(.horizontal)
             
             GridView(items: viewModel.seasons, columns: 1) { season in
-                Menu {
-                    ForEach(viewModel.platforms, id: \.id!) { platform in
-                        Button(action: {
-                            Task {
-                                await viewModel.updateSeasonPlatform(seasonId: season.id, platformId: platform.id!)
-                            }
-                        }) {
-                            HStack {
-                                ImageCardView(url: platform.logo)
-                                Text(platform.name).font(.caption)
+                HStack {
+                    Menu {
+                        ForEach(viewModel.platforms, id: \.id!) { platform in
+                            Button(action: {
+                                Task {
+                                    await viewModel.updateSeasonPlatform(seasonId: season.id, platformId: platform.id!)
+                                }
+                            }) {
+                                HStack {
+                                    ImageCardView(url: platform.logo)
+                                    Text(platform.name).font(.caption)
+                                }
                             }
                         }
-                    }
-                } label: {
-                    HStack {
+                    } label: {
                         ImageCardView(url: season.platform.logo)
-                            .frame(width: 50, height: 50)
-                        
-                        Spacer()
-                        
-                        Text("\(Helper.shared.dateToString(date: season.addedAt, style: .medium))")
+                                .frame(width: 50, height: 50)
+                    }
+                    
+                    Spacer()
+                    
+                    Text("\(Helper.shared.dateToString(date: season.addedAt, style: .medium))")
+                    
+                    Spacer()
+                    
+                    Button(action: { viewModel.showDeleteModal.toggle() }) {
+                        Image(systemName: "trash").foregroundColor(.red)
+                    }.alert("Supprimer la saison ?", isPresented: $viewModel.showDeleteModal) {
+                        Button("Annuler", role: .cancel) {
+                            viewModel.showDeleteModal.toggle()
+                        }
+                        Button("Supprimer", role: .destructive) {
+                            Task {
+                                await viewModel.deleteSeason(id: season.id)
+                            }
+                        }
                     }
                 }
                 .padding()

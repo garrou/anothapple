@@ -12,6 +12,7 @@ class SeasonDetailsViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var seasons: [SeasonInfos] = []
     @Published var platforms: [Platform] = []
+    @Published var showDeleteModal = false
     
     private let router: SeasonDetailsRouter
     
@@ -47,6 +48,13 @@ class SeasonDetailsViewModel: ObservableObject {
         seasons = await SeriesManager.shared.getSeasonDetails(id: router.serie.id, num: router.season.number)
         platforms = await PlatformsCacheManager.shared.getPlatforms()
         isLoading = false
+    }
+    
+    func deleteSeason(id: Int) async {
+        let deleted = await SeasonsManager.shared.deleteSeason(id: id)
+        if deleted {
+            router.goBack()
+        }
     }
 }
 

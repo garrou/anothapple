@@ -32,4 +32,15 @@ class SeasonsManager {
         }
         return updated
     }
+    
+    func deleteSeason(id: Int) async -> Bool {
+        var deleted = false
+        do {
+            deleted = try await seasonService.deleteSeason(id: id)
+            ToastManager.shared.setToast(message: deleted ? "Saison supprimée" : "Erreur durant la suppression", isError: !deleted)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur lors de la suppression de la série")
+        }
+        return deleted
+    }
 }
