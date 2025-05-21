@@ -23,11 +23,11 @@ struct PersonDetails: Codable {
     
     let name: String
     
-    let birthday: String
+    let birthday: String?
     
     let deathday: String?
     
-    let nationality: String
+    let nationality: String?
     
     let description: String
     

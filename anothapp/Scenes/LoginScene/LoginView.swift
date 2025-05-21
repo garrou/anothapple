@@ -59,7 +59,7 @@ struct LoginView: View {
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(viewModel.isInvalidForm ? .secondary : .primary)
                     .padding()
-                    .background(RoundedRectangle(cornerRadius: 8).stroke(.primary, lineWidth: 1))
+                    .background(RoundedRectangle(cornerRadius: 8).stroke(viewModel.isInvalidForm ? .secondary : .primary, lineWidth: 1))
             }.disabled(viewModel.isInvalidForm)
             
             HStack {

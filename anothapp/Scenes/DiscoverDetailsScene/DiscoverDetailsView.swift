@@ -36,6 +36,7 @@ struct DiscoverDetailsView: View {
                             .padding(.horizontal, 10)
                             .padding(.vertical, 5)
                             .background(.yellow.opacity(0.8))
+                            .cornerRadius(8)
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
@@ -340,9 +341,11 @@ struct ActorDetailView : View {
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.white)
                 
-                Text(person.nationality)
-                    .font(.system(size: 18, weight: .medium))
-                    .foregroundColor(.white.opacity(0.9))
+                if let nationality = person.nationality {
+                    Text(nationality)
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(.white.opacity(0.9))
+                }
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 20)
@@ -356,11 +359,9 @@ struct ActorDetailView : View {
                 .foregroundColor(.primary)
             
             HStack(spacing: 24) {
-                infoItem(title: "Naissance", value: person.birthday)
+                infoItem(title: "Naissance", value: person.birthday ?? "?")
                 
-                if let deathday = person.deathday {
-                    infoItem(title: "Décès", value: deathday)
-                }
+                infoItem(title: "Décès", value: person.deathday ?? "?")
             }
             .padding(.vertical, 4)
         }

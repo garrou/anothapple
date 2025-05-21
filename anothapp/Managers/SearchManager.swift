@@ -79,6 +79,7 @@ class SearchManager {
         do {
             return try await searchService.fetchCharacterById(id: id)
         } catch {
+            print(error)
             ToastManager.shared.setToast(message: "Erreur lors de la récupération de l'acteur")
             return nil
         }
