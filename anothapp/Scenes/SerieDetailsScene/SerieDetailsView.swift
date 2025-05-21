@@ -215,7 +215,8 @@ struct SerieDetailsView: View {
                                     }
                                 }) {
                                     HStack {
-                                        Image(systemName: viewModel.serie.favorite ? "heart.fill" : "heart").foregroundColor(viewModel.serie.favorite ? .red : .primary)
+                                        Image(systemName: viewModel.serie.favorite ? "heart.fill" : "heart")
+                                            .foregroundColor(viewModel.serie.favorite ? .red : .primary)
                                         Text(viewModel.serie.favorite ? "Supprimer" : "Ajouter")
                                     }
                                 }

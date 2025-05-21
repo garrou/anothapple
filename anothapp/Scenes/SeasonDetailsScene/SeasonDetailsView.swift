@@ -50,7 +50,7 @@ struct SeasonDetailsView: View {
                         }
                     } label: {
                         ImageCardView(url: season.platform.logo)
-                                .frame(width: 50, height: 50)
+                            .frame(width: 50, height: 50)
                     }
                     
                     Spacer()
@@ -62,9 +62,7 @@ struct SeasonDetailsView: View {
                     Button(action: { viewModel.showDeleteModal.toggle() }) {
                         Image(systemName: "trash").foregroundColor(.red)
                     }.alert("Supprimer la saison ?", isPresented: $viewModel.showDeleteModal) {
-                        Button("Annuler", role: .cancel) {
-                            viewModel.showDeleteModal.toggle()
-                        }
+                        Button("Annuler", role: .cancel) { viewModel.showDeleteModal.toggle() }
                         Button("Supprimer", role: .destructive) {
                             Task {
                                 await viewModel.deleteSeason(id: season.id)

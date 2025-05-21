@@ -60,6 +60,10 @@ class HomeViewModel: ObservableObject {
         router.routeToSeriesStatusView(status: .stopped, title: "Arrêtées")
     }
     
+    func routeToSettingsView() {
+        router.routeToSettingsView()
+    }
+    
     @MainActor
     func loadCaches() async {
         isLoading = true

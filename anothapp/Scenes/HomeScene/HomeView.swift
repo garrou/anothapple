@@ -61,7 +61,6 @@ struct HomeView: View {
                                     Button(action: { viewModel.routeToProfileView() }) {
                                         Label("Profil", systemImage: "person.crop.circle")
                                     }
-                                    
                                     Button(action: { viewModel.routeToWatchListView() }) {
                                         Label("Ma liste", systemImage: "list.bullet")
                                     }
@@ -80,9 +79,9 @@ struct HomeView: View {
 //                                    NavigationLink(destination: Text("Option 3 View")) {
 //                                        Label("Calendrier", systemImage: "calendar")
 //                                    }
-//                                    NavigationLink(destination: Text("Option 3 View")) {
-//                                        Label("Paramètres", systemImage: "gear")
-//                                    }
+                                    Button(action: { viewModel.routeToSettingsView() }) {
+                                        Label("Paramètres", systemImage: "gear")
+                                    }
                                     Button(action: { viewModel.logout() }) {
                                         HStack {
                                             Image(systemName: "arrow.left.to.line").padding(.leading, 5)

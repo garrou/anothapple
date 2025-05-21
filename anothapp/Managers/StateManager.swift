@@ -20,4 +20,12 @@ class StateManager: ObservableObject {
         let _ = await KindsCacheManager.shared.getKinds()
         hasLoaded = true
     }
+    
+    func clearCaches() {
+        SeriesCacheManager.shared.clear()
+        SeriesListCacheManager.shared.clear()
+        PlatformsCacheManager.shared.clear()
+        KindsCacheManager.shared.clear()
+        hasLoaded = false
+    }
 }

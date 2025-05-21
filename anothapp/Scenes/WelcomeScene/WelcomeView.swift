@@ -12,7 +12,7 @@ struct WelcomeView: View {
     @StateObject var viewModel: WelcomeViewModel
     
     var body: some View {
-        VStack(spacing: 5) {
+        VStack {
             Text("Anothapp")
                 .font(.largeTitle)
                 .textCase(.uppercase)
@@ -25,11 +25,9 @@ struct WelcomeView: View {
                 Text("Se connecter")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.primary)
-                    .padding()
-                    .cornerRadius(8)
             }
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 30)
         .task {
             await viewModel.loadImages(limit: 9)
         }

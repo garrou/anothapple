@@ -36,7 +36,6 @@ struct DiscoverDetailsView: View {
                             .padding(.horizontal, 10)
                             .padding(.vertical, 5)
                             .background(.yellow.opacity(0.8))
-                            .cornerRadius(8)
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {

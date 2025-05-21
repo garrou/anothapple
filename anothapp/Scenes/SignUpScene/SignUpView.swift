@@ -73,7 +73,7 @@ struct SignUpView: View {
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(viewModel.isInvalidForm ? .secondary : .primary)
                     .padding()
-                    .cornerRadius(8)
+                    .background(RoundedRectangle(cornerRadius: 8).stroke(.primary, lineWidth: 1))
             }
             .disabled(viewModel.isInvalidForm)
             

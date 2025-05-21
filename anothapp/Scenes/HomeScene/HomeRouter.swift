@@ -42,6 +42,11 @@ class HomeRouter {
         rootCoordinator.push(router)
     }
     
+    func routeToSettingsView() {
+        let router = SettingsRouter(rootCoordinator: rootCoordinator)
+        rootCoordinator.push(router)
+    }
+    
     func routeToWelcomePage() {
         rootCoordinator.popToRoot()
     }
