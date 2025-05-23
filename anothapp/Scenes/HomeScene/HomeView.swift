@@ -29,11 +29,11 @@ struct HomeView: View {
                         }
                         .tag(AppTab.discover)
                     
-//                    Text("Friends")
-//                        .tabItem {
-//                            Label("Amis", systemImage: "person.fill.checkmark")
-//                        }
-//                        .tag(AppTab.friends)
+                    viewModel.getFriendsTabView()
+                        .tabItem {
+                            Label("Amis", systemImage: "person.fill.checkmark")
+                        }
+                        .tag(AppTab.friends)
                     
                     viewModel.getStatisticsTabView()
                         .tabItem {

@@ -27,6 +27,10 @@ class HomeRouter {
         DashboardRouter(rootCoordinator: rootCoordinator).makeView()
     }
     
+    func getFriendsTabView() -> AnyView {
+        FriendsRouter(rootCoordinator: rootCoordinator).makeView()
+    }
+    
     func routeToSeriesStatusView(status: SerieStatus, title: String) {
         let router = SeriesStatusRouter(rootCoordinator: rootCoordinator, status: status, title: title)
         rootCoordinator.push(router)

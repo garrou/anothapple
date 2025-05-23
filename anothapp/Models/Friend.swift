@@ -20,3 +20,9 @@ struct ViewedByFriends: Codable {
         case friends = "viewed"
     }
 }
+
+struct SummaryFriends: Codable {
+    let friends: [Friend]
+    let received: [Friend]
+    let sent: [Friend]
+}

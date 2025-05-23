@@ -50,7 +50,6 @@ struct DiscoverView: View {
             }
         }
         .padding(.vertical, 10)
-        .navigationTitle("Découvrir")
         .task {
             await viewModel.loadSeries()
         }

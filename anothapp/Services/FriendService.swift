@@ -16,4 +16,9 @@ class FriendService {
         let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)?status=viewed&serieId=\(id)")
         return ok ? try decoder.decode(ViewedByFriends.self, from: data) : nil
     }
+    
+    func fetchSummaryFriends() async throws -> SummaryFriends? {
+        let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)")
+        return ok ? try decoder.decode(SummaryFriends.self, from: data) : nil
+    }
 }

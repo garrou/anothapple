@@ -147,7 +147,6 @@ struct SeriesView: View {
                 }.zIndex(10)
             }
         }
-        .navigationTitle("Mes séries")
         .padding(.vertical, 10)
         .onReceive(StateManager.shared.$hasLoaded) { newValue in
             Task {

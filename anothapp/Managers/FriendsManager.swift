@@ -24,4 +24,17 @@ class FriendsManager {
         }
         return friends
     }
+    
+    func getSummaryFriends() async -> SummaryFriends {
+        var summaryFriends: SummaryFriends = .init(friends: [], received: [], sent: [])
+        
+        do {
+            if let summary = try await friendService.fetchSummaryFriends() {
+                summaryFriends = summary
+            }
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la récupération des amis")
+        }
+        return summaryFriends
+    }
 }

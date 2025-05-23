@@ -32,6 +32,10 @@ class HomeViewModel: ObservableObject {
         router.getDiscoverTabView()
     }
     
+    func getFriendsTabView() -> AnyView {
+        router.getFriendsTabView()
+    }
+    
     func getStatisticsTabView() -> AnyView {
         router.getStatisticsTabView()
     }
