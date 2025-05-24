@@ -1,5 +1,5 @@
 //
-//  FriendCardView.swift
+//  CardView.swift
 //  anothapp
 //
 //  Created by Adrien Garrouste on 30/03/2025.

@@ -15,8 +15,11 @@ struct FriendsView: View {
         VStack {
             Picker("", selection: $viewModel.selectedTab) {
                 Image(systemName: "person.fill.checkmark").tag(FriendsTab.friends)
+                
                 Image(systemName: "person.badge.plus").tag(FriendsTab.add)
+                
                 Image(systemName: "arrow.down.circle").tag(FriendsTab.received)
+                
                 Image(systemName: "arrow.up.circle").tag(FriendsTab.sent)
             }
             .pickerStyle(SegmentedPickerStyle())
@@ -39,20 +42,16 @@ struct FriendsView: View {
     }
 }
 
-struct FriendsTabView: View {
+private struct FriendsTabView: View {
     
-    let viewModel: FriendsViewModel
+    @StateObject var viewModel: FriendsViewModel
     
     var body: some View {
         VStack {
+            Text(Helper.shared.formatPlural(str: "ami", num: viewModel.summary.friends.count)).font(.headline)
+            
             GridView(items: viewModel.summary.friends, columns: 2) { friend in
-                VStack {
-                    if let img = friend.picture {
-                        ImageCardView(url: img)
-                    }
-                    Text(friend.username).font(.headline)
-                    Text(friend.email).font(.subheadline)
-                }
+                CardView(picture: friend.picture, text: friend.username)
             }
             
             Spacer()
@@ -60,35 +59,48 @@ struct FriendsTabView: View {
     }
 }
 
-struct AddTabView: View {
+private struct AddTabView: View {
     
-    let viewModel: FriendsViewModel
+    @StateObject var viewModel: FriendsViewModel
+    @FocusState private var isSearchFocused: Bool
     
     var body: some View {
         VStack {
-            Text("Ajouter")
+            Text("Ajouter des amis").font(.headline)
+            
+            TextField("Nom d'utilisateur", text: $viewModel.usernameSearch)
+                .padding(.all, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(isSearchFocused ? .primary : .secondary, lineWidth: 1)
+                )
+                .focused($isSearchFocused)
+                .onSubmit {
+                    Task {
+                        await viewModel.getUsersByUsername()
+                    }
+                }
+                .padding()
+            
+            GridView(items: viewModel.users, columns: 2) { user in
+                CardView(picture: user.picture, text: user.username)
+            }
             
             Spacer()
         }
     }
 }
 
-struct ReceivedTabView: View {
+private struct ReceivedTabView: View {
     
-    let viewModel: FriendsViewModel
+    @StateObject var viewModel: FriendsViewModel
     
     var body: some View {
         VStack {
-            Text("Demandes reçues")
+            Text("Demandes reçues").font(.headline)
             
             GridView(items: viewModel.summary.received, columns: 2) { friend in
-                VStack {
-                    if let img = friend.picture {
-                        ImageCardView(url: img)
-                    }
-                    Text(friend.username).font(.headline)
-                    Text(friend.email).font(.subheadline)
-                }
+                CardView(picture: friend.picture, text: friend.username)
             }
             
             Spacer()
@@ -96,22 +108,16 @@ struct ReceivedTabView: View {
     }
 }
 
-struct SentTabView: View {
+private struct SentTabView: View {
     
-    let viewModel: FriendsViewModel
+    @StateObject var viewModel: FriendsViewModel
     
     var body: some View {
         VStack {
-            Text("Demandes envoyées")
+            Text("Demandes envoyées").font(.headline)
             
             GridView(items: viewModel.summary.sent, columns: 2) { friend in
-                VStack {
-                    if let img = friend.picture {
-                        ImageCardView(url: img)
-                    }
-                    Text(friend.username).font(.headline)
-                    Text(friend.email).font(.subheadline)
-                }
+                CardView(picture: friend.picture, text: friend.username)
             }
             
             Spacer()

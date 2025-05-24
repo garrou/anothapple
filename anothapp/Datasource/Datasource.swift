@@ -9,7 +9,7 @@ import Foundation
 
 class Datasource {
     
-    static var mockFriend = Friend(id: "12345", email: "test@mail.com", username: "Test", picture: nil, current: false)
+    static var mockFriend = Friend(id: "12345", email: "test@mail.com", username: "Test", picture: nil)
     
     static var mockSeason = Season(number: 1, episodes: 82, image: "https://pictures.betaseries.com/fonds/seasons/3966/6673f65bbdf50.jpg", interval: "1 - 82")
     

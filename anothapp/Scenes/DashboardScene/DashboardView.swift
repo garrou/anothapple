@@ -37,7 +37,7 @@ struct DashboardView: View {
     }
 }
 
-struct GloablStatisticView: View {
+private struct GloablStatisticView: View {
     
     @StateObject var viewModel: DashboardViewModel
     
@@ -63,7 +63,7 @@ struct GloablStatisticView: View {
     }
 }
 
-struct BarChart: View {
+private struct BarChart: View {
     
     let title: String
     let xLabel: String
@@ -91,7 +91,7 @@ struct BarChart: View {
     }
 }
 
-struct LineChart: View {
+private struct LineChart: View {
     
     let title: String
     let xLabel: String
@@ -119,7 +119,7 @@ struct LineChart: View {
     }
 }
 
-struct PieChart: View {
+private struct PieChart: View {
     
     let title: String
     let data: [Stat]
@@ -149,7 +149,7 @@ struct PieChart: View {
     }
 }
 
-struct StatTile: View {
+private struct StatTile: View {
     let title: String
     let value: String
     

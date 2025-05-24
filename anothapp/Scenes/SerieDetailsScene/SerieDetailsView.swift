@@ -61,10 +61,11 @@ struct SerieDetailsView: View {
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     
-                    // Tabs
                     Picker("", selection: $viewModel.selectedTab) {
                         Image(systemName: "square.grid.2x2").tag(SerieDetailsTab.seasons)
+                        
                         Image(systemName: "play.square.stack").tag(SerieDetailsTab.add)
+                        
                         Image(systemName: "person.fill.checkmark").tag(SerieDetailsTab.viewedBy)
                     }
                     .pickerStyle(SegmentedPickerStyle())
@@ -72,85 +73,11 @@ struct SerieDetailsView: View {
                     
                     TabView(selection: $viewModel.selectedTab) {
                         
-                        // User seasons
-                        GridView(items: viewModel.infos.seasons, columns: 2) { season in
-                            Button(action: {
-                                viewModel.routeToSeasonDetails(season: season)
-                            }) {
-                                SeasonCardView(season: season)
-                            }
-                        }
-                        .tag(SerieDetailsTab.seasons)
-                        .background(
-                            GeometryReader { geometry in
-                                Color.clear.preference(
-                                    key: ContentHeightPreferenceKey.self,
-                                    value: geometry.size.height
-                                )
-                            }
-                        )
-                        .task {
-                            await viewModel.getSerieInfos()
-                        }
+                        UserSeasonsView(viewModel: viewModel).tag(SerieDetailsTab.seasons)
                         
-                        // Seasons to add
-                        GridView(items: viewModel.seasons, columns: 2) { season in
-                            SeasonCardView(season: season) {
-                                HStack {
-                                    // Add
-                                    Button(action: {
-                                        Task {
-                                            await viewModel.addSeason(season: season)
-                                        }
-                                    }) {
-                                        Image(systemName: "plus.square")
-                                            .font(.system(size: 20, weight: .regular))
-                                            .foregroundColor(.primary)
-                                    }.padding()
-                                    
-                                    // Episodes
-                                    Button(action: {
-                                        viewModel.routeToEpisodesView(season: season.number)
-                                    }) {
-                                        Image(systemName: "list.number")
-                                            .font(.system(size: 20, weight: .regular))
-                                            .foregroundColor(.primary)
-                                    }.padding()
-                                }
-                            }
-                        }
-                        .tag(SerieDetailsTab.add)
-                        .background(
-                            GeometryReader { geometry in
-                                Color.clear.preference(
-                                    key: ContentHeightPreferenceKey.self,
-                                    value: geometry.size.height
-                                )
-                            }
-                        )
-                        .task {
-                            await viewModel.getSeasonsToAdd()
-                        }
+                        AddSeasonsView(viewModel: viewModel).tag(SerieDetailsTab.add)
                         
-                        // Friends who watched this serie
-                        GridView(items: viewModel.viewedByFriends, columns: 2) { friend in
-                            Button(action: { print("user") })
-                            {
-                                CardView(picture: friend.picture, text: friend.username).padding(.all, 2)
-                            }
-                        }
-                        .tag(SerieDetailsTab.viewedBy)
-                        .background(
-                            GeometryReader { geometry in
-                                Color.clear.preference(
-                                    key: ContentHeightPreferenceKey.self,
-                                    value: geometry.size.height
-                                )
-                            }
-                        )
-                        .task {
-                            await viewModel.getFriendsWhoWatch()
-                        }
+                        FriendsWatchView(viewModel: viewModel).tag(SerieDetailsTab.viewedBy)
                     }
                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                     .onPreferenceChange(ContentHeightPreferenceKey.self) { height in
@@ -266,7 +193,100 @@ struct SerieDetailsView: View {
     }
 }
 
-struct HScrollItems<Data: Hashable, Content: View>: View {
+private struct UserSeasonsView: View {
+    
+    @StateObject var viewModel: SerieDetailsViewModel
+    
+    var body: some View {
+        GridView(items: viewModel.infos.seasons, columns: 2) { season in
+            Button(action: {
+                viewModel.routeToSeasonDetails(season: season)
+            }) {
+                SeasonCardView(season: season)
+            }
+        }
+        .background(
+            GeometryReader { geometry in
+                Color.clear.preference(
+                    key: ContentHeightPreferenceKey.self,
+                    value: geometry.size.height
+                )
+            }
+        )
+        .task {
+            await viewModel.getSerieInfos()
+        }
+    }
+}
+
+private struct AddSeasonsView: View {
+    
+    @StateObject var viewModel: SerieDetailsViewModel
+    
+    var body: some View {
+        GridView(items: viewModel.seasons, columns: 2) { season in
+            SeasonCardView(season: season) {
+                HStack {
+                    Button(action: {
+                        Task {
+                            await viewModel.addSeason(season: season)
+                        }
+                    }) {
+                        Image(systemName: "plus.square")
+                            .font(.system(size: 20, weight: .regular))
+                            .foregroundColor(.primary)
+                    }.padding()
+                    
+                    Button(action: {
+                        viewModel.routeToEpisodesView(season: season.number)
+                    }) {
+                        Image(systemName: "list.number")
+                            .font(.system(size: 20, weight: .regular))
+                            .foregroundColor(.primary)
+                    }.padding()
+                }
+            }
+        }
+        .background(
+            GeometryReader { geometry in
+                Color.clear.preference(
+                    key: ContentHeightPreferenceKey.self,
+                    value: geometry.size.height
+                )
+            }
+        )
+        .task {
+            await viewModel.getSeasonsToAdd()
+        }
+    }
+}
+
+private struct FriendsWatchView: View {
+    
+    @StateObject var viewModel: SerieDetailsViewModel
+    
+    var body: some View {
+        GridView(items: viewModel.viewedByFriends, columns: 2) { friend in
+            Button(action: { print("user") })
+            {
+                CardView(picture: friend.picture, text: friend.username).padding(.all, 2)
+            }
+        }
+        .background(
+            GeometryReader { geometry in
+                Color.clear.preference(
+                    key: ContentHeightPreferenceKey.self,
+                    value: geometry.size.height
+                )
+            }
+        )
+        .task {
+            await viewModel.getFriendsWhoWatch()
+        }
+    }
+}
+
+private struct HScrollItems<Data: Hashable, Content: View>: View {
     let items: [Data]
     let content: (Data) -> Content
     
@@ -281,7 +301,7 @@ struct HScrollItems<Data: Hashable, Content: View>: View {
     }
 }
 
-struct SeasonCardView<Content: View>: View {
+private struct SeasonCardView<Content: View>: View {
     
     let season: Season
     let content: Content

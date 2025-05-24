@@ -33,7 +33,7 @@ struct TimelineView: View {
 }
 
 
-struct TimelineItemView: View {
+private struct TimelineItemView: View {
     
     let item: Timeline
     

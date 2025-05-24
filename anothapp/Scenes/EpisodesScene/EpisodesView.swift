@@ -29,7 +29,7 @@ struct EpisodesView: View {
     }
 }
 
-struct EpisodeView: View {
+private struct EpisodeView: View {
     let episode: Episode
     
     var body: some View {

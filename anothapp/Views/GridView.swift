@@ -21,7 +21,7 @@ struct GridView<Item, Content>: View where Item: Hashable, Content: View {
     
     var body: some View {
         if items.isEmpty {
-            Text("Aucun résultat")
+            Text("Aucun résultat").padding()
         } else {
             LazyVGrid(columns: columns) {
                 ForEach(items, id: \.self.hashValue) { item in

@@ -10,7 +10,6 @@ struct Friend: Codable, Hashable {
     let email: String
     let username: String
     let picture: String?
-    let current: Bool
 }
 
 struct ViewedByFriends: Codable {

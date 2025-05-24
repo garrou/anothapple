@@ -17,9 +17,16 @@ class FriendsViewModel: ObservableObject {
 
     @Published var summary: SummaryFriends = .init(friends: [], received: [], sent: [])
     @Published var selectedTab: FriendsTab = .friends
+    @Published var usernameSearch = ""
+    @Published var users: [Friend] = []
     
     init(router: FriendsRouter) {
         self.router = router
+    }
+    
+    @MainActor
+    func getUsersByUsername() async {
+        users = await UserManager.shared.getUsersByUsername(username: usernameSearch)
     }
     
     @MainActor

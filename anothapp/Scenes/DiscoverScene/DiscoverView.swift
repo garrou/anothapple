@@ -41,10 +41,7 @@ struct DiscoverView: View {
                         }
                     })
                     {
-                        VStack {
-                            ImageCardView(url: serie.poster)
-                            Text(serie.title).font(.headline)
-                        }
+                        CardView(picture: serie.poster, text: serie.title)
                     }
                 }
             }

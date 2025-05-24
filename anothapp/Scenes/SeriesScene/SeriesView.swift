@@ -48,10 +48,7 @@ struct SeriesView: View {
                             viewModel.routeToSerieDetail(serie: serie)
                         })
                         {
-                            VStack {
-                                ImageCardView(url: serie.poster)
-                                Text(serie.title).font(.headline)
-                            }
+                            CardView(picture: serie.poster, text: serie.title)
                         }
                     }
                 }
@@ -74,7 +71,6 @@ struct SeriesView: View {
                         
                         VStack {
                             
-                            // Tabs
                             Picker("", selection: $viewModel.selectedFilterTab) {
                                 Image(systemName: "theatermasks").tag(FilterTab.kinds)
                                 Image(systemName: "flag").tag(FilterTab.countries)
@@ -84,59 +80,9 @@ struct SeriesView: View {
                             
                             TabView(selection: $viewModel.selectedFilterTab) {
                                 
-                                List {
-                                    ForEach(viewModel.kinds, id: \.value) { kind in
-                                        HStack {
-                                            Text(kind.name)
-                                            
-                                            Spacer()
-                                            
-                                            if viewModel.isKindSelected(kind) {
-                                                Image(systemName: "checkmark.circle")
-                                                    .foregroundColor(.primary)
-                                            }
-                                        }
-                                        .contentShape(Rectangle())
-                                        .onTapGesture {
-                                            Task {
-                                                await viewModel.selectKind(kind)
-                                            }
-                                        }
-                                    }
-                                }
-                                .listStyle(PlainListStyle())
-                                .tag(FilterTab.kinds)
-                                .onAppear {
-                                    Task {
-                                        await viewModel.loadKinds()
-                                    }
-                                }
+                                KindsView(viewModel: viewModel).tag(FilterTab.kinds)
                                 
-                                List {
-                                    ForEach(viewModel.countries, id: \.self) { country in
-                                        HStack {
-                                            Text(country)
-                                            
-                                            Spacer()
-                                            
-                                            if viewModel.isCountrySelected(country) {
-                                                Image(systemName: "checkmark.circle")
-                                                    .foregroundColor(.primary)
-                                            }
-                                        }
-                                        .contentShape(Rectangle())
-                                        .onTapGesture {
-                                            Task {
-                                                await viewModel.selectCountry(country)
-                                            }
-                                        }
-                                    }
-                                }
-                                .listStyle(PlainListStyle())
-                                .tag(FilterTab.countries)
-                                .onAppear {
-                                    viewModel.loadCountries()
-                                }
+                                CountriesView(viewModel: viewModel).tag(FilterTab.countries)
                             }
                         }
                         .frame(width: 300)
@@ -153,6 +99,70 @@ struct SeriesView: View {
                 if !newValue { return }
                 await viewModel.loadSeries()
             }
+        }
+    }
+}
+
+private struct KindsView: View {
+    
+    @StateObject var viewModel: SeriesViewModel
+    
+    var body: some View {
+        List {
+            ForEach(viewModel.kinds, id: \.value) { kind in
+                HStack {
+                    Text(kind.name)
+                    
+                    Spacer()
+                    
+                    if viewModel.isKindSelected(kind) {
+                        Image(systemName: "checkmark.circle")
+                            .foregroundColor(.primary)
+                    }
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    Task {
+                        await viewModel.selectKind(kind)
+                    }
+                }
+            }
+        }
+        .listStyle(PlainListStyle())
+        .task {
+            await viewModel.loadKinds()
+        }
+    }
+}
+
+private struct CountriesView: View {
+    
+    @StateObject var viewModel: SeriesViewModel
+    
+    var body: some View {
+        List {
+            ForEach(viewModel.countries, id: \.self) { country in
+                HStack {
+                    Text(country)
+                    
+                    Spacer()
+                    
+                    if viewModel.isCountrySelected(country) {
+                        Image(systemName: "checkmark.circle")
+                            .foregroundColor(.primary)
+                    }
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    Task {
+                        await viewModel.selectCountry(country)
+                    }
+                }
+            }
+        }
+        .listStyle(PlainListStyle())
+        .onAppear {
+            viewModel.loadCountries()
         }
     }
 }
