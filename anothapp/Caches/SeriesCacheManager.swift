@@ -53,11 +53,10 @@ class SeriesCacheManager {
     }
     
     func addSerie(id: Int) async -> Bool {
-        let request = SerieRequest(id: id, list: false)
         var isAdded = false
         
         do {
-            let (data, added) = try await serieService.addSerie(request: request)
+            let (data, added) = try await serieService.addSerie(request: .init(id: id, list: false))
             isAdded = added
             
             if isAdded {
@@ -125,10 +124,8 @@ class SeriesCacheManager {
     }
     
     func changeFavorite(serie: Serie) async -> Serie {
-        let request = StatusRequest(favorite: true, watch: nil)
-        
         do {
-            if try await serieService.changeFavorite(id: serie.id, request: request) {
+            if try await serieService.changeFavorite(id: serie.id, request: .init(favorite: true, watch: nil)) {
                 serie.favorite.toggle()
                 store(id: serie.id, value: serie)
             }
@@ -139,10 +136,8 @@ class SeriesCacheManager {
     }
     
     func changeWatching(serie: Serie) async -> Serie {
-        let request = StatusRequest(favorite: nil, watch: true)
-        
         do {
-            if try await serieService.changeWatching(id: serie.id, request: request) {
+            if try await serieService.changeWatching(id: serie.id, request: .init(favorite: nil, watch: true)) {
                 serie.watch.toggle()
                 store(id: serie.id, value: serie)
             }

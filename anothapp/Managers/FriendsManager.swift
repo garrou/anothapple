@@ -37,4 +37,22 @@ class FriendsManager {
         }
         return summaryFriends
     }
+    
+    func sendFriendRequest(userId: String) async {
+        do {
+            let added = try await friendService.sendFriendRequest(request: .init(userId: userId))
+            ToastManager.shared.setToast(message: added ? "Demande envoyé" : "Erreur durant la demande", isError: !added)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la demande d'ajout")
+        }
+    }
+    
+    func removeFriend(userId: String) async {
+        do {
+            let removed = try await friendService.removeFriend(userId: userId)
+            ToastManager.shared.setToast(message: removed ? "Ami(e) supprimé(e)" : "Erreur durant la suppression", isError: !removed)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la suppression")
+        }
+    }
 }

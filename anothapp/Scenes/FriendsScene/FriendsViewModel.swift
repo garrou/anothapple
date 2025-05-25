@@ -19,9 +19,18 @@ class FriendsViewModel: ObservableObject {
     @Published var selectedTab: FriendsTab = .friends
     @Published var usernameSearch = ""
     @Published var users: [Friend] = []
+    @Published var showDeleteModal = false
     
     init(router: FriendsRouter) {
         self.router = router
+    }
+    
+    func sendFriendRequest(userId: String) async {
+        await FriendsManager.shared.sendFriendRequest(userId: userId)
+    }
+    
+    func removeFriend(userId: String) async {
+        await FriendsManager.shared.removeFriend(userId: userId)
     }
     
     @MainActor

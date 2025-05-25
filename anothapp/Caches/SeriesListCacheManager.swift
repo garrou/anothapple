@@ -52,11 +52,9 @@ class SeriesListCacheManager {
         getById(id: id) != nil
     }
     
-    func addSerie(id: Int) async -> Bool {
-        let request = SerieRequest(id: id, list: true)
-        
+    func addSerie(id: Int) async -> Bool {        
         do {
-            let (data, added) = try await serieService.addSerie(request: request)
+            let (data, added) = try await serieService.addSerie(request: .init(id: id, list: true))
             if !added { return false }
             let show = try JSONDecoder().decode(Serie.self, from: data)
             store(id: show.id, value: show)

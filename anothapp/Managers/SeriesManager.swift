@@ -13,11 +13,10 @@ class SeriesManager {
     private let serieService = SerieService()
     
     func addSeason(id: Int, season: Season) async -> Bool {
-        let request = SeasonRequest(id: id, num: season.number)
         var added = false
         
         do {
-            added = try await serieService.addSeason(request: request)
+            added = try await serieService.addSeason(request: .init(id: id, num: season.number))
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant l'ajout de la saison")
         }

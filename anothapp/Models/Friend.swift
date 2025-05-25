@@ -25,3 +25,8 @@ struct SummaryFriends: Codable {
     let received: [Friend]
     let sent: [Friend]
 }
+
+
+struct FriendRequest: Codable {
+    let userId: String
+}

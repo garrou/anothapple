@@ -51,9 +51,30 @@ private struct FriendsTabView: View {
             Text(Helper.shared.formatPlural(str: "ami", num: viewModel.summary.friends.count)).font(.headline)
             
             GridView(items: viewModel.summary.friends, columns: 2) { friend in
-                CardView(picture: friend.picture, text: friend.username)
+                CardView(picture: friend.picture, text: friend.username) {
+                    HStack(spacing: 30) {
+                        Button(action: { viewModel.showDeleteModal.toggle() }) {
+                            Image(systemName: "trash")
+                                .font(.system(size: 20, weight: .regular))
+                                .foregroundColor(.red)
+                        }
+                        .alert("Supprimer l'ami(e) ?", isPresented: $viewModel.showDeleteModal) {
+                            Button("Annuler", role: .cancel) { viewModel.showDeleteModal.toggle() }
+                            Button("Supprimer", role: .destructive) {
+                                Task {
+                                    await viewModel.removeFriend(userId: friend.id)
+                                }
+                            }
+                        }
+                        
+                        Button(action: { print("details") }) {
+                            Image(systemName: "eye")
+                                .font(.system(size: 20, weight: .regular))
+                                .foregroundColor(.primary)
+                        }
+                    }.padding(.top, 1)
+                }
             }
-            
             Spacer()
         }
     }
@@ -83,7 +104,19 @@ private struct AddTabView: View {
                 .padding()
             
             GridView(items: viewModel.users, columns: 2) { user in
-                CardView(picture: user.picture, text: user.username)
+                VStack {
+                    CardView(picture: user.picture, text: user.username) {
+                        Button(action: {
+                            Task {
+                                await viewModel.sendFriendRequest(userId: user.id)
+                            }
+                        }) {
+                            Image(systemName: "plus.square")
+                                .font(.system(size: 20, weight: .regular))
+                                .foregroundColor(.primary)
+                        }.padding(.top, 1)
+                    }
+                }
             }
             
             Spacer()

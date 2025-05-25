@@ -21,4 +21,14 @@ class FriendService {
         let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)")
         return ok ? try decoder.decode(SummaryFriends.self, from: data) : nil
     }
+    
+    func sendFriendRequest(request: FriendRequest) async throws -> Bool {
+        let (_, ok) = try await BaseService.shared.dataRequest(url: "\(baseUrl)", method: "POST", data: request)
+        return ok
+    }
+    
+    func removeFriend(userId: String) async throws -> Bool {
+        let (_, ok) = try await BaseService.shared.request(url: "\(baseUrl)/\(userId)", method: "DELETE", successCode: 204)
+        return ok
+    }
 }

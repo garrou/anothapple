@@ -7,10 +7,11 @@
 
 import SwiftUI
 
-struct CardView: View {
+struct CardView<Content: View>: View {
     
     let picture: String?
     let text: String
+    let content: (() -> Content)?
     
     var body: some View {
         VStack {
@@ -21,9 +22,27 @@ struct CardView: View {
                     .frame(width: 50, height: 50)
             }
             Text(text).font(.headline)
+            
+            if let content = content {
+                content()
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(.all, 1)
+    }
+}
+
+extension CardView {
+    init(picture: String?, text: String) where Content == EmptyView {
+        self.picture = picture
+        self.text = text
+        self.content = nil
+    }
+    
+    init(picture: String?, text: String, @ViewBuilder content: @escaping () -> Content) {
+        self.picture = picture
+        self.text = text
+        self.content = content
     }
 }
 

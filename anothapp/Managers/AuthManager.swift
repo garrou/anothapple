@@ -13,12 +13,10 @@ class AuthManager {
     private let authService = AuthService()
     
     func login(identifier: String, password: String) async -> User? {
-        
-        let request = LoginRequest(identifier: identifier, password: password)
         var user: User? = nil
         
         do {
-            user = try await authService.login(loginRequest: request)
+            user = try await authService.login(loginRequest: .init(identifier: identifier, password: password))
             
             if user == nil {
                 ToastManager.shared.setToast(message: "Identifiant ou mot de passe incorrect")
@@ -30,12 +28,10 @@ class AuthManager {
     }
     
     func signup(email: String, username: String, password: String, confirm: String) async -> Bool {
-        
-        let signUpRequest = SignUpRequest(email: email, username: username, password: password, confirm: confirm)
         var created = false
         
         do {
-            created = try await authService.signup(signUpRequest: signUpRequest)
+            created = try await authService.signup(signUpRequest: .init(email: email, username: username, password: password, confirm: confirm))
             
             if !created {
                 ToastManager.shared.setToast(message: "Erreur durant la création du compte")
