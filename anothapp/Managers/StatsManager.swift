@@ -12,108 +12,108 @@ class StatsManager {
     static let shared = StatsManager()
     private let statService = StatService()
     
-    func getUserStats() async -> UserStat? {
+    func getUserStats(userId: String?) async -> UserStat? {
         do {
-            return try await statService.getUserStats()
+            return try await statService.getUserStats(userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques")
             return nil
         }
     }
     
-    func getSeasonsMonthCurrentYear() async -> [Stat] {
+    func getSeasonsMonthCurrentYear(userId: String?) async -> [Stat] {
         do {
-            return try await statService.getGroupedCountByTypeByPeriod(type: .seasons, period: .year)
+            return try await statService.getGroupedCountByTypeByPeriod(type: .seasons, period: .year, userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques des saisons de l'année")
             return []
         }
     }
     
-    func getEpisodesMonthCurrentYear() async -> [Stat] {
+    func getEpisodesMonthCurrentYear(userId: String?) async -> [Stat] {
         do {
-            return try await statService.getGroupedCountByTypeByPeriod(type: .episodes, period: .year)
+            return try await statService.getGroupedCountByTypeByPeriod(type: .episodes, period: .year, userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques des épisodes de l'année")
             return []
         }
     }
     
-    func getHoursPerYear() async -> [Stat] {
+    func getHoursPerYear(userId: String?) async -> [Stat] {
         do {
-            return try await statService.getTimeByType(type: .years)
+            return try await statService.getTimeByType(type: .years, userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques des heures par années")
             return []
         }
     }
     
-    func getSeasonsPerYears() async -> [Stat] {
+    func getSeasonsPerYears(userId: String?) async -> [Stat] {
         do {
-            return try await statService.getGroupedCountByTypeByPeriod(type: .seasons, period: .years)
+            return try await statService.getGroupedCountByTypeByPeriod(type: .seasons, period: .years, userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques des seasons par années")
             return []
         }
     }
     
-    func getEpisodesPerYears() async -> [Stat] {
+    func getEpisodesPerYears(userId: String?) async -> [Stat] {
         do {
-            return try await statService.getGroupedCountByTypeByPeriod(type: .episodes, period: .years)
+            return try await statService.getGroupedCountByTypeByPeriod(type: .episodes, period: .years, userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques des épisodes par années")
             return []
         }
     }
     
-    func getSeasonsByMonths() async -> [Stat] {
+    func getSeasonsByMonths(userId: String?) async -> [Stat] {
         do {
-            return try await statService.getGroupedCountByTypeByPeriod(type: .seasons, period: .months)
+            return try await statService.getGroupedCountByTypeByPeriod(type: .seasons, period: .months, userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques des seasons par mois")
             return []
         }
     }
     
-    func getMonthsRanking() async -> [Stat] {
+    func getMonthsRanking(userId: String?) async -> [Stat] {
         do {
-            return try await statService.getGroupedCountByTypeByPeriod(type: .bestMonths)
+            return try await statService.getGroupedCountByTypeByPeriod(type: .bestMonths, userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques des épisodes par mois")
             return []
         }
     }
     
-    func getTimeConsumingSeries() async -> [Stat] {
+    func getTimeConsumingSeries(userId: String?) async -> [Stat] {
         do {
-            return try await statService.getTimeByType(type: .rank)
+            return try await statService.getTimeByType(type: .rank, userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques des séries chronophages")
             return []
         }
     }
     
-    func getMostViewedKinds() async -> [Stat] {
+    func getMostViewedKinds(userId: String?) async -> [Stat] {
         do {
-            return try await statService.getGroupedCountByTypeByPeriod(type: .kinds)
+            return try await statService.getGroupedCountByTypeByPeriod(type: .kinds, userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques des genres de séries")
             return []
         }
     }
     
-    func getSeasonsPlatforms() async -> [Stat] {
+    func getSeasonsPlatforms(userId: String?) async -> [Stat] {
         do {
-            return try await statService.getGroupedCountByTypeByPeriod(type: .platforms)
+            return try await statService.getGroupedCountByTypeByPeriod(type: .platforms, userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques des plateformes")
             return []
         }
     }
     
-    func getSeriesCountries() async -> [Stat] {
+    func getSeriesCountries(userId: String?) async -> [Stat] {
         do {
-            return try await statService.getGroupedCountByTypeByPeriod(type: .countries)
+            return try await statService.getGroupedCountByTypeByPeriod(type: .countries, userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques des pays de production")
             return []

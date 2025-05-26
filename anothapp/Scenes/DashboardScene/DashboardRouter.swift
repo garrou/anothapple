@@ -10,9 +10,11 @@ import SwiftUI
 class DashboardRouter: ObservableObject {
     
     private let rootCoordinator: NavigationCoordinator
+    private let userId: String?
     
-    init(rootCoordinator: NavigationCoordinator) {
+    init(rootCoordinator: NavigationCoordinator, userId: String? = nil) {
         self.rootCoordinator = rootCoordinator
+        self.userId = userId
     }
 }
 
@@ -21,7 +23,7 @@ class DashboardRouter: ObservableObject {
 extension DashboardRouter: Routable {
     
     func makeView() -> AnyView {
-        let viewModel = DashboardViewModel(router: self)
+        let viewModel = DashboardViewModel(router: self, userId: userId)
         let view = DashboardView(viewModel: viewModel)
         return AnyView(view)
     }

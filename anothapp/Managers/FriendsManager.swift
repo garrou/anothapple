@@ -47,12 +47,41 @@ class FriendsManager {
         }
     }
     
-    func removeFriend(userId: String) async {
+    func removeFriend(userId: String) async -> Bool {
+        var removed = false
+        
         do {
-            let removed = try await friendService.removeFriend(userId: userId)
+            removed = try await friendService.removeFriend(userId: userId)
             ToastManager.shared.setToast(message: removed ? "Ami(e) supprimé(e)" : "Erreur durant la suppression", isError: !removed)
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant la suppression")
         }
+        return removed
+    }
+    
+    func acceptFriend(userId: String) async -> Bool {
+        var accepted = false
+        
+        do {
+            accepted = try await friendService.acceptFriend(request: .init(userId: userId))
+            ToastManager.shared.setToast(message: accepted ? "Ami(e) accepté(e)" : "Erreur durant l'ajout", isError: !accepted)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la suppression")
+        }
+        return accepted
+    }
+    
+    func getFriendsByStatus(status: FriendStatus) async -> [Friend] {
+        var friends: [Friend] = []
+        
+        do {
+            if let summary = try await friendService.fetchFriendsByStatus(status: status) {
+                friends = (Mirror(reflecting: summary).children.first { $0.label == status.rawValue }?.value as? [Friend]) ?? []
+            }
+        } catch {
+            print(error)
+            ToastManager.shared.setToast(message: "Erreur durant la récupération des amis avec le status '\(status.rawValue)'")
+        }
+        return friends
     }
 }

@@ -36,9 +36,6 @@ struct FriendsView: View {
                 SentTabView(viewModel: viewModel).tag(FriendsTab.sent)
             }
         }
-        .task {
-            await viewModel.loadSummaryFriends()
-        }
     }
 }
 
@@ -48,26 +45,26 @@ private struct FriendsTabView: View {
     
     var body: some View {
         VStack {
-            Text(Helper.shared.formatPlural(str: "ami", num: viewModel.summary.friends.count)).font(.headline)
+            Text(Helper.shared.formatPlural(str: "ami", num: viewModel.friends.count)).font(.headline)
             
-            GridView(items: viewModel.summary.friends, columns: 2) { friend in
+            GridView(items: viewModel.friends, columns: 2) { friend in
                 CardView(picture: friend.picture, text: friend.username) {
                     HStack(spacing: 30) {
-                        Button(action: { viewModel.showDeleteModal.toggle() }) {
+                        Button(action: { viewModel.showDeleteFriendModal.toggle() }) {
                             Image(systemName: "trash")
                                 .font(.system(size: 20, weight: .regular))
                                 .foregroundColor(.red)
                         }
-                        .alert("Supprimer l'ami(e) ?", isPresented: $viewModel.showDeleteModal) {
-                            Button("Annuler", role: .cancel) { viewModel.showDeleteModal.toggle() }
+                        .alert("Supprimer l'ami(e) ?", isPresented: $viewModel.showDeleteFriendModal) {
+                            Button("Annuler", role: .cancel) { viewModel.showDeleteFriendModal.toggle() }
                             Button("Supprimer", role: .destructive) {
                                 Task {
-                                    await viewModel.removeFriend(userId: friend.id)
+                                    await viewModel.removeFriend(userId: friend.id, status: .friends)
                                 }
                             }
                         }
                         
-                        Button(action: { print("details") }) {
+                        Button(action: { viewModel.openFriendDetailsView(userId: friend.id) }) {
                             Image(systemName: "eye")
                                 .font(.system(size: 20, weight: .regular))
                                 .foregroundColor(.primary)
@@ -76,6 +73,12 @@ private struct FriendsTabView: View {
                 }
             }
             Spacer()
+        }
+        .task {
+            await viewModel.getFriends()
+        }
+        .sheet(isPresented: $viewModel.openFriendDetails, onDismiss: { viewModel.closeFriendDetails() }) {
+            viewModel.getDashboardView()
         }
     }
 }
@@ -103,7 +106,7 @@ private struct AddTabView: View {
                 }
                 .padding()
             
-            GridView(items: viewModel.users, columns: 2) { user in
+            GridView(items: viewModel.searchFriends, columns: 2) { user in
                 VStack {
                     CardView(picture: user.picture, text: user.username) {
                         Button(action: {
@@ -132,11 +135,42 @@ private struct ReceivedTabView: View {
         VStack {
             Text("Demandes reçues").font(.headline)
             
-            GridView(items: viewModel.summary.received, columns: 2) { friend in
-                CardView(picture: friend.picture, text: friend.username)
+            GridView(items: viewModel.receivedFriends, columns: 2) { friend in
+                CardView(picture: friend.picture, text: friend.username) {
+                    HStack(spacing: 30) {
+                        Button(action: { viewModel.showDeleteReceivedModal.toggle() }) {
+                            Image(systemName: "trash")
+                                .font(.system(size: 20, weight: .regular))
+                                .foregroundColor(.red)
+                        }
+                        .alert("Supprimer la demande reçue ?", isPresented: $viewModel.showDeleteReceivedModal) {
+                            Button("Annuler", role: .cancel) { viewModel.showDeleteReceivedModal.toggle() }
+                            Button("Supprimer", role: .destructive) {
+                                Task {
+                                    await viewModel.removeFriend(userId: friend.id, status: .received)
+                                }
+                            }
+                        }
+                        
+                        Button(action: {
+                            Task {
+                                await viewModel.acceptFriend(userId: friend.id)
+                            }
+                        }) {
+                            Image(systemName: "checkmark.circle")
+                                .font(.system(size: 20, weight: .regular))
+                                .foregroundColor(.green)
+                        }
+                        
+                    }
+                    .padding(.top, 1)
+                }
             }
             
             Spacer()
+        }
+        .task {
+            await viewModel.getReceivedFriendsRequest()
         }
     }
 }
@@ -149,11 +183,29 @@ private struct SentTabView: View {
         VStack {
             Text("Demandes envoyées").font(.headline)
             
-            GridView(items: viewModel.summary.sent, columns: 2) { friend in
-                CardView(picture: friend.picture, text: friend.username)
+            GridView(items: viewModel.sentFriends, columns: 2) { friend in
+                CardView(picture: friend.picture, text: friend.username) {
+                    Button(action: { viewModel.showDeleteSentModal.toggle() }) {
+                        Image(systemName: "trash")
+                            .font(.system(size: 20, weight: .regular))
+                            .foregroundColor(.red)
+                    }
+                    .padding(.top, 1)
+                    .alert("Supprimer la demande envoyée ?", isPresented: $viewModel.showDeleteSentModal) {
+                        Button("Annuler", role: .cancel) { viewModel.showDeleteSentModal.toggle() }
+                        Button("Supprimer", role: .destructive) {
+                            Task {
+                                await viewModel.removeFriend(userId: friend.id, status: .sent)
+                            }
+                        }
+                    }
+                }
             }
             
             Spacer()
+        }
+        .task {
+            await viewModel.getSentFriendsRequest()
         }
     }
 }

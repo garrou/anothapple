@@ -288,7 +288,7 @@ private struct ActorsView: View {
                 }
             }
         }
-        .sheet(isPresented: $viewModel.openActorDetails) {
+        .sheet(isPresented: $viewModel.openActorDetails, onDismiss: { viewModel.closeActorDetails() }) {
             ActorDetailView(viewModel: viewModel)
         }
         .background(

@@ -42,6 +42,11 @@ class DiscoverDetailsViewModel: ObservableObject {
         }
     }
     
+    func closeActorDetails() {
+        selectedActor = nil
+        openActorDetails = false
+    }
+    
     @MainActor
     func addSerie() async {
         isSerieAdded = await SeriesCacheManager.shared.addSerie(id: serie.id)

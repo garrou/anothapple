@@ -10,6 +10,8 @@ import Foundation
 class DashboardViewModel: ObservableObject {
     
     private let router: DashboardRouter
+    private let userId: String?
+    
     @Published var isLoading = false
     @Published var userStats: UserStat? = nil
     @Published var seasonsMonthsCurrentYear: [Stat] = []
@@ -36,26 +38,27 @@ class DashboardViewModel: ObservableObject {
         Helper.shared.formatMins(userStats?.bestMonth?.value ?? 0)
     }
     
-    init(router: DashboardRouter) {
+    init(router: DashboardRouter, userId: String? = nil) {
         self.router = router
+        self.userId = userId
     }
     
     @MainActor
     func loadStats() async {
         if userStats != nil { return }
         isLoading = true
-        userStats = await StatsManager.shared.getUserStats()
-        seasonsMonthsCurrentYear = await StatsManager.shared.getSeasonsMonthCurrentYear()
-        epiodesMonthsCurrentYear = await StatsManager.shared.getEpisodesMonthCurrentYear()
-        hoursPerYear = await StatsManager.shared.getHoursPerYear()
-        seasonsPerYears = await StatsManager.shared.getSeasonsPerYears()
-        episodesPerYears = await StatsManager.shared.getEpisodesPerYears()
-        seasonsByMonths = await StatsManager.shared.getSeasonsByMonths()
-        monthsRankingHours = await StatsManager.shared.getMonthsRanking()
-        timeConsumingSeries = await StatsManager.shared.getTimeConsumingSeries()
-        mostViewedKinds = await StatsManager.shared.getMostViewedKinds()
-        seasonsByPlatforms = await StatsManager.shared.getSeasonsPlatforms();
-        seriesCountries = await StatsManager.shared.getSeriesCountries();
+        userStats = await StatsManager.shared.getUserStats(userId: userId)
+        seasonsMonthsCurrentYear = await StatsManager.shared.getSeasonsMonthCurrentYear(userId: userId)
+        epiodesMonthsCurrentYear = await StatsManager.shared.getEpisodesMonthCurrentYear(userId: userId)
+        hoursPerYear = await StatsManager.shared.getHoursPerYear(userId: userId)
+        seasonsPerYears = await StatsManager.shared.getSeasonsPerYears(userId: userId)
+        episodesPerYears = await StatsManager.shared.getEpisodesPerYears(userId: userId)
+        seasonsByMonths = await StatsManager.shared.getSeasonsByMonths(userId: userId)
+        monthsRankingHours = await StatsManager.shared.getMonthsRanking(userId: userId)
+        timeConsumingSeries = await StatsManager.shared.getTimeConsumingSeries(userId: userId)
+        mostViewedKinds = await StatsManager.shared.getMostViewedKinds(userId: userId)
+        seasonsByPlatforms = await StatsManager.shared.getSeasonsPlatforms(userId: userId);
+        seriesCountries = await StatsManager.shared.getSeriesCountries(userId: userId);
         isLoading = false
     }
 }

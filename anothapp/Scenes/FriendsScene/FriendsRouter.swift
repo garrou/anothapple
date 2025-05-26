@@ -15,6 +15,10 @@ class FriendsRouter {
     init(rootCoordinator: NavigationCoordinator) {
         self.rootCoordinator = rootCoordinator
     }
+    
+    func getDashboardView(userId: String) -> AnyView {
+        DashboardRouter(rootCoordinator: rootCoordinator, userId: userId).makeView()
+    }
 }
 
 // MARK: ViewFactory implementation
