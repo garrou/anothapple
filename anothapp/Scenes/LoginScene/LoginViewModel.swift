@@ -27,8 +27,8 @@ class LoginViewModel: ObservableObject {
     }
     
     func performLogin() async {
-        if let user = await AuthManager.shared.login(identifier: identifier, password: password) {
-            SecurityManager.shared.storeUser(user)
+        let isLoggedIn = await AuthManager.shared.login(identifier: identifier, password: password)
+        if (isLoggedIn) {
             router.routeToHomePage()
         }
     }

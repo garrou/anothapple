@@ -267,9 +267,28 @@ private struct FriendsWatchView: View {
     
     var body: some View {
         GridView(items: viewModel.viewedByFriends, columns: 2) { friend in
-            Button(action: { print("user") })
-            {
-                CardView(picture: friend.picture, text: friend.username).padding(.all, 2)
+            CardView(picture: friend.picture, text: friend.username) {
+                Button(action: { viewModel.openFriendDetailsView(userId: friend.id) }) {
+                    Image(systemName: "eye")
+                        .font(.system(size: 20, weight: .regular))
+                        .foregroundColor(.primary)
+                }
+                .padding(.top, 1)
+                .sheet(isPresented: $viewModel.openFriendDetails, onDismiss: { viewModel.closeFriendDetails() }) {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            
+                            Button(action: { viewModel.closeFriendDetails() }) {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 20, weight: .regular))
+                                    .foregroundColor(.primary)
+                            }
+                        }.padding()
+                        
+                        viewModel.getDashboardView()
+                    }
+                }
             }
         }
         .background(

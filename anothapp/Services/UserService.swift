@@ -16,4 +16,9 @@ class UserService {
         let (data, ok) = try await BaseService.shared.request(url: "\(baseUrl)?username=\(username)")
         return ok ? try decoder.decode([Friend].self, from: data) : []
     }
+    
+    func updateProfilePicture(request: ProfilePictureRequest) async throws -> Bool {
+        let (_, ok) = try await BaseService.shared.dataRequest(url: "\(baseUrl)/me", method: "PATCH", data: request)
+        return ok
+    }
 }

@@ -35,6 +35,10 @@ class SerieDetailsRouter: ObservableObject {
         let router = SeasonDetailsRouter(rootCoordinator: rootCoordinator, serie: serie, season: season)
         rootCoordinator.push(router)
     }
+    
+    func getDashboardView(userId: String) -> AnyView {
+        DashboardRouter(rootCoordinator: rootCoordinator, userId: userId).makeView()
+    }
 }
 
 // MARK: ViewFactory implementation

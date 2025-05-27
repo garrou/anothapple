@@ -79,7 +79,6 @@ class FriendsManager {
                 friends = (Mirror(reflecting: summary).children.first { $0.label == status.rawValue }?.value as? [Friend]) ?? []
             }
         } catch {
-            print(error)
             ToastManager.shared.setToast(message: "Erreur durant la récupération des amis avec le status '\(status.rawValue)'")
         }
         return friends

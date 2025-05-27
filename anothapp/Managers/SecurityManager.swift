@@ -12,6 +12,8 @@ class SecurityManager {
     
     static let shared = SecurityManager()
     private let key = "user_info"
+    private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
     
     func clearUser() {
         let query: [String: Any] = [
@@ -20,15 +22,29 @@ class SecurityManager {
         ]
         
         let status = SecItemDelete(query as CFDictionary)
-        if status == errSecSuccess {
-            print("Keychain item deleted successfully.")
-        } else {
-            print("Failed to delete item: \(status)")
+        if status != errSecSuccess {
+            ToastManager.shared.setToast(message: "Erreur durant la suppression des informations de l'utilisateur")
         }
     }
     
+    func updateUser(_ user: User) -> Bool {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: key
+        ]
+        
+        guard let data = try? encoder.encode(user) else {
+            return false
+        }
+        
+        let updateData: [String: Any] = [
+            kSecValueData as String: data
+        ]
+        let updateStatus = SecItemUpdate(query as CFDictionary, updateData as CFDictionary)
+        return updateStatus == errSecSuccess
+    }
+    
     func storeUser(_ user: User) {
-        let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(user)
             let query: [String: Any] = [
@@ -38,14 +54,13 @@ class SecurityManager {
                 kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked
             ]
             let status = SecItemAdd(query as CFDictionary, nil)
+            let stored = status == errSecSuccess
             
-            if status == errSecSuccess {
-                print("User data stored successfully.")
-            } else {
-                print("Error storing user data: \(status)")
+            if !stored {
+                ToastManager.shared.setToast(message: "Erreur, données de l'utilisateur non stockées")
             }
         } catch {
-            print("Error during encoding user data: \(error)")
+            ToastManager.shared.setToast(message: "Erreur durant le stockage de l'utilisateur")
         }
     }
     
@@ -60,14 +75,13 @@ class SecurityManager {
         let status = SecItemCopyMatching(query as CFDictionary, &result)
         
         if status == errSecSuccess, let retrievedData = result as? Data {
-            let decoder = JSONDecoder()
             do {
                 return try decoder.decode(User.self, from: retrievedData)
             } catch {
-                print("Error decoding user data: \(error)")
+                ToastManager.shared.setToast(message: "Données utilisateur non valides")
             }
         } else {
-            print("Error retrieving item from Keychain: \(status)")
+            ToastManager.shared.setToast(message: "Erreur durant la récupération du profil")
         }
         return nil
     }

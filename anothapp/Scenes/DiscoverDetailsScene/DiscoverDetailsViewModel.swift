@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class DiscoverDetailsViewModel: ObservableObject {
     
@@ -22,6 +23,10 @@ class DiscoverDetailsViewModel: ObservableObject {
     @Published var openActorDetails: Bool = false
     @Published var selectedActor: PersonDetails? = nil
     @Published var tabContentHeight: CGFloat = ContentHeightPreferenceKey.defaultValue
+    @Published var showProfilePictureModal: Bool = false
+    @Published var selectedProfilePicture: String? = nil
+    @Published var openFriendDetails = false
+    @Published var friendIdToConsult: String? = nil
     
     private let router: DiscoverDetailsRouter
     
@@ -41,6 +46,39 @@ class DiscoverDetailsViewModel: ObservableObject {
     func closeActorDetails() {
         selectedActor = nil
         openActorDetails = false
+    }
+    
+    func openProfilePictureModal(image: String) {
+        showProfilePictureModal = true
+        selectedProfilePicture = image
+    }
+    
+    func closeProfilePictureModal() {
+        showProfilePictureModal = false
+        selectedProfilePicture = nil
+    }
+    
+    func openFriendDetailsView(userId: String) {
+        openFriendDetails = true
+        friendIdToConsult = userId
+    }
+    
+    func closeFriendDetails() {
+        openFriendDetails = false
+        friendIdToConsult = nil
+    }
+    
+    func updateProfilePicture() async {
+        if let image = selectedProfilePicture {
+            await UserManager.shared.updateProfilePicture(image: image)
+        }
+    }
+    
+    func getDashboardView() -> AnyView {
+        if let id = friendIdToConsult {
+            return router.getDashboardView(userId: id)
+        }
+        return AnyView(EmptyView())
     }
     
     @MainActor

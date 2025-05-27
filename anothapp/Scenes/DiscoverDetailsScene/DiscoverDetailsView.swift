@@ -254,9 +254,17 @@ private struct ImagesView: View {
     
     var body: some View {
         GridView(items: viewModel.images, columns: 2) { image in
-            Button(action: { print("image") })
+            Button(action: { viewModel.openProfilePictureModal(image: image) })
             {
                 ImageCardView(url: image)
+            }
+            .alert("Modifier la photo de profil ?", isPresented: $viewModel.showProfilePictureModal) {
+                Button("Annuler", role: .cancel) { viewModel.closeProfilePictureModal() }
+                Button("Modifier", role: .destructive) {
+                    Task {
+                        await viewModel.updateProfilePicture()
+                    }
+                }
             }
         }
         .background(
@@ -348,7 +356,7 @@ private struct ActorDetailView: View {
     
     private var headerSection: some View {
         ZStack(alignment: .bottom) {
-   
+            
             if let posterUrl = viewModel.selectedActor!.poster {
                 ImageCardView(url: posterUrl)
             } else {
@@ -454,13 +462,32 @@ private struct ActorDetailView: View {
 
 private struct FriendsWatchView: View {
     
-    let viewModel: DiscoverDetailsViewModel
+    @StateObject var viewModel: DiscoverDetailsViewModel
     
     var body: some View {
         GridView(items: viewModel.viewedByFriends, columns: 2) { friend in
-            Button(action: { print("user") })
-            {
-                CardView(picture: friend.picture, text: friend.username).padding(.all, 2)
+            CardView(picture: friend.picture, text: friend.username) {
+                Button(action: { viewModel.openFriendDetailsView(userId: friend.id) }) {
+                    Image(systemName: "eye")
+                        .font(.system(size: 20, weight: .regular))
+                        .foregroundColor(.primary)
+                }
+                .padding(.top, 1)
+                .sheet(isPresented: $viewModel.openFriendDetails, onDismiss: { viewModel.closeFriendDetails() }) {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            
+                            Button(action: { viewModel.closeFriendDetails() }) {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 20, weight: .regular))
+                                    .foregroundColor(.primary)
+                            }
+                        }.padding()
+                        
+                        viewModel.getDashboardView()
+                    }
+                }
             }
         }
         .background(

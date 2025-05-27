@@ -12,19 +12,18 @@ class AuthManager {
     static let shared = AuthManager()
     private let authService = AuthService()
     
-    func login(identifier: String, password: String) async -> User? {
-        var user: User? = nil
-        
+    func login(identifier: String, password: String) async -> Bool {
         do {
-            user = try await authService.login(loginRequest: .init(identifier: identifier, password: password))
-            
-            if user == nil {
+            if let user = try await authService.login(loginRequest: .init(identifier: identifier, password: password)) {
+                SecurityManager.shared.storeUser(user)
+                return true
+            } else {
                 ToastManager.shared.setToast(message: "Identifiant ou mot de passe incorrect")
             }
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant l'authentification")
         }
-        return user
+        return false
     }
     
     func signup(email: String, username: String, password: String, confirm: String) async -> Bool {

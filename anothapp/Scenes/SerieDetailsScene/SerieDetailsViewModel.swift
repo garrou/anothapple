@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class SerieDetailsViewModel: ObservableObject {
     
@@ -19,6 +20,8 @@ class SerieDetailsViewModel: ObservableObject {
     @Published var isMenuOpened = false
     @Published var showDeleteModal = false
     @Published var tabContentHeight: CGFloat = ContentHeightPreferenceKey.defaultValue
+    @Published var openFriendDetails = false
+    @Published var friendIdToConsult: String? = nil
     
     init(router: SerieDetailsRouter, serie: Serie) {
         self.router = router
@@ -76,6 +79,23 @@ class SerieDetailsViewModel: ObservableObject {
     
     func addSeason(season: Season) async {
         _ = await SeriesManager.shared.addSeason(id: serie.id, season: season)
+    }
+    
+    func openFriendDetailsView(userId: String) {
+        openFriendDetails = true
+        friendIdToConsult = userId
+    }
+    
+    func closeFriendDetails() {
+        openFriendDetails = false
+        friendIdToConsult = nil
+    }
+    
+    func getDashboardView() -> AnyView {
+        if let id = friendIdToConsult {
+            return router.getDashboardView(userId: id)
+        }
+        return AnyView(EmptyView())
     }
 }
 

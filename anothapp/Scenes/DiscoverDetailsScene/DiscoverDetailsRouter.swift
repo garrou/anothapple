@@ -26,6 +26,10 @@ class DiscoverDetailsRouter {
         let router = DiscoverDetailsRouter(rootCoordinator: rootCoordinator, serie: serie)
         rootCoordinator.push(router)
     }
+    
+    func getDashboardView(userId: String) -> AnyView {
+        DashboardRouter(rootCoordinator: rootCoordinator, userId: userId).makeView()
+    }
 }
 
 // MARK: ViewFactory implementation
