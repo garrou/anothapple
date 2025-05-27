@@ -78,7 +78,19 @@ private struct FriendsTabView: View {
             await viewModel.getFriends()
         }
         .sheet(isPresented: $viewModel.openFriendDetails, onDismiss: { viewModel.closeFriendDetails() }) {
-            viewModel.getDashboardView()
+            VStack {
+                HStack {
+                    Spacer()
+                    
+                    Button(action: { viewModel.closeFriendDetails() }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 20, weight: .regular))
+                            .foregroundColor(.primary)
+                    }
+                }.padding()
+                
+                viewModel.getDashboardView()
+            }
         }
     }
 }

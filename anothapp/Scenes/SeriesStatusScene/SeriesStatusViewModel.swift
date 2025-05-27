@@ -7,10 +7,6 @@
 
 import Foundation
 
-enum SerieStatus {
-    case favorite, watchlist, continueWatching, stopped
-}
-
 class SeriesStatusViewModel: ObservableObject {
     
     @Published var isLoading = false
@@ -47,11 +43,13 @@ class SeriesStatusViewModel: ObservableObject {
             series = await SeriesListCacheManager.shared.getWatchList()
             break
         case .continueWatching:
-            series = await SeriesManager.shared.getSeriesByStatus(status: "continue")
+            series = await SeriesManager.shared.getSeriesByStatus(status: .continueWatching)
             break
         case .stopped:
             series = SeriesCacheManager.shared.getSeriesByWatching(watching: false)
             break
+        case .shared:
+            break;
         }
         isLoading = false
     }

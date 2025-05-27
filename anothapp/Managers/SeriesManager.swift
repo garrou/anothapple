@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 class SeriesManager {
     
     static let shared = SeriesManager()
@@ -47,9 +48,9 @@ class SeriesManager {
         }
     }
     
-    func getSeriesByStatus(status: String) async -> [Serie] {
+    func getSeriesByStatus(status: SerieStatus, userId: String? = nil) async -> [Serie] {
         do {
-            return try await serieService.fetchSeries(status: status)
+            return try await serieService.fetchSeries(status: status, userId: userId)
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant la récupération des séries par statut")
             return []

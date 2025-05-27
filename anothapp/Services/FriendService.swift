@@ -7,13 +7,6 @@
 
 import Foundation
 
-enum FriendStatus: String {
-    case sent = "sent"
-    case received = "received"
-    case friends = "friends"
-    case viewed = "viewed"
-}
-
 class FriendService {
     
     private let baseUrl = "\(BaseService.serverUrl)/friends"

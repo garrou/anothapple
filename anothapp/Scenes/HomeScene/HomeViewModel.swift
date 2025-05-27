@@ -8,10 +8,6 @@
 import Foundation
 import SwiftUI
 
-enum AppTab {
-    case series, discover, friends, statistics
-}
-
 class HomeViewModel: ObservableObject {
     
     private let router: HomeRouter

@@ -26,7 +26,7 @@ class SeriesListCacheManager {
     
     private func loadWatchList() async -> [Serie] {
         do {
-            let fetched = try await serieService.fetchSeries(status: "watchlist")
+            let fetched = try await serieService.fetchSeries(status: .watchlist)
             fetched.forEach { store(id: $0.id, value: $0) }
             return fetched
         } catch {

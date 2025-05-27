@@ -7,10 +7,6 @@
 
 import Foundation
 
-enum FilterTab {
-    case kinds, countries
-}
-
 class SeriesViewModel: ObservableObject {
     
     @Published var series: [Serie] = []

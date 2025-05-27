@@ -7,10 +7,6 @@
 
 import Foundation
 
-enum DiscoverDetailsTab {
-    case details, similars, images, characters, friends
-}
-
 class DiscoverDetailsViewModel: ObservableObject {
     
     @Published var serie: ApiSerie

@@ -221,11 +221,17 @@ private struct SimilarsView: View {
                 }
             })
             {
-                Text(similar.title)
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding()
-                    .border(Color(.separator), width: 0.5)
+                HStack {
+                    Text(similar.title)
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                }
+                .padding()
+                .border(Color(.separator), width: 0.5)
             }
         }
         .background(
@@ -289,7 +295,19 @@ private struct ActorsView: View {
             }
         }
         .sheet(isPresented: $viewModel.openActorDetails, onDismiss: { viewModel.closeActorDetails() }) {
-            ActorDetailView(viewModel: viewModel)
+            VStack {
+                HStack {
+                    Spacer()
+                    
+                    Button(action: { viewModel.closeActorDetails() }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 20, weight: .regular))
+                            .foregroundColor(.primary)
+                    }
+                }.padding()
+                
+                ActorDetailView(viewModel: viewModel)
+            }
         }
         .background(
             GeometryReader { geometry in

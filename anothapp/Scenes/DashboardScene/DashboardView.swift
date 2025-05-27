@@ -17,7 +17,12 @@ struct DashboardView: View {
             if viewModel.isLoading {
                 LoadingView()
             } else {
-                GloablStatisticView(viewModel: viewModel)
+                GlobalStatisticView(viewModel: viewModel)
+                
+                if (viewModel.mustShowFriendStats) {
+                    FriendSeriesView(viewModel: viewModel, series: viewModel.friendSharedSeries, title: viewModel.friendSharedSeriesLabel)
+                    FriendSeriesView(viewModel: viewModel, series: viewModel.friendFavoritesSeries, title: viewModel.friendFavoriteSeriesLabel)
+                }
                 BarChart(title: "Saisons par mois cette année", xLabel: "Mois", yLabel: "Saisons", data: viewModel.seasonsMonthsCurrentYear, color: .green)
                 BarChart(title: "Episodes par mois cette année", xLabel: "Mois", yLabel: "Episodes", data: viewModel.epiodesMonthsCurrentYear, color: .cyan)
                 LineChart(title: "Temps en heures par années", xLabel: "Années", yLabel: "Heures", data: viewModel.hoursPerYear, color: .yellow)
@@ -37,7 +42,43 @@ struct DashboardView: View {
     }
 }
 
-private struct GloablStatisticView: View {
+private struct FriendSeriesView: View {
+    
+    @StateObject var viewModel: DashboardViewModel
+    let series: [Serie]
+    let title: String
+    
+    var body: some View {
+        DisclosureGroup(title) {
+            GridView(items: series, columns: 1) { serie in
+                Button(action: {
+                    Task {
+                        await viewModel.routeToDiscoverDetails(id: serie.id)
+                    }
+                })
+                {
+                    HStack {
+                        Text(serie.title)
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        Spacer()
+                        
+                        
+                        Image(systemName: "chevron.right")
+                    }
+                    .padding()
+                    .border(Color(.separator), width: 0.5)
+                }
+            }.padding(.top, 5)
+        }
+        .padding()
+        .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(radius: 4))
+        .padding(.horizontal, 16)
+    }
+}
+
+private struct GlobalStatisticView: View {
     
     @StateObject var viewModel: DashboardViewModel
     

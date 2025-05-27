@@ -7,10 +7,6 @@
 
 import Foundation
 
-enum SerieDetailsTab {
-    case seasons, add, viewedBy
-}
-
 class SerieDetailsViewModel: ObservableObject {
     
     private let router: SerieDetailsRouter

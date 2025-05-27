@@ -16,6 +16,11 @@ class DashboardRouter: ObservableObject {
         self.rootCoordinator = rootCoordinator
         self.userId = userId
     }
+    
+    func routeToDiscoverDetails(serie: ApiSerie) {
+        let router = DiscoverDetailsRouter(rootCoordinator: rootCoordinator, serie: serie)
+        rootCoordinator.push(router)
+    }
 }
 
 // MARK: ViewFactory implementation

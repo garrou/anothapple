@@ -8,10 +8,6 @@
 import Foundation
 import SwiftUI
 
-enum FriendsTab {
-    case friends, add, received, sent
-}
-
 class FriendsViewModel: ObservableObject {
     
     private let router: FriendsRouter

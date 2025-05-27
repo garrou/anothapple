@@ -12,8 +12,11 @@ class SerieService {
     private let baseUrl = "\(BaseService.serverUrl)/shows"
     private let decoder: JSONDecoder = JSONDecoder()
     
-    func fetchSeries(status: String? = nil) async throws -> [Serie] {
-        let url = status == nil ? baseUrl : "\(baseUrl)?status=\(status!)"
+    func fetchSeries(status: SerieStatus? = nil, userId: String? = nil) async throws -> [Serie] {
+        let url = Helper.shared.buildUrlWithParams(url: "\(baseUrl)", params: [
+            Param(name: "status", value: status?.rawValue),
+            Param(name: "friendId", value: userId)
+        ]);
         let (data, ok) = try await BaseService.shared.request(url: url)
         return ok ? try decoder.decode([Serie].self, from: data) : []
     }

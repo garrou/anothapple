@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class DashboardViewModel: ObservableObject {
     
@@ -25,6 +26,26 @@ class DashboardViewModel: ObservableObject {
     @Published var mostViewedKinds: [Stat] = []
     @Published var seasonsByPlatforms: [Stat] = []
     @Published var seriesCountries: [Stat] = []
+    @Published var friendSharedSeries: [Serie] = []
+    @Published var friendFavoritesSeries: [Serie] = []
+    
+    var mustShowFriendStats: Bool {
+        userId != nil
+    }
+    
+    var friendSharedSeriesLabel: String {
+        let num = friendSharedSeries.count
+        let middle = Helper.shared.formatPlural(str: "série", num: num, showNum: false)
+        let end = Helper.shared.formatPlural(str: "commune", num: num, showNum: false)
+        return "\(num) \(middle) \(end)"
+    }
+    
+    var friendFavoriteSeriesLabel: String {
+        let num = friendFavoritesSeries.count
+        let middle = Helper.shared.formatPlural(str: "série", num: num, showNum: false)
+        let end = Helper.shared.formatPlural(str: "favorite", num: num, showNum: false)
+        return "\(num) \(middle) \(end)"
+    }
     
     var monthTime: String {
         Helper.shared.formatMins(userStats?.monthTime ?? 0)
@@ -59,7 +80,18 @@ class DashboardViewModel: ObservableObject {
         mostViewedKinds = await StatsManager.shared.getMostViewedKinds(userId: userId)
         seasonsByPlatforms = await StatsManager.shared.getSeasonsPlatforms(userId: userId);
         seriesCountries = await StatsManager.shared.getSeriesCountries(userId: userId);
+        
+        if (mustShowFriendStats) {
+            friendSharedSeries = await SeriesManager.shared.getSeriesByStatus(status: .shared, userId: userId!)
+            friendFavoritesSeries = await SeriesManager.shared.getSeriesByStatus(status: .favorite, userId: userId!)
+        }
         isLoading = false
+    }
+    
+    func routeToDiscoverDetails(id: Int) async {
+        if let fetched = await ApiSeriesCacheManager.shared.getSerie(id: id) {
+            router.routeToDiscoverDetails(serie: fetched)
+        }
     }
 }
 

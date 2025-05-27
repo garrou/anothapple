@@ -31,9 +31,13 @@ class Helper {
         return dateFormatter.string(from: date)
     }
     
-    func formatPlural(str: String, num: Int, prefix: Bool = true) -> String {
+    func formatPlural(str: String, num: Int, prefix: Bool = true, showNum: Bool = true) -> String {
         let suffix = num > 1 ? "s" : ""
-        return prefix ? "\(num) \(str)\(suffix)" : "\(str)\(suffix) \(num)"
+        
+        if (showNum) {
+            return prefix ? "\(num) \(str)\(suffix)" : "\(str)\(suffix) \(num)"
+        }
+        return "\(str)\(suffix)"
     }
     
     func formatMins(_ mins: Int) -> String {
