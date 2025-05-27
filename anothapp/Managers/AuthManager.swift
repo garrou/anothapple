@@ -15,8 +15,7 @@ class AuthManager {
     func login(identifier: String, password: String) async -> Bool {
         do {
             if let user = try await authService.login(loginRequest: .init(identifier: identifier, password: password)) {
-                SecurityManager.shared.storeUser(user)
-                return true
+                return SecurityManager.shared.storeUser(user)
             } else {
                 ToastManager.shared.setToast(message: "Identifiant ou mot de passe incorrect")
             }

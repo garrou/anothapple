@@ -44,7 +44,9 @@ class SecurityManager {
         return updateStatus == errSecSuccess
     }
     
-    func storeUser(_ user: User) {
+    func storeUser(_ user: User) -> Bool {
+        var stored = false
+        
         do {
             let data = try encoder.encode(user)
             let query: [String: Any] = [
@@ -54,7 +56,7 @@ class SecurityManager {
                 kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked
             ]
             let status = SecItemAdd(query as CFDictionary, nil)
-            let stored = status == errSecSuccess
+            stored = status == errSecSuccess
             
             if !stored {
                 ToastManager.shared.setToast(message: "Erreur, données de l'utilisateur non stockées")
@@ -62,6 +64,7 @@ class SecurityManager {
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant le stockage de l'utilisateur")
         }
+        return stored
     }
     
     func getUser() -> User? {
