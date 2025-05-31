@@ -14,18 +14,16 @@ class DiscoverDetailsViewModel: ObservableObject {
     @Published var isMenuOpened = false
     @Published var isSerieAdded = false
     @Published var isSerieInList = false
-    @Published var isShowModal = false
     @Published var viewedByFriends: [Friend] = []
     @Published var selectedTab: DiscoverDetailsTab = .details
     @Published var similars: [BaseSerie] = []
     @Published var images: [String] = []
     @Published var characters: [Person] = []
-    @Published var openActorDetails: Bool = false
+    @Published var isSheetOpened: Bool = false
     @Published var selectedActor: PersonDetails? = nil
     @Published var tabContentHeight: CGFloat = ContentHeightPreferenceKey.defaultValue
     @Published var showProfilePictureModal: Bool = false
     @Published var selectedProfilePicture: String? = nil
-    @Published var openFriendDetails = false
     @Published var friendIdToConsult: String? = nil
     
     private let router: DiscoverDetailsRouter
@@ -37,15 +35,17 @@ class DiscoverDetailsViewModel: ObservableObject {
         self.isSerieInList = SeriesListCacheManager.shared.isAlreadyAdded(id: serie.id)
     }
     
+    @MainActor
     func routeToDiscoverDetails(id: Int) async {
         if let fetched = await ApiSeriesCacheManager.shared.getSerie(id: id) {
             router.routeToDiscoverDetails(serie: fetched)
+            isSheetOpened = false
         }
     }
     
     func closeActorDetails() {
         selectedActor = nil
-        openActorDetails = false
+        isSheetOpened = false
     }
     
     func openProfilePictureModal(image: String) {
@@ -59,12 +59,12 @@ class DiscoverDetailsViewModel: ObservableObject {
     }
     
     func openFriendDetailsView(userId: String) {
-        openFriendDetails = true
+        isSheetOpened = true
         friendIdToConsult = userId
     }
     
     func closeFriendDetails() {
-        openFriendDetails = false
+        isSheetOpened = false
         friendIdToConsult = nil
     }
     
@@ -124,8 +124,10 @@ class DiscoverDetailsViewModel: ObservableObject {
     
     @MainActor
     func getActorDetails(id: Int) async {
-        selectedActor = await SearchManager.shared.getActorDetails(id: id)
-        openActorDetails = selectedActor != nil
+        if let actor = await SearchManager.shared.getActorDetails(id: id) {
+            isSheetOpened = true
+            selectedActor = actor
+        }
     }
 }
 

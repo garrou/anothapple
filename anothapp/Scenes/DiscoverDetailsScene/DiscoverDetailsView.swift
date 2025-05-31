@@ -302,7 +302,7 @@ private struct ActorsView: View {
                 }
             }
         }
-        .sheet(isPresented: $viewModel.openActorDetails, onDismiss: { viewModel.closeActorDetails() }) {
+        .sheet(isPresented: $viewModel.isSheetOpened, onDismiss: { viewModel.closeActorDetails() }) {
             VStack {
                 HStack {
                     Spacer()
@@ -314,7 +314,9 @@ private struct ActorsView: View {
                     }
                 }.padding()
                 
-                ActorDetailView(viewModel: viewModel)
+                if let actor = viewModel.selectedActor {
+                    ActorDetailView(viewModel: viewModel, actor: actor)
+                }
             }
         }
         .background(
@@ -334,6 +336,7 @@ private struct ActorsView: View {
 private struct ActorDetailView: View {
     
     @StateObject var viewModel: DiscoverDetailsViewModel
+    let actor: PersonDetails
     
     var body: some View {
         ScrollView {
@@ -357,7 +360,7 @@ private struct ActorDetailView: View {
     private var headerSection: some View {
         ZStack(alignment: .bottom) {
             
-            if let posterUrl = viewModel.selectedActor!.poster {
+            if let posterUrl = actor.poster {
                 ImageCardView(url: posterUrl)
             } else {
                 Rectangle()
@@ -373,11 +376,11 @@ private struct ActorDetailView: View {
             .frame(height: 280)
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(viewModel.selectedActor!.name)
+                Text(actor.name)
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.white)
                 
-                if let nationality = viewModel.selectedActor!.nationality {
+                if let nationality = actor.nationality {
                     Text(nationality)
                         .font(.system(size: 18, weight: .medium))
                         .foregroundColor(.white.opacity(0.9))
@@ -395,9 +398,13 @@ private struct ActorDetailView: View {
                 .foregroundColor(.primary)
             
             HStack(spacing: 24) {
-                infoItem(title: "Naissance", value: viewModel.selectedActor!.birthday ?? "?")
+                if let birthday = actor.birthday {
+                    infoItem(title: "Naissance", value: birthday)
+                }
                 
-                infoItem(title: "Décès", value: viewModel.selectedActor!.deathday ?? "?")
+                if let deathday = actor.deathday {
+                    infoItem(title: "Décès", value: deathday)
+                }
             }
             .padding(.vertical, 4)
         }
@@ -421,7 +428,7 @@ private struct ActorDetailView: View {
                 .font(.system(size: 22, weight: .bold))
                 .foregroundColor(.primary)
             
-            Text(viewModel.selectedActor!.description)
+            Text(actor.description)
                 .font(.system(size: 16))
                 .foregroundColor(.primary)
                 .lineSpacing(4)
@@ -435,16 +442,15 @@ private struct ActorDetailView: View {
                 .font(.system(size: 22, weight: .bold))
                 .foregroundColor(.primary)
             
-            if viewModel.selectedActor!.series.isEmpty {
+            if actor.series.isEmpty {
                 Text("Aucune série")
                     .font(.system(size: 16))
                     .foregroundColor(.secondary)
                     .padding(.top, 8)
             } else {
-                GridView(items: viewModel.selectedActor!.series, columns: 2) { serie in
+                GridView(items: actor.series, columns: 2) { serie in
                     Button(action: {
                         Task {
-                            viewModel.openActorDetails = false
                             await viewModel.routeToDiscoverDetails(id: serie.id)
                         }
                     })
@@ -473,7 +479,7 @@ private struct FriendsWatchView: View {
                         .foregroundColor(.primary)
                 }
                 .padding(.top, 1)
-                .sheet(isPresented: $viewModel.openFriendDetails, onDismiss: { viewModel.closeFriendDetails() }) {
+                .sheet(isPresented: $viewModel.isSheetOpened, onDismiss: { viewModel.closeFriendDetails() }) {
                     VStack {
                         HStack {
                             Spacer()
