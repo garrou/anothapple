@@ -31,4 +31,10 @@ class SeasonInfosTest: XCTestCase {
         XCTAssertNotNil(infos)
         XCTAssertTrue(infos!.count == 1)
     }
+    
+    func testSerializeUpdateSeason() throws {
+        let episodeInfos: UpdateSeasonRequest = .init(id: 1905, platform: 1, viewedAt: Date())
+        let jsonData = try JSONEncoder().encode(episodeInfos)
+        XCTAssertNotNil(jsonData)
+    }
 }

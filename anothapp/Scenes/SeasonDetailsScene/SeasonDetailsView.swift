@@ -37,11 +37,7 @@ struct SeasonDetailsView: View {
                 HStack {
                     Menu {
                         ForEach(viewModel.platforms, id: \.id!) { platform in
-                            Button(action: {
-                                Task {
-                                    await viewModel.updateSeasonPlatform(seasonId: season.id, platformId: platform.id!)
-                                }
-                            }) {
+                            Button(action: { viewModel.selectPlatformId(seasonId: season.id, platformId: platform.id!) }) {
                                 HStack {
                                     ImageCardView(url: platform.logo)
                                     Text(platform.name).font(.caption)
@@ -55,12 +51,12 @@ struct SeasonDetailsView: View {
                     
                     Spacer()
                     
-                    Text("\(Helper.shared.dateToString(date: season.addedAt, style: .medium))")
+                    DatePicker("", selection: viewModel.bindingForDate(season.id)).datePickerStyle(CompactDatePickerStyle())
                     
                     Spacer()
                     
                     Button(action: { viewModel.showDeleteModal.toggle() }) {
-                        Image(systemName: "trash").foregroundColor(.red)
+                        Image(systemName: "trash").foregroundColor(.red).font(.system(size: 20))
                     }.alert("Supprimer la saison ?", isPresented: $viewModel.showDeleteModal) {
                         Button("Annuler", role: .cancel) { viewModel.showDeleteModal.toggle() }
                         Button("Supprimer", role: .destructive) {
@@ -68,6 +64,14 @@ struct SeasonDetailsView: View {
                                 await viewModel.deleteSeason(id: season.id)
                             }
                         }
+                    }
+                    
+                    Button(action: {
+                        Task {
+                            await viewModel.updateSeason(seasonId: season.id)
+                        }
+                    }) {
+                        Image(systemName: "checkmark.circle").foregroundColor(.green).font(.system(size: 20))
                     }
                 }
                 .padding()

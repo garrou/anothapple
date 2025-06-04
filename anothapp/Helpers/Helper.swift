@@ -26,8 +26,9 @@ class Helper {
         }
     }
     
-    func dateToString(date: Date, style: DateFormatter.Style? = nil) -> String {
+    func dateToString(date: Date, style: DateFormatter.Style? = nil, format: String? = nil) -> String {
         if let style { dateFormatter.dateStyle = style }
+        if let format { dateFormatter.dateFormat = format }
         return dateFormatter.string(from: date)
     }
     

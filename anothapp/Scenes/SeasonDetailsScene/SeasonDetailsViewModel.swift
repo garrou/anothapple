@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class SeasonDetailsViewModel: ObservableObject {
     
@@ -13,6 +14,8 @@ class SeasonDetailsViewModel: ObservableObject {
     @Published var seasons: [SeasonInfos] = []
     @Published var platforms: [Platform] = []
     @Published var showDeleteModal = false
+    @Published var seasonsAddedAt: [Int:Date] = [:]
+    @Published var seasonsPlatformId: [Int:Int] = [:]
     
     private let router: SeasonDetailsRouter
     
@@ -25,21 +28,41 @@ class SeasonDetailsViewModel: ObservableObject {
         self.router = router
     }
     
-    private func updateSeason(seasonId: Int, platformId: Int) {
+    private func changeSeason(seasonId: Int, platformId: Int, addedAt: Date) {
         let seasonIndex = seasons.firstIndex(where: { $0.id == seasonId })
         if seasonIndex == nil { return }
+        
         let platformIndex = platforms.firstIndex(where: { $0.id == platformId })
         if platformIndex == nil { return }
+        
         let platform = Platform(id: platformId, name: platforms[platformIndex!].name, logo: platforms[platformIndex!].logo)
-        let updated = SeasonInfos(id: seasonId, addedAt: seasons[seasonIndex!].addedAt, platform: platform)
+        let updated = SeasonInfos(id: seasonId, addedAt: addedAt, platform: platform)
         seasons[seasonIndex!] = updated
     }
     
+    func bindingForDate(_ key: Int) -> Binding<Date> {
+        Binding<Date>(
+            get: {
+                self.seasonsAddedAt[key] ?? Date()
+            },
+            set: { newValue in
+                self.seasonsAddedAt[key] = newValue
+            }
+        )
+    }
+    
+    func selectPlatformId(seasonId: Int, platformId: Int) {
+        seasonsPlatformId[seasonId] = platformId
+        changeSeason(seasonId: seasonId, platformId: platformId, addedAt: seasonsAddedAt[seasonId]!)
+    }
+    
     @MainActor
-    func updateSeasonPlatform(seasonId: Int, platformId: Int) async {
-        let updated = await SeasonsManager.shared.updateSeason(id: seasonId, platformId: platformId)
+    func updateSeason(seasonId: Int) async {
+        let platformId = seasonsPlatformId[seasonId]
+        let addedAt = seasonsAddedAt[seasonId]
+        let updated = await SeasonsManager.shared.updateSeason(id: seasonId, platformId: platformId, viewedAt: addedAt)
         if !updated { return }
-        updateSeason(seasonId: seasonId, platformId: platformId)
+        changeSeason(seasonId: seasonId, platformId: platformId!, addedAt: addedAt!)
     }
     
     @MainActor
@@ -47,6 +70,12 @@ class SeasonDetailsViewModel: ObservableObject {
         isLoading = true
         seasons = await SeriesManager.shared.getSeasonDetails(id: router.serie.id, num: router.season.number)
         platforms = await PlatformsCacheManager.shared.getPlatforms()
+        seasonsAddedAt = seasons.reduce(into: [Int: Date]()) { result, season in
+            result[season.id] = season.addedAt
+        }
+        seasonsPlatformId = seasons.reduce(into: [Int: Int]()) { result, season in
+            result[season.id] = season.platform.id
+        }
         isLoading = false
     }
     

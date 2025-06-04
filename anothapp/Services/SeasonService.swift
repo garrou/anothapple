@@ -22,7 +22,7 @@ class SeasonService {
         return ok ? try decoder.decode([Timeline].self, from: data) : []
     }
     
-    func updateSeason(request: PlatformRequest) async throws -> Bool {
+    func updateSeason(request: UpdateSeasonRequest) async throws -> Bool {
         let (_, ok) = try await BaseService.shared.dataRequest(url: "\(baseUrl)/\(request.id)", method: "PATCH", data: request)
         return ok
     }

@@ -20,14 +20,20 @@ struct Toast: ViewModifier {
             if isShowing {
                 VStack {
                     Spacer()
-                    HStack {
+                    
+                    HStack(alignment: .center) {
+                        Image(systemName: isError ? "exclamationmark.triangle" : "checkmark.circle")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+                            .padding(.leading, 8)
+                        
                         Text(message)
                             .foregroundColor(.white)
-                            .padding(.horizontal, 16)
                             .padding(.vertical, 10)
-                            .background(isError ? Color.red : Color.green)
-                            .cornerRadius(8)
                     }
+                    .padding(.horizontal, 16)
+                    .background(isError ? .red : .green)
+                    .cornerRadius(8)
                     .padding(.bottom, 30)
                     .transition(.move(edge: .bottom))
                     .onAppear {
