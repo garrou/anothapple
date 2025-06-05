@@ -70,7 +70,7 @@ class DiscoverDetailsViewModel: ObservableObject {
     
     func updateProfilePicture() async {
         if let image = selectedProfilePicture {
-            await UserManager.shared.updateProfilePicture(image: image)
+            _ = await UserManager.shared.updateProfilePicture(image: image)
         }
     }
     

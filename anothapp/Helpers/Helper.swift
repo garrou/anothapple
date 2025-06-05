@@ -14,7 +14,26 @@ enum FormatterError: Error {
 class Helper {
     
     static let shared = Helper()
+    static let minPassword = 8
+    static let maxPassword = 50
+    static let minUsername = 3
+    static let maxUsername = 25
     private let dateFormatter = DateFormatter()
+    
+    
+    func isValidUsername(_ username: String) -> Bool {
+        username.count >= Helper.minUsername && username.count <= Helper.maxUsername
+    }
+    
+    func isValidPassword(_ password: String) -> Bool {
+        password.count >= Helper.minPassword && password.count <= Helper.maxPassword
+    }
+    
+    func isValidEmail(_ email: String) -> Bool {
+        let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        let matches = detector?.matches(in: email, options: [], range: NSRange(location: 0, length: email.utf16.count))
+        return matches?.first?.url?.scheme == "mailto"
+    }
     
     func stringToDate(str: String, format: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") throws -> Date {
         dateFormatter.dateFormat = format
@@ -35,7 +54,7 @@ class Helper {
     func formatPlural(str: String, num: Int, prefix: Bool = true, showNum: Bool = true) -> String {
         let suffix = num > 1 ? "s" : ""
         
-        if (showNum) {
+        if showNum {
             return prefix ? "\(num) \(str)\(suffix)" : "\(str)\(suffix) \(num)"
         }
         return "\(str)\(suffix)"

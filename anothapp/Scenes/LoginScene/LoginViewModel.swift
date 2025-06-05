@@ -27,8 +27,9 @@ class LoginViewModel: ObservableObject {
     }
     
     func performLogin() async {
+        if isInvalidForm { return }
         let isLoggedIn = await AuthManager.shared.login(identifier: identifier, password: password)
-        if (isLoggedIn) {
+        if isLoggedIn {
             router.routeToHomePage()
         }
     }

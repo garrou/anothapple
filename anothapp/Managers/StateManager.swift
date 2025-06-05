@@ -14,10 +14,10 @@ class StateManager: ObservableObject {
     
     func loadCaches() async {
         guard !hasLoaded else { return }
-        let _ = await SeriesCacheManager.shared.getSeries()
-        let _ = await SeriesListCacheManager.shared.getWatchList()
-        let _ = await PlatformsCacheManager.shared.getPlatforms()
-        let _ = await KindsCacheManager.shared.getKinds()
+        _ = await SeriesCacheManager.shared.getSeries()
+        _ = await SeriesListCacheManager.shared.getWatchList()
+        _ = await PlatformsCacheManager.shared.getPlatforms()
+        _ = await KindsCacheManager.shared.getKinds()
         hasLoaded = true
     }
     

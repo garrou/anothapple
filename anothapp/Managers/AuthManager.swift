@@ -26,6 +26,23 @@ class AuthManager {
     }
     
     func signup(email: String, username: String, password: String, confirm: String) async -> Bool {
+        
+        if !Helper.shared.isValidEmail(email) {
+            ToastManager.shared.setToast(message: "Email invalide")
+            return false
+        }
+        if !Helper.shared.isValidUsername(username) {
+            ToastManager.shared.setToast(message: "Le nom d'utilisateur doit contenir entre \(Helper.minUsername) et \(Helper.maxUsername) caractères")
+            return false
+        }
+        if !Helper.shared.isValidPassword(password) {
+            ToastManager.shared.setToast(message: "Le mot de passe doit contenir entre \(Helper.minPassword) et \(Helper.maxPassword) caractères")
+            return false
+        }
+        if password != confirm {
+            ToastManager.shared.setToast(message: "Les mots de passe ne correspondent pas")
+            return false
+        }
         var created = false
         
         do {

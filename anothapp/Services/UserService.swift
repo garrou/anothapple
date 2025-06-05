@@ -21,4 +21,14 @@ class UserService {
         let (_, ok) = try await BaseService.shared.dataRequest(url: "\(baseUrl)/me", method: "PATCH", data: request)
         return ok
     }
+    
+    func updateEmail(request: ProfileEmailRequest) async throws -> Bool {
+        let (_, ok) = try await BaseService.shared.dataRequest(url: "\(baseUrl)/me", method: "PATCH", data: request)
+        return ok
+    }
+    
+    func updatePassword(request: ProfilePasswordRequest) async throws -> Bool {
+        let (_, ok) = try await BaseService.shared.dataRequest(url: "\(baseUrl)/me", method: "PATCH", data: request)
+        return ok
+    }
 }

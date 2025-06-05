@@ -19,7 +19,7 @@ struct DashboardView: View {
             } else {
                 GlobalStatisticView(viewModel: viewModel)
                 
-                if (viewModel.mustShowFriendStats) {
+                if viewModel.mustShowFriendStats {
                     FriendSeriesView(viewModel: viewModel, series: viewModel.friendSharedSeries, title: viewModel.friendSharedSeriesLabel)
                     FriendSeriesView(viewModel: viewModel, series: viewModel.friendFavoritesSeries, title: viewModel.friendFavoriteSeriesLabel)
                 }

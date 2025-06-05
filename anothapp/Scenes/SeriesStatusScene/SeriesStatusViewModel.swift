@@ -38,18 +38,14 @@ class SeriesStatusViewModel: ObservableObject {
         switch(status) {
         case .favorite:
             series = SeriesCacheManager.shared.getFavorites()
-            break
         case .watchlist:
             series = await SeriesListCacheManager.shared.getWatchList()
-            break
         case .continueWatching:
             series = await SeriesManager.shared.getSeriesByStatus(status: .continueWatching)
-            break
         case .stopped:
             series = SeriesCacheManager.shared.getSeriesByWatching(watching: false)
-            break
         case .shared:
-            break;
+            break
         }
         isLoading = false
     }

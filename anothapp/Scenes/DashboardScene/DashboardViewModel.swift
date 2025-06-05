@@ -81,7 +81,7 @@ class DashboardViewModel: ObservableObject {
         seasonsByPlatforms = await StatsManager.shared.getSeasonsPlatforms(userId: userId);
         seriesCountries = await StatsManager.shared.getSeriesCountries(userId: userId);
         
-        if (mustShowFriendStats) {
+        if mustShowFriendStats {
             friendSharedSeries = await SeriesManager.shared.getSeriesByStatus(status: .shared, userId: userId!)
             friendFavoritesSeries = await SeriesManager.shared.getSeriesByStatus(status: .favorite, userId: userId!)
         }

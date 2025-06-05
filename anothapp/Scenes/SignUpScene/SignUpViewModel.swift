@@ -17,7 +17,10 @@ class SignUpViewModel: ObservableObject {
     private let router: SignUpRouter
     
     var isInvalidForm: Bool {
-        email.isEmpty || username.isEmpty || password.isEmpty || confirmPassword.isEmpty
+        email.isEmpty
+        || username.isEmpty
+        || password.isEmpty || confirmPassword.isEmpty || !Helper.shared.isValidPassword(password) || password != confirmPassword
+        || !Helper.shared.isValidEmail(email)
     }
     
     init(router: SignUpRouter) {
@@ -29,31 +32,10 @@ class SignUpViewModel: ObservableObject {
     }
     
     func performSignUp() async {
-        if !isValidEmail() {
-            ToastManager.shared.setToast(message: "Email invalide")
-            return
-        }
-        if username.count < 3 {
-            ToastManager.shared.setToast(message: "Le nom d'utilisateur doit contenir au moins 3 caractères")
-            return
-        }
-        if password.count < 8 {
-            ToastManager.shared.setToast(message: "Le mot de passe doit contenir au moins 8 caractères")
-            return
-        }
-        if password != confirmPassword {
-            ToastManager.shared.setToast(message: "Les mots de passe ne correspondent pas")
-            return
-        }
+        if isInvalidForm { return }
         if await AuthManager.shared.signup(email: email, username: username, password: password, confirm: confirmPassword) {
             router.routeToLoginPage()
         }
-    }
-    
-    private func isValidEmail() -> Bool {
-        let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
-        let matches = detector?.matches(in: email, options: [], range: NSRange(location: 0, length: email.utf16.count))
-        return matches?.first?.url?.scheme == "mailto"
     }
 }
 

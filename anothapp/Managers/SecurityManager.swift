@@ -83,8 +83,6 @@ class SecurityManager {
             } catch {
                 ToastManager.shared.setToast(message: "Données utilisateur non valides")
             }
-        } else {
-            ToastManager.shared.setToast(message: "Erreur durant la récupération du profil")
         }
         return nil
     }
