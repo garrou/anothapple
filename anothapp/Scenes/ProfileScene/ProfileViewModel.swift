@@ -82,12 +82,9 @@ class ProfileViewModel: ObservableObject {
         }
         if updated {
             loadProfile()
-        }
-        closeSheet()
-        
-        if updated {
             clearFields()
         }
+        closeSheet()
     }
     
     @MainActor
@@ -113,12 +110,9 @@ class ProfileViewModel: ObservableObject {
         }
         if updated {
             loadProfile()
-        }
-        closeSheet()
-        
-        if updated {
             clearFields()
         }
+        closeSheet()
     }
     
     @MainActor
