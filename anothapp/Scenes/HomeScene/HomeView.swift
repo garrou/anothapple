@@ -41,6 +41,7 @@ struct HomeView: View {
                         }
                         .tag(AppTab.statistics)
                 }
+                .tint(.primary)
                 
                 if viewModel.isMenuOpened {
                     ZStack {
