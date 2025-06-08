@@ -73,33 +73,41 @@ struct ProfileView: View {
 private struct ChangeProfilePictureView: View {
     
     @StateObject var viewModel: ProfileViewModel
+    @FocusState private var isSearchFocused: Bool
     
     var body: some View {
         List {
-            ForEach(viewModel.series, id: \.id) { serie in
-                Button(action: {
+            TextField("Titre de la série", text: $viewModel.titleSearch)
+                .padding(.all, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(isSearchFocused ? .primary : .secondary, lineWidth: 1)
+                )
+                .focused($isSearchFocused)
+                .onChange(of: viewModel.titleSearch) {
                     Task {
-                        await viewModel.expandSerie(id: serie.id)
+                        await viewModel.loadSeries()
                     }
-                }) {
-                    VStack {
-                        HStack {
-                            Text(serie.title).font(.headline)
-                            Spacer()
-                            Image(systemName: viewModel.isExpanded(id: serie.id) ? "chevron.down" : "chevron.right")
-                        }
-                        
-                        if viewModel.isExpanded(id: serie.id) {
-                            GridView(items: viewModel.images, columns: 2) { image in
-                                Button(action: {
-                                    Task {
-                                        await viewModel.updateProfilePicture(image: image)
-                                    }
-                                })
-                                {
-                                    ImageCardView(url: image)
+                }
+            
+            ForEach(viewModel.series, id: \.id) { serie in
+                DisclosureGroup(serie.title) {
+                    if viewModel.isLoading {
+                        LoadingView()
+                    } else {
+                        GridView(items: viewModel.getSerieImages(id: serie.id), columns: 2) { image in
+                            Button(action: {
+                                Task {
+                                    await viewModel.updateProfilePicture(image: image)
                                 }
+                            })
+                            {
+                                ImageCardView(url: image)
                             }
+                            .buttonStyle(.plain)
+                        }
+                        .task {
+                            await viewModel.loadSerieImages(id: serie.id)
                         }
                     }
                 }

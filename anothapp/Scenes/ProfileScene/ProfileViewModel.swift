@@ -19,8 +19,9 @@ class ProfileViewModel: ObservableObject {
     @Published var newPassword = ""
     @Published var confirmPassword = ""
     @Published var series: [Serie] = []
-    @Published var images: [String] = []
-    @Published var expandedSerie = -1
+    @Published var images: [Int:[String]] = [:]
+    @Published var isLoading = false
+    @Published var titleSearch = ""
     
     init(router: ProfileRouter) {
         self.router = router
@@ -62,15 +63,18 @@ class ProfileViewModel: ObservableObject {
         confirmPassword = ""
     }
     
-    func isExpanded(id: Int) -> Bool {
-        id == expandedSerie
+    func getSerieImages(id: Int) -> [String] {
+        images[id] ?? []
     }
     
     @MainActor
-    func expandSerie(id: Int) async {
-        guard !isExpanded(id: id) else { return }
-        images = await SearchManager.shared.getSerieImages(id: id)
-        expandedSerie = id
+    func loadSerieImages(id: Int) async {
+        if let images = images[id] {
+            if !images.isEmpty { return }
+        }
+        isLoading = true
+        images[id] = await SearchManager.shared.getSerieImages(id: id)
+        isLoading = false
     }
     
     @MainActor
@@ -117,8 +121,7 @@ class ProfileViewModel: ObservableObject {
     
     @MainActor
     func loadSeries() async {
-        guard series.isEmpty else { return }
-        series = await SeriesCacheManager.shared.getSeries()
+        series = await SeriesCacheManager.shared.getSeries(title: titleSearch)
     }
     
     func loadProfile() {
