@@ -50,6 +50,11 @@ struct SerieDetailsView: View {
                             Text("\(Helper.shared.formatMins(viewModel.infos.time)) de visionnage")
                         }
                         
+                        HStack {
+                            Image(systemName: viewModel.serie.watch ? "play" : "pause").foregroundColor(viewModel.serie.watch ? .green : .red)
+                            Text(viewModel.serie.watch ? "Visionnage en cours" : "Visionnage arrêté")
+                        }
+                        
                         if viewModel.serie.favorite {
                             HStack {
                                 Image(systemName: "heart.fill")
@@ -68,7 +73,7 @@ struct SerieDetailsView: View {
                         
                         Image(systemName: "person.fill.checkmark").tag(SerieDetailsTab.viewedBy)
                     }
-                    .pickerStyle(SegmentedPickerStyle())
+                    .pickerStyle(.segmented)
                     .padding()
                     
                     TabView(selection: $viewModel.selectedTab) {
@@ -148,6 +153,17 @@ struct SerieDetailsView: View {
                                     }
                                 }
                                 
+                                // Edit
+                                Button(action: { viewModel.openUpdateSerieModal.toggle() }) {
+                                    HStack {
+                                        Image(systemName: "pencil").foregroundColor(.primary)
+                                        Text("Modifier")
+                                    }
+                                }
+                                .sheet(isPresented: $viewModel.openUpdateSerieModal) {
+                                    UpdateSerieModal(viewModel: viewModel)
+                                }
+                                
                                 //Delete
                                 Button(action: { viewModel.showDeleteModal.toggle() }) {
                                     HStack {
@@ -165,7 +181,7 @@ struct SerieDetailsView: View {
                                     }
                                 }
                             }
-                            .listStyle(PlainListStyle())
+                            .listStyle(.plain)
                             .frame(maxHeight: .infinity)
                         }
                         .frame(width: 200)
@@ -344,6 +360,43 @@ private struct SeasonCardView<Content: View>: View {
             }
             
             content
+        }
+    }
+}
+
+private struct UpdateSerieModal: View {
+    
+    @StateObject var viewModel: SerieDetailsViewModel
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Text("Modifier la date d'ajout de la série").font(.system(size: 20, weight: .bold))
+                
+                Spacer()
+                
+                Button(action: { viewModel.openUpdateSerieModal = false }) {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 20, weight: .regular))
+                        .foregroundColor(.primary)
+                }
+            }.padding()
+            
+            DatePicker("", selection: $viewModel.addedAt, in: ...Date()).datePickerStyle(.graphical)
+            
+            Button(action: {
+                Task {
+                    await viewModel.changeAddedAt()
+                }
+            }) {
+                Text("Enregistrer")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.primary)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 8).stroke(.primary, lineWidth: 1))
+            }
+            
+            Spacer()
         }
     }
 }

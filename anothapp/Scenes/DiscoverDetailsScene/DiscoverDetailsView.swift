@@ -28,7 +28,7 @@ struct DiscoverDetailsView: View {
                     
                     Image(systemName: "person.fill.checkmark").tag(DiscoverDetailsTab.friends)
                 }
-                .pickerStyle(SegmentedPickerStyle())
+                .pickerStyle(.segmented)
                 .padding()
                 
                 TabView(selection: $viewModel.selectedTab) {
@@ -97,7 +97,7 @@ struct DiscoverDetailsView: View {
                                     }
                                 }
                             }
-                            .listStyle(PlainListStyle())
+                            .listStyle(.plain)
                             .frame(maxHeight: .infinity)
                         }
                         .frame(width: 200)

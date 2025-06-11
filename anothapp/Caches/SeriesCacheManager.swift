@@ -125,10 +125,13 @@ class SeriesCacheManager {
     
     func changeFavorite(serie: Serie) async -> Serie {
         do {
-            if try await serieService.changeFavorite(id: serie.id, request: .init(favorite: true, watch: nil)) {
+            let updated = try await serieService.updateSerie(id: serie.id, request: .init(favorite: true))
+            
+            if updated {
                 serie.favorite.toggle()
                 store(id: serie.id, value: serie)
             }
+            ToastManager.shared.setToast(message: updated ? "Favori modifié" : "Favori non modifié", isError: !updated)
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant la modification")
         }
@@ -137,10 +140,28 @@ class SeriesCacheManager {
     
     func changeWatching(serie: Serie) async -> Serie {
         do {
-            if try await serieService.changeWatching(id: serie.id, request: .init(favorite: nil, watch: true)) {
+            let updated = try await serieService.updateSerie(id: serie.id, request: .init(watch: true))
+            
+            if updated {
                 serie.watch.toggle()
                 store(id: serie.id, value: serie)
             }
+            ToastManager.shared.setToast(message: updated ? "Visionage modifiée" : "Visionage non modifié", isError: !updated)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la modification")
+        }
+        return serie
+    }
+    
+    func changeAddedAt(serie: Serie, addedAt: Date) async -> Serie {
+        do {
+            let updated = try await serieService.updateSerie(id: serie.id, request: .init(addedAt: addedAt))
+            
+            if updated {
+                serie.addedAt = addedAt
+                store(id: serie.id, value: serie)
+            }
+            ToastManager.shared.setToast(message: updated ? "Date modifiée" : "Date non modifiée", isError: !updated)
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant la modification")
         }

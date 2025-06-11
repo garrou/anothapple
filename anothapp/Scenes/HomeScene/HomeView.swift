@@ -90,7 +90,7 @@ struct HomeView: View {
                                         }
                                     }
                                 }
-                                .listStyle(PlainListStyle())
+                                .listStyle(.plain)
                                 .frame(maxHeight: .infinity)
                             }
                             .frame(width: 250)

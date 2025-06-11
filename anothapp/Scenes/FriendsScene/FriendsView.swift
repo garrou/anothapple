@@ -22,7 +22,7 @@ struct FriendsView: View {
                 
                 Image(systemName: "arrow.up.circle").tag(FriendsTab.sent)
             }
-            .pickerStyle(SegmentedPickerStyle())
+            .pickerStyle(.segmented)
             .padding()
             
             TabView(selection: $viewModel.selectedTab) {

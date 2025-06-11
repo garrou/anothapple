@@ -26,12 +26,7 @@ class SerieService {
         return ok ? try? decoder.decode(SerieInfos.self, from: data) : nil
     }
     
-    func changeFavorite(id: Int, request: StatusRequest) async throws -> Bool {
-        let (_, ok) = try await BaseService.shared.dataRequest(url: "\(baseUrl)/\(id)", method: "PATCH", data: request)
-        return ok
-    }
-    
-    func changeWatching(id: Int, request: StatusRequest) async throws -> Bool {
+    func updateSerie(id: Int, request: StatusRequest) async throws -> Bool {
         let (_, ok) = try await BaseService.shared.dataRequest(url: "\(baseUrl)/\(id)", method: "PATCH", data: request)
         return ok
     }

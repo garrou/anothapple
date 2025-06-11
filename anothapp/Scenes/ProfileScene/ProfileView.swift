@@ -30,7 +30,7 @@ struct ProfileView: View {
                 IconTextView(icon: "lock", text: "Modifier le mot de passe")
             }
         }
-        .listStyle(PlainListStyle())
+        .listStyle(.plain)
         .navigationTitle("Profil")
         .sheet(isPresented: $viewModel.isSheetOpened, onDismiss: { viewModel.closeSheet() }) {
             VStack {
@@ -113,7 +113,7 @@ private struct ChangeProfilePictureView: View {
                 }
             }
         }
-        .listStyle(PlainListStyle())
+        .listStyle(.plain)
         .task {
             await viewModel.loadSeries()
         }

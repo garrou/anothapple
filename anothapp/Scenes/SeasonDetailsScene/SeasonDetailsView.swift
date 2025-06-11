@@ -51,7 +51,7 @@ struct SeasonDetailsView: View {
                     
                     Spacer()
                     
-                    DatePicker("", selection: viewModel.bindingForDate(season.id)).datePickerStyle(CompactDatePickerStyle())
+                    DatePicker("", selection: viewModel.bindingForDate(season.id), in: ...Date())
                     
                     Spacer()
                     

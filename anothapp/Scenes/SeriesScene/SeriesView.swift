@@ -75,7 +75,7 @@ struct SeriesView: View {
                                 Image(systemName: "theatermasks").tag(FilterTab.kinds)
                                 Image(systemName: "flag").tag(FilterTab.countries)
                             }
-                            .pickerStyle(SegmentedPickerStyle())
+                            .pickerStyle(.segmented)
                             .padding()
                             
                             TabView(selection: $viewModel.selectedFilterTab) {
@@ -128,7 +128,7 @@ private struct KindsView: View {
                 }
             }
         }
-        .listStyle(PlainListStyle())
+        .listStyle(.plain)
         .task {
             await viewModel.loadKinds()
         }
@@ -160,7 +160,7 @@ private struct CountriesView: View {
                 }
             }
         }
-        .listStyle(PlainListStyle())
+        .listStyle(.plain)
         .onAppear {
             viewModel.loadCountries()
         }

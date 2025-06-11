@@ -22,10 +22,13 @@ class SerieDetailsViewModel: ObservableObject {
     @Published var tabContentHeight: CGFloat = ContentHeightPreferenceKey.defaultValue
     @Published var openFriendDetails = false
     @Published var friendIdToConsult: String? = nil
+    @Published var openUpdateSerieModal = false
+    @Published var addedAt: Date
     
     init(router: SerieDetailsRouter, serie: Serie) {
         self.router = router
         self.serie = serie
+        addedAt = serie.addedAt
     }
     
     func routeToEpisodesView(season: Int) {
@@ -44,6 +47,12 @@ class SerieDetailsViewModel: ObservableObject {
     @MainActor
     func changeWatching() async {
         serie = await SeriesCacheManager.shared.changeWatching(serie: serie)
+    }
+    
+    @MainActor
+    func changeAddedAt() async {
+        serie = await SeriesCacheManager.shared.changeAddedAt(serie: serie, addedAt: addedAt)
+        openUpdateSerieModal = false
     }
     
     func deleteSerie() async {
