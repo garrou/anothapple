@@ -61,6 +61,7 @@ class Helper {
     }
     
     func formatMins(_ mins: Int) -> String {
+        if mins < 0 { return "0 min" }
         let days = mins / (24 * 60)
         let hours = (mins % (24 * 60)) / 60
         let minutes = mins % 60
@@ -69,7 +70,7 @@ class Helper {
         if days > 0 { str += formatPlural(str: "jour", num: days) + " " }
         if hours > 0 { str += formatPlural(str: "heure", num: hours) + " " }
         if minutes > 0 { str += formatPlural(str: "min", num: minutes) }
-        return str.isEmpty ? formatPlural(str: "min", num: mins) : str
+        return str.isEmpty ? formatPlural(str: "min", num: mins) : str.trimmingCharacters(in: .whitespaces)
     }
     
     func containsString(_ str1: String, _ str2: String) -> Bool {

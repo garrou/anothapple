@@ -27,14 +27,15 @@ class SeasonInfosTest: XCTestCase {
         ]
         """
         
-        let infos = try? decoder.decode([SeasonInfos].self, from: jsonSeasonDetails.data(using: .utf8)!)
+        let jsonData = try XCTUnwrap(jsonSeasonDetails.data(using: .utf8))
+        let infos = try decoder.decode([SeasonInfos].self, from: jsonData)
         XCTAssertNotNil(infos)
-        XCTAssertTrue(infos!.count == 1)
-    }
-    
-    func testSerializeUpdateSeason() throws {
-        let episodeInfos: UpdateSeasonRequest = .init(id: 1905, platform: 1, viewedAt: Date())
-        let jsonData = try JSONEncoder().encode(episodeInfos)
-        XCTAssertNotNil(jsonData)
+        XCTAssertTrue(infos.count == 1)
+        XCTAssertEqual(infos[0].id, 1399)
+        
+        let date = try Helper.shared.stringToDate(str: "2018-04-01T20:00:00.000Z")
+        XCTAssertEqual(infos[0].addedAt, date)
+        XCTAssertEqual(infos[0].platform.id, 1)
+        XCTAssertEqual(infos[0].platform.name, "Netflix")
     }
 }

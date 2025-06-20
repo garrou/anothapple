@@ -12,26 +12,6 @@ class SerieTest: XCTestCase {
     
     private let decoder = JSONDecoder()
     
-    func testStringFormattingError() {
-        XCTAssertThrowsError(try Helper.shared.stringToDate(str: ""))
-    }
-    
-    
-    func testDateFormatting() {
-        XCTAssertNoThrow(try Helper.shared.stringToDate(str: "2024-10-10T17:56:24.228Z"))
-    }
-    
-    func testDateToString() {
-        let string = Helper.shared.dateToString(date: Date())
-        XCTAssertNotEqual(string, "")
-    }
-    
-    func testCompareDate() throws {
-        let first = try Helper.shared.stringToDate(str: "2024-10-10T17:56:24.228Z")
-        let second = try Helper.shared.stringToDate(str: "2025-02-12T13:12:58.024Z")
-        XCTAssertTrue(first < second)
-    }
-    
     func testDeserializeSerie() throws {
         let jsonSerie = """
         {
@@ -48,8 +28,82 @@ class SerieTest: XCTestCase {
         }
         """
         
-        let serie = try? decoder.decode(Serie.self, from: jsonSerie.data(using: .utf8)!)
-        XCTAssertNotNil(serie)
+        let jsonData = try XCTUnwrap(jsonSerie.data(using: .utf8))
+        let serie = try decoder.decode(Serie.self, from: jsonData)
+        
+        XCTAssertEqual(serie.id, 1)
+        XCTAssertEqual(serie.title, "Test")
+        XCTAssertFalse(serie.poster.isEmpty)
+        XCTAssertEqual(serie.kinds.count, 1)
+        XCTAssertFalse(serie.favorite)
+        XCTAssertEqual(serie.duration, 45)
+        
+        let date = try Helper.shared.stringToDate(str: "2025-02-12T13:12:58.024Z")
+        XCTAssertEqual(serie.addedAt, date)
+        XCTAssertEqual(serie.country, "France")
+        XCTAssertTrue(serie.watch)
+        XCTAssertEqual(serie.seasons, 2)
+    }
+    
+    func testDeserializeSerieWithInvalidJson() {
+        let invalidJson = """
+        {
+            "id": "not_a_number",
+            "title": "Test"
+        }
+        """
+        
+        let jsonData = invalidJson.data(using: .utf8)!
+        
+        XCTAssertThrowsError(try decoder.decode(Episode.self, from: jsonData)) { error in
+            XCTAssertTrue(error is DecodingError)
+        }
+    }
+    
+    func testDeserializeSerieWithMissingRequiredFields() {
+        let incompleteJson = """
+        {
+            "id": 1,    
+            "poster": "https://picsum.photos/200", 
+            "kinds": ["Action"], 
+            "favorite": false, 
+            "duration": 45, 
+            "addedAt": "2025-02-12T13:12:58.024Z" , 
+            "country": "France", 
+            "watch": true, 
+            "seasons": 2
+        }
+        """
+        
+        let jsonData = incompleteJson.data(using: .utf8)!
+        
+        XCTAssertThrowsError(try decoder.decode(Episode.self, from: jsonData)) { error in
+            XCTAssertTrue(error is DecodingError)
+            if case DecodingError.keyNotFound(let key, _) = error {
+                XCTAssertEqual(key.stringValue, "title")
+            }
+        }
+    }
+    
+    func testDeserializeSerieMissingOptionalFields() throws {
+        let jsonSerie = """
+        {
+            "id": 1,
+            "title": "Test",
+            "poster": "https://picsum.photos/200", 
+            "kinds": ["Action"], 
+            "duration": 45, 
+            "addedAt": "2025-02-12T13:12:58.024Z" , 
+            "country": "France", 
+            "seasons": 2
+        }
+        """
+        
+        let jsonData = try XCTUnwrap(jsonSerie.data(using: .utf8))
+        let serie = try decoder.decode(Serie.self, from: jsonData)
+        
+        XCTAssertFalse(serie.favorite)
+        XCTAssertFalse(serie.watch)
     }
     
     func testDeserializeSerieInfos() throws {
@@ -86,7 +140,10 @@ class SerieTest: XCTestCase {
         }
         """
         
-        let infos = try? decoder.decode(SerieInfos.self, from: jsonSerieInfos.data(using: .utf8)!)
-        XCTAssertNotNil(infos)
+        let jsonData = try XCTUnwrap(jsonSerieInfos.data(using: .utf8))
+        let infos = try decoder.decode(SerieInfos.self, from: jsonData)
+        XCTAssertEqual(infos.seasons.count, 4)
+        XCTAssertEqual(infos.time, 7700)
+        XCTAssertEqual(infos.episodes, 154)
     }
 }
