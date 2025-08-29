@@ -24,7 +24,8 @@ class SerieTest: XCTestCase {
             "addedAt": "2025-02-12T13:12:58.024Z" , 
             "country": "France", 
             "watch": true, 
-            "seasons": 2
+            "seasons": 2,
+            "note": 3
         }
         """
         
@@ -37,6 +38,7 @@ class SerieTest: XCTestCase {
         XCTAssertEqual(serie.kinds.count, 1)
         XCTAssertFalse(serie.favorite)
         XCTAssertEqual(serie.duration, 45)
+        XCTAssertEqual(serie.note, 3)
         
         let date = try Helper.shared.stringToDate(str: "2025-02-12T13:12:58.024Z")
         XCTAssertEqual(serie.addedAt, date)

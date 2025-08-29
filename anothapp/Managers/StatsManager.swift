@@ -119,4 +119,13 @@ class StatsManager {
             return []
         }
     }
+    
+    func getSeriesNotes(userId: String?) async -> [Stat] {
+        do {
+            return try await statService.getGroupedCountByTypeByPeriod(type: .notes, userId: userId)
+        } catch {
+            ToastManager.shared.setToast(message: "Impossible de récupérer les statistiques des notes")
+            return []
+        }
+    }
 }

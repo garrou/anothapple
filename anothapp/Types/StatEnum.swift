@@ -12,6 +12,7 @@ enum ChartGroupedType: String {
     case bestMonths = "best-months"
     case countries = "countries"
     case platforms = "platforms"
+    case notes = "notes"
 }
 
 enum ChartGroupedPeriod: String {

@@ -15,7 +15,7 @@ class Datasource {
     
     static var mockSerieInfos = SerieInfos(seasons: [], time: 0, episodes: 0)
     
-    static var mockSerie = Serie(id: 33104, title: "Daredevil: Born Again", poster: "https://pictures.betaseries.com/fonds/poster/1b03b1f37e10c1eb8d675f869bc4adcd.jpg", kinds: ["Action", "Drame"], duration: 59, country: "États-Unis", seasons: 1, favorite: false, addedAt: Date(), watch: true)
+    static var mockSerie = Serie(id: 33104, title: "Daredevil: Born Again", poster: "https://pictures.betaseries.com/fonds/poster/1b03b1f37e10c1eb8d675f869bc4adcd.jpg", kinds: ["Action", "Drame"], duration: 59, country: "États-Unis", seasons: 1, favorite: false, addedAt: Date(), watch: true, note: 5)
     
     static var mockImages = ["https://picsum.photos/200", "https://picsum.photos/201", "https://picsum.photos/202"]
     

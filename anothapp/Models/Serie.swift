@@ -16,12 +16,13 @@ class Serie: BaseSerie {
     var favorite: Bool
     var addedAt: Date
     var watch: Bool
+    var note: Int?
     
     enum CodingKeys: String, CodingKey {
-        case poster, kinds, duration, country, seasons, favorite, addedAt, watch
+        case poster, kinds, duration, country, seasons, favorite, addedAt, watch, note
     }
     
-    init(id: Int, title: String, poster: String, kinds: [String], duration: Int, country: String, seasons: Int, favorite: Bool, addedAt: Date, watch: Bool) {
+    init(id: Int, title: String, poster: String, kinds: [String], duration: Int, country: String, seasons: Int, favorite: Bool, addedAt: Date, watch: Bool, note: Int) {
         self.poster = poster
         self.kinds = kinds
         self.duration = duration
@@ -30,6 +31,7 @@ class Serie: BaseSerie {
         self.favorite = favorite
         self.addedAt = addedAt
         self.watch = watch
+        self.note = note
         super.init(id: id, title: title)
     }
     
@@ -42,6 +44,7 @@ class Serie: BaseSerie {
         country = try container.decode(String.self, forKey: .country)
         watch = (try? container.decode(Bool.self, forKey: .watch)) ?? false
         seasons = try container.decode(Int.self, forKey: .seasons)
+        note = try? container.decode(Int.self, forKey: .note)
         
         if let dateString = (try? container.decode(String.self, forKey: .addedAt)) {
             addedAt = try Helper.shared.stringToDate(str: dateString)

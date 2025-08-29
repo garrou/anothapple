@@ -18,6 +18,7 @@ class StateManager: ObservableObject {
         _ = await SeriesListCacheManager.shared.getWatchList()
         _ = await PlatformsCacheManager.shared.getPlatforms()
         _ = await KindsCacheManager.shared.getKinds()
+        _ = await NotesCacheManager.shared.getNotes()
         hasLoaded = true
     }
     
@@ -26,6 +27,7 @@ class StateManager: ObservableObject {
         SeriesListCacheManager.shared.clear()
         PlatformsCacheManager.shared.clear()
         KindsCacheManager.shared.clear()
+        NotesCacheManager.shared.clear()
         hasLoaded = false
     }
 }

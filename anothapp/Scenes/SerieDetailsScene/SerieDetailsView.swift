@@ -62,6 +62,20 @@ struct SerieDetailsView: View {
                                 Text("Série dans vos favoris")
                             }
                         }
+                        HStack {
+                            ForEach(viewModel.notes, id: \.id) { note in
+                                Button(note.name) {
+                                    Task {
+                                        await viewModel.changeNote(note)
+                                    }
+                                }
+                                .padding(.all, 6)
+                                .background(note.id == viewModel.serie.note ? Helper.shared.noteToColor(note) : .clear)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .foregroundColor(.primary)
+                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(.primary, lineWidth: 1))
+                            }
+                        }
                     }
                     .font(.subheadline)
                     .foregroundColor(.gray)
@@ -205,6 +219,8 @@ struct SerieDetailsView: View {
                         .font(.title2)
                 }
             }
+        }.task {
+            await viewModel.getNotes()
         }
     }
 }

@@ -24,6 +24,7 @@ class SerieDetailsViewModel: ObservableObject {
     @Published var friendIdToConsult: String? = nil
     @Published var openUpdateSerieModal = false
     @Published var addedAt: Date
+    @Published var notes: [Note] = []
     
     init(router: SerieDetailsRouter, serie: Serie) {
         self.router = router
@@ -37,6 +38,11 @@ class SerieDetailsViewModel: ObservableObject {
     
     func routeToSeasonDetails(season: Season) {
         router.routeToSeasonDetailsView(serie: serie, season: season)
+    }
+    
+    @MainActor
+    func changeNote(_ note: Note) async {
+        serie = await SeriesCacheManager.shared.changeNote(serie: serie, note: note)
     }
     
     @MainActor
@@ -67,6 +73,11 @@ class SerieDetailsViewModel: ObservableObject {
         if let fetched = await ApiSeriesCacheManager.shared.getSerie(id: serie.id) {
             router.routeToDiscoverDetails(serie: fetched)
         }
+    }
+    
+    @MainActor
+    func getNotes() async {
+        notes = await NotesCacheManager.shared.getNotes()
     }
     
     @MainActor

@@ -28,6 +28,7 @@ class DashboardViewModel: ObservableObject {
     @Published var seriesCountries: [Stat] = []
     @Published var friendSharedSeries: [Serie] = []
     @Published var friendFavoritesSeries: [Serie] = []
+    @Published var seriesNotes: [Stat] = []
     
     var mustShowFriendStats: Bool {
         userId != nil
@@ -80,6 +81,7 @@ class DashboardViewModel: ObservableObject {
         mostViewedKinds = await StatsManager.shared.getMostViewedKinds(userId: userId)
         seasonsByPlatforms = await StatsManager.shared.getSeasonsPlatforms(userId: userId);
         seriesCountries = await StatsManager.shared.getSeriesCountries(userId: userId);
+        seriesNotes = await StatsManager.shared.getSeriesNotes(userId: userId);
         
         if mustShowFriendStats {
             friendSharedSeries = await SeriesManager.shared.getSeriesByStatus(status: .shared, userId: userId!)

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum FormatterError: Error {
     case decodingFailed(String)
@@ -86,6 +87,17 @@ class Helper {
     func buildUrlWithParams(url: String, params: [Param]) -> String {
         return params.reduce(url) { acc, curr in
             buildUrl(url: acc, query: curr.name, param: curr.value)
+        }
+    }
+    
+    func noteToColor(_ note: Note) -> Color {
+        switch note.id {
+            case 1: return .red
+            case 2: return .orange
+            case 3: return .yellow
+            case 4: return .blue
+            case 5: return .green
+            default : return .clear
         }
     }
     

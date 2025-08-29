@@ -138,6 +138,21 @@ class SeriesCacheManager {
         return serie
     }
     
+    func changeNote(serie: Serie, note: Note) async -> Serie {
+        do {
+            let updated = try await serieService.updateSerie(id: serie.id, request: .init(note: note.id))
+            
+            if updated {
+                serie.note = note.id
+                store(id: serie.id, value: serie)
+            }
+            ToastManager.shared.setToast(message: updated ? "Note modifiée" : "Note non modifiée", isError: !updated)
+        } catch {
+            ToastManager.shared.setToast(message: "Erreur durant la modification")
+        }
+        return serie
+    }
+    
     func changeWatching(serie: Serie) async -> Serie {
         do {
             let updated = try await serieService.updateSerie(id: serie.id, request: .init(watch: true))

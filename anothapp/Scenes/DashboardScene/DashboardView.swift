@@ -34,6 +34,7 @@ struct DashboardView: View {
                 PieChart(title: "Genre les plus regardés", data: viewModel.mostViewedKinds)
                 PieChart(title: "Saisons par plateformes", data: viewModel.seasonsByPlatforms)
                 PieChart(title: "Pays des séries", data: viewModel.seriesCountries)
+                PieChart(title: "Notes attribuées aux séries", data: viewModel.seriesNotes)
             }
         }
         .task {
