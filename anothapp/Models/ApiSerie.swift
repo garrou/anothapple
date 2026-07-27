@@ -17,15 +17,15 @@ class ApiSerie: BaseSerie {
     let episodes: Int
     let network: String
     let note: Float
-    let status: String
+    let finished: Bool
     let creation: Int
     let platforms: [Platform]
     
     enum CodingKeys: String, CodingKey {
-        case poster, kinds, duration, country, synopsis = "description", seasons, episodes, network, note, status, creation, platforms
+        case poster, kinds, duration, country, synopsis = "description", seasons, episodes, network, note, finished, creation, platforms
     }
     
-    init(id: Int, title: String, poster: String, kinds: [String], duration: Int, country: String, synopsis: String, seasons: Int, episodes: Int, network: String, note: Float, status: String, creation: Int, platforms: [Platform]) {
+    init(id: Int, title: String, poster: String, kinds: [String], duration: Int, country: String, synopsis: String, seasons: Int, episodes: Int, network: String, note: Float, finished: Bool, creation: Int, platforms: [Platform]) {
         self.poster = poster
         self.kinds = kinds
         self.duration = duration
@@ -35,7 +35,7 @@ class ApiSerie: BaseSerie {
         self.episodes = episodes
         self.network = network
         self.note = note
-        self.status = status
+        self.finished = finished
         self.creation = creation
         self.platforms = platforms
         super.init(id: id, title: title)
@@ -52,7 +52,7 @@ class ApiSerie: BaseSerie {
         self.episodes = try container.decode(Int.self, forKey: .episodes)
         self.network = try container.decode(String.self, forKey: .network)
         self.note = try container.decode(Float.self, forKey: .note)
-        self.status = try container.decode(String.self, forKey: .status)
+        self.finished = try container.decode(Bool.self, forKey: .finished)
         self.creation = try container.decode(Int.self, forKey: .creation)
         self.platforms = try container.decode([Platform].self, forKey: .platforms)
         try super.init(from: decoder)

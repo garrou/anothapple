@@ -168,7 +168,7 @@ private struct DetailView: View {
                 DetailRow(title: "Durée", value: "\(viewModel.serie.duration) mins")
                 DetailRow(title: "Pays", value: viewModel.serie.country)
                 DetailRow(title: "Platforme", value: viewModel.serie.network)
-                DetailRow(title: "Status", value: viewModel.serie.status)
+                DetailRow(title: "Status", value: viewModel.serie.finished ? "Terminée" : "En cours")
                 DetailRow(title: "Création", value: "\(viewModel.serie.creation)")
                 
                 if !viewModel.serie.platforms.isEmpty {
