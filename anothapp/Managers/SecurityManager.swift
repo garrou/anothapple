@@ -46,7 +46,14 @@ class SecurityManager {
             query[kSecAttrAccessible as String] = kSecAttrAccessibleWhenUnlocked
             
             let status = SecItemAdd(query as CFDictionary, nil)
-            let stored = status == errSecSuccess
+            let stored: Bool
+            
+            if status == errSecDuplicateItem {
+                stored = updateUser(user)
+            } else {
+                stored = status == errSecSuccess
+            }
+            
             if !stored {
                 ToastManager.shared.setToast(message: "Erreur, données de l'utilisateur non stockées")
             }
