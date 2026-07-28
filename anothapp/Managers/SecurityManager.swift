@@ -12,68 +12,56 @@ class SecurityManager {
     
     static let shared = SecurityManager()
     private let key = "user_info"
+    private let service = Bundle.main.bundleIdentifier ?? "anothapp"
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
     
-    func clearUser() {
-        let query: [String: Any] = [
+    private var baseQuery: [String: Any] {
+        [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key
+            kSecAttrAccount as String: key,
+            kSecAttrService as String: service
         ]
-        
-        let status = SecItemDelete(query as CFDictionary)
-        if status != errSecSuccess {
+    }
+    
+    func clearUser() {
+        let status = SecItemDelete(baseQuery as CFDictionary)
+        if status != errSecSuccess && status != errSecItemNotFound {
             ToastManager.shared.setToast(message: "Erreur durant la suppression des informations de l'utilisateur")
         }
     }
     
     func updateUser(_ user: User) -> Bool {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key
-        ]
-        
-        guard let data = try? encoder.encode(user) else {
-            return false
-        }
-        
-        let updateData: [String: Any] = [
-            kSecValueData as String: data
-        ]
-        let updateStatus = SecItemUpdate(query as CFDictionary, updateData as CFDictionary)
+        guard let data = try? encoder.encode(user) else { return false }
+        let updateData: [String: Any] = [kSecValueData as String: data]
+        let updateStatus = SecItemUpdate(baseQuery as CFDictionary, updateData as CFDictionary)
         return updateStatus == errSecSuccess
     }
     
     func storeUser(_ user: User) -> Bool {
-        var stored = false
-        
         do {
             let data = try encoder.encode(user)
-            let query: [String: Any] = [
-                kSecClass as String: kSecClassGenericPassword,
-                kSecAttrAccount as String: key,
-                kSecValueData as String: data,
-                kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked
-            ]
-            let status = SecItemAdd(query as CFDictionary, nil)
-            stored = status == errSecSuccess
+            var query = baseQuery
+            query[kSecValueData as String] = data
+            query[kSecAttrAccessible as String] = kSecAttrAccessibleWhenUnlocked
             
+            let status = SecItemAdd(query as CFDictionary, nil)
+            let stored = status == errSecSuccess
             if !stored {
                 ToastManager.shared.setToast(message: "Erreur, données de l'utilisateur non stockées")
             }
+            return stored
         } catch {
             ToastManager.shared.setToast(message: "Erreur durant le stockage de l'utilisateur")
+            return false
         }
-        return stored
     }
     
     func getUser() -> User? {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key,
-            kSecMatchLimit as String: kSecMatchLimitOne,
-            kSecReturnData as String: true
-        ]
+        var query = baseQuery
+        query[kSecMatchLimit as String] = kSecMatchLimitOne
+        query[kSecReturnData as String] = true
+        
         var result: AnyObject?
         let status = SecItemCopyMatching(query as CFDictionary, &result)
         
