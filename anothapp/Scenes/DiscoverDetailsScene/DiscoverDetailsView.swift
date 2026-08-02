@@ -172,21 +172,9 @@ private struct DetailView: View {
                 DetailRow(title: "Création", value: "\(viewModel.serie.creation)")
                 
                 if !viewModel.serie.platforms.isEmpty {
-                    Text("Plateformes")
-                        .fontWeight(.semibold)
-                    
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            ForEach(viewModel.serie.platforms, id: \.name) { platform in
-                                VStack {
-                                    ImageCardView(url: platform.logo)
-                                        .frame(width: 100, height: 100)
-                                    Text(platform.name)
-                                        .font(.caption)
-                                }
-                                .padding(.horizontal, 8)
-                            }
-                        }
+                    GridView(items: viewModel.serie.platforms, columns: 3) { platform in
+                        ImageCardView(url: platform.logo)
+                                .frame(width: 100, height: 100)
                     }
                 }
             }
@@ -302,7 +290,7 @@ private struct ActorsView: View {
                 }
             }
         }
-        .sheet(isPresented: $viewModel.isSheetOpened, onDismiss: { viewModel.closeActorDetails() }) {
+        .sheet(isPresented: $viewModel.isActorSheetOpened, onDismiss: { viewModel.closeActorDetails() }) {
             VStack {
                 HStack {
                     Spacer()
@@ -472,28 +460,25 @@ private struct FriendsWatchView: View {
     
     var body: some View {
         GridView(items: viewModel.viewedByFriends, columns: 2) { friend in
-            CardView(picture: friend.picture, text: friend.username) {
-                Button(action: { viewModel.openFriendDetailsView(userId: friend.id) }) {
-                    Image(systemName: "eye")
-                        .font(.system(size: 20, weight: .regular))
-                        .foregroundColor(.primary)
+            Button(action: { viewModel.openFriendDetailsView(userId: friend.id) }) {
+                CardView(picture: friend.picture, text: friend.username) {
+                    EmptyView()
                 }
-                .padding(.top, 1)
-                .sheet(isPresented: $viewModel.isSheetOpened, onDismiss: { viewModel.closeFriendDetails() }) {
-                    VStack {
-                        HStack {
-                            Spacer()
-                            
-                            Button(action: { viewModel.closeFriendDetails() }) {
-                                Image(systemName: "xmark")
-                                    .font(.system(size: 20, weight: .regular))
-                                    .foregroundColor(.primary)
-                            }
-                        }.padding()
+            }
+            .padding(.top, 1)
+            .sheet(isPresented: $viewModel.isFriendSheetOpened, onDismiss: { viewModel.closeFriendDetails() }) {
+                VStack {
+                    HStack {
+                        Spacer()
                         
+                        Button(action: { viewModel.closeFriendDetails() }) {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 20, weight: .regular))
+                                .foregroundColor(.primary)
+                        }
+                    }.padding()
                         viewModel.getDashboardView()
                     }
-                }
             }
         }
         .background(

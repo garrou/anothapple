@@ -19,7 +19,8 @@ class DiscoverDetailsViewModel: ObservableObject {
     @Published var similars: [BaseSerie] = []
     @Published var images: [String] = []
     @Published var characters: [Person] = []
-    @Published var isSheetOpened: Bool = false
+    @Published var isActorSheetOpened: Bool = false
+    @Published var isFriendSheetOpened: Bool = false
     @Published var selectedActor: PersonDetails? = nil
     @Published var tabContentHeight: CGFloat = ContentHeightPreferenceKey.defaultValue
     @Published var showProfilePictureModal: Bool = false
@@ -39,13 +40,14 @@ class DiscoverDetailsViewModel: ObservableObject {
     func routeToDiscoverDetails(id: Int) async {
         if let fetched = await ApiSeriesCacheManager.shared.getSerie(id: id) {
             router.routeToDiscoverDetails(serie: fetched)
-            isSheetOpened = false
+            isActorSheetOpened = false
+            isFriendSheetOpened = false
         }
     }
     
     func closeActorDetails() {
         selectedActor = nil
-        isSheetOpened = false
+        isActorSheetOpened = false
     }
     
     func openProfilePictureModal(image: String) {
@@ -59,12 +61,12 @@ class DiscoverDetailsViewModel: ObservableObject {
     }
     
     func openFriendDetailsView(userId: String) {
-        isSheetOpened = true
+        isFriendSheetOpened = true
         friendIdToConsult = userId
     }
     
     func closeFriendDetails() {
-        isSheetOpened = false
+        isFriendSheetOpened = false
         friendIdToConsult = nil
     }
     
@@ -125,7 +127,7 @@ class DiscoverDetailsViewModel: ObservableObject {
     @MainActor
     func getActorDetails(id: Int) async {
         if let actor = await SearchManager.shared.getActorDetails(id: id) {
-            isSheetOpened = true
+            isActorSheetOpened = true
             selectedActor = actor
         }
     }

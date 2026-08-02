@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ApiSeriesCacheManager {
+actor ApiSeriesCacheManager {
 
     static let shared = ApiSeriesCacheManager()
     private let cache = NSCache<NSString, ApiSerie>()
