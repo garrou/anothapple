@@ -23,18 +23,20 @@ struct DashboardView: View {
                     FriendSeriesView(viewModel: viewModel, series: viewModel.friendSharedSeries, title: viewModel.friendSharedSeriesLabel)
                     FriendSeriesView(viewModel: viewModel, series: viewModel.friendFavoritesSeries, title: viewModel.friendFavoriteSeriesLabel)
                 }
-                BarChart(title: "Saisons par mois cette année", xLabel: "Mois", yLabel: "Saisons", data: viewModel.seasonsMonthsCurrentYear, color: .green)
-                BarChart(title: "Episodes par mois cette année", xLabel: "Mois", yLabel: "Episodes", data: viewModel.epiodesMonthsCurrentYear, color: .cyan)
-                LineChart(title: "Temps en heures par années", xLabel: "Années", yLabel: "Heures", data: viewModel.hoursPerYear, color: .yellow)
-                BarChart(title: "Saisons par années", xLabel: "Années", yLabel: "Saisons", data: viewModel.seasonsPerYears, color: .orange)
-                BarChart(title: "Episodes par années", xLabel: "Années", yLabel: "Episodes", data: viewModel.episodesPerYears, color: .pink)
-                BarChart(title: "Saisons par mois", xLabel: "Mois", yLabel: "Saisons", data: viewModel.seasonsByMonths, color: .mint)
-                BarChart(title: "Mois record en heures", xLabel: "Mois", yLabel: "Heures", data: viewModel.monthsRankingHours, color: .red)
-                PieChart(title: "Série les plus chronophages en heures", data: viewModel.timeConsumingSeries)
-                PieChart(title: "Genre les plus regardés", data: viewModel.mostViewedKinds)
-                PieChart(title: "Saisons par plateformes", data: viewModel.seasonsByPlatforms)
-                PieChart(title: "Pays des séries", data: viewModel.seriesCountries)
-                PieChart(title: "Notes attribuées aux séries", data: viewModel.seriesNotes)
+                if let userStats = viewModel.stats {
+                    BarChart(title: "Saisons par mois cette année", xLabel: "Mois", yLabel: "Saisons", data: userStats.seasonsMonthCurrentYear, color: .green)
+                    BarChart(title: "Episodes par mois cette année", xLabel: "Mois", yLabel: "Episodes", data: userStats.episodesMonthCurrentYear, color: .cyan)
+                    LineChart(title: "Temps en heures par années", xLabel: "Années", yLabel: "Heures", data: userStats.timeYears, color: .yellow)
+                    BarChart(title: "Saisons par années", xLabel: "Années", yLabel: "Saisons", data: userStats.seasonsYears, color: .orange)
+                    BarChart(title: "Episodes par années", xLabel: "Années", yLabel: "Episodes", data: userStats.episodesYears, color: .pink)
+                    BarChart(title: "Saisons par mois", xLabel: "Mois", yLabel: "Saisons", data: userStats.seasonsMonths, color: .mint)
+                    BarChart(title: "Mois record en heures", xLabel: "Mois", yLabel: "Heures", data: userStats.bestMonths, color: .red)
+                    PieChart(title: "Série les plus chronophages en heures", data: userStats.seriesRankingTime)
+                    PieChart(title: "Genre les plus regardés", data: userStats.seriesKinds)
+                    PieChart(title: "Saisons par plateformes", data: userStats.seasonsPlatforms)
+                    PieChart(title: "Pays des séries", data: userStats.seriesCountries)
+                    PieChart(title: "Notes attribuées aux séries", data: userStats.seriesNotes)
+                }
             }
         }
         .task {
@@ -84,7 +86,7 @@ private struct GlobalStatisticView: View {
     @StateObject var viewModel: DashboardViewModel
     
     var body: some View {
-        if let userStats = viewModel.userStats {
+        if let userStats = viewModel.stats {
             VStack(alignment: .leading, spacing: 16) {
                 StatTile(title: "Ce mois", value: "\(viewModel.monthTime)")
                 StatTile(title: "Temps total", value: "\(viewModel.totalTime)")
@@ -114,21 +116,25 @@ private struct BarChart: View {
     let color: Color
     
     var body: some View {
-        VStack {
-            Text(title)
-            
-            Chart(data) { item in
-                BarMark(
-                    x: .value(xLabel, item.label),
-                    y: .value(yLabel, item.value)
-                )
-                .foregroundStyle(color)
+        if data.isEmpty {
+            EmptyView()
+        } else {
+            VStack {
+                Text(title)
+                
+                Chart(data) { item in
+                    BarMark(
+                        x: .value(xLabel, item.label),
+                        y: .value(yLabel, item.value)
+                    )
+                    .foregroundStyle(color)
+                }
+                .frame(height: 300)
             }
-            .frame(height: 300)
+            .padding()
+            .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(radius: 4))
+            .padding()
         }
-        .padding()
-        .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(radius: 4))
-        .padding()
         
     }
 }
@@ -142,21 +148,25 @@ private struct LineChart: View {
     let color: Color
     
     var body: some View {
-        VStack {
-            Text(title)
-            
-            Chart(data) { item in
-                LineMark(
-                    x: .value(xLabel, item.label),
-                    y: .value(yLabel, item.value)
-                )
-                .foregroundStyle(color)
+        if data.isEmpty {
+            EmptyView()
+        } else {
+            VStack {
+                Text(title)
+                
+                Chart(data) { item in
+                    LineMark(
+                        x: .value(xLabel, item.label),
+                        y: .value(yLabel, item.value)
+                    )
+                    .foregroundStyle(color)
+                }
+                .frame(height: 300)
             }
-            .frame(height: 300)
+            .padding()
+            .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(radius: 4))
+            .padding()
         }
-        .padding()
-        .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(radius: 4))
-        .padding()
         
     }
 }
@@ -167,27 +177,31 @@ private struct PieChart: View {
     let data: [Stat]
     
     var body: some View {
-        VStack {
-            Text(title)
-            
-            Chart(data) { item in
-                SectorMark(
-                    angle: .value("Valeur", item.value)
-                )
-                .foregroundStyle(by: .value("Label", item.label))
-                .foregroundStyle(.primary)
-                .annotation(position: .overlay) {
-                    Text("\(item.value)")
-                        .foregroundStyle(.white)
-                        .font(.caption)
+        if data.isEmpty {
+            EmptyView()
+        } else {
+            VStack {
+                Text(title)
+                
+                Chart(data) { item in
+                    SectorMark(
+                        angle: .value("Valeur", item.value)
+                    )
+                    .foregroundStyle(by: .value("Label", item.label))
+                    .foregroundStyle(.primary)
+                    .annotation(position: .overlay) {
+                        Text("\(item.value)")
+                            .foregroundStyle(.white)
+                            .font(.caption)
+                    }
                 }
+                .chartLegend(position: .bottom, alignment: .center)
+                .frame(height: 300)
             }
-            .chartLegend(position: .bottom, alignment: .center)
-            .frame(height: 300)
+            .padding()
+            .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(radius: 4))
+            .padding()
         }
-        .padding()
-        .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(radius: 4))
-        .padding()
     }
 }
 
